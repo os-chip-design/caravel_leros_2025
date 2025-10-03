@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![UPRJ_CI](https://github.com/chipfoundry/caravel_user_project/actions/workflows/user_project_ci.yml/badge.svg)](https://github.com/chipfoundry/caravel_user_project/actions/workflows/user_project_ci.yml)
 
-This is a sample user project for the Caravel harness, integrating the open-source Leros CPU core.
+This is a user project for the Caravel harness, integrating the open-source Leros CPU core.
 
 Checkout with submodules:
 
@@ -10,7 +10,7 @@ Checkout with submodules:
 
 Then build the project as described in [the Docs](docs/source/index.md).
 
-This repository contains the DTU subsystem from the [Edu4Chip](https://edu4chip.github.io/) project.
+This repository contains the DTU subsystem from the [Edu4Chip](https://edu4chip.github.io/) tapeout project.
 
 
 ## TODO
