@@ -20,10 +20,11 @@ This repository contains the DTU subsystem from the [Edu4Chip](https://edu4chip.
 * [x] Harden the example project
 * [ ] Run the provided tests
 * [ ] MPW check
-* [ ] Test upload to ChipFoundry
+* [ ] Test upload to ChipFoundry (user is martin-schoeberl)
 * [ ] Change example to Chisel top level and synthesize it
 * [ ] Have some basic tests
 * [ ] Add DTU subsystem (inclusive memories)
+* [ ] Set pin defines in defines.v
 * [ ] Explore three different memories
   - [ ] OpenRAM
   - [ ] EF RAM
