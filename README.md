@@ -21,7 +21,7 @@ This repository contains the DTU subsystem from the [Edu4Chip](https://edu4chip.
 * [ ] Run the provided tests
 * [ ] MPW check
 * [ ] Test upload to ChipFoundry (user is martin-schoeberl)
-* [ ] Change example to Chisel top level and synthesize it
+* [ ] Change example to Chisel top level (with a simple design) and harden it
 * [ ] Have some basic tests
 * [ ] Add DTU subsystem (inclusive memories)
 * [ ] Set pin defines in defines.v
