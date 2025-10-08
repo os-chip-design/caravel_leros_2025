@@ -19,11 +19,12 @@ This repository contains the DTU subsystem from the [Edu4Chip](https://edu4chip.
 * [x] Setup Caravel on chipdesign1
 * [x] Harden the example project
 * [ ] Run the provided tests
-* [ ] MPW check
+* [x] MPW check
 * [ ] Test upload to ChipFoundry (user is martin-schoeberl)
 * [ ] Change example to Chisel top level (with a simple design) and harden it
 * [ ] Have some basic tests
 * [ ] Add DTU subsystem (inclusive memories)
+* [ ] Make sure to use 10 MHz for the serial port
 * [ ] Set pin defines in defines.v
 * [ ] Explore three different memories
   - [ ] OpenRAM
