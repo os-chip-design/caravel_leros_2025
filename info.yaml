@@ -1,0 +1,17 @@
+
+project:
+  description: "Leros microcontroller implemented using Chisel and integrated into Caravel."
+  foundry: "SkyWater"
+  process: "SKY130A"
+  organization: "Technical University of Denmark"
+  contact: "masca@dtu.dk"
+  authors:
+    - name: "Martin Schoeberl"
+      email: "masca@dtu.dk"
+  license: "BSD"
+  language: "Chisel"
+  top_level: "user_project_wrapper"
+  version: "1.0"
+  category: "Digital"
+  keywords: ["Leros", "Chisel", "Sky130", "Caravel"]
+
