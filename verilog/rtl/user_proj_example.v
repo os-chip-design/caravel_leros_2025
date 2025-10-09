@@ -66,53 +66,30 @@ module user_proj_example #(
     output [BITS-1:0] io_oeb,
 
     // IRQ
-    output [2:0] irq
+    output [2:0] user_irq
 );
-    wire clk;
-    wire rst;
+    
+    LerosCaravel leros(
+        .clock(wb_clk_i),
+        .reset(wb_rst_i),
+        .io_wb_stb(wbs_stb_i),
+        .io_wb_cyc(wbs_cyc_i),
+        .io_wb_we(wbs_we_i),
+        .io_wb_sel(wbs_sel_i),
+        .io_wb_dat_i(wbs_dat_i),
+        .io_wb_adr(wbs_adr_i),
+        .io_wb_dat_o(wbs_dat_o),
+        .io_wb_ack(wbs_ack_o),
 
-    wire [BITS-1:0] rdata; 
-    wire [BITS-1:0] wdata;
-    wire [BITS-1:0] count;
+        .io_la_in(la_data_in),
+        .io_la_out(la_data_out),
+        .io_la_outputEnable(la_oenb),
 
-    wire valid;
-    wire [3:0] wstrb;
-    wire [BITS-1:0] la_write;
+        .io_gpio_in(io_in),
+        .io_gpio_out(io_out),
+        .io_gpio_outputEnable(io_oeb),
 
-    // WB MI A
-    assign valid = wbs_cyc_i && wbs_stb_i; 
-    assign wstrb = wbs_sel_i & {4{wbs_we_i}};
-    assign wbs_dat_o = {{(32-BITS){1'b0}}, rdata};
-    assign wdata = wbs_dat_i[BITS-1:0];
-
-    // IO
-    assign io_out = count;
-    assign io_oeb = {(BITS){rst}};
-
-    // IRQ
-    assign irq = 3'b000;	// Unused
-
-    // LA
-    assign la_data_out = {{(128-BITS){1'b0}}, count};
-    // Assuming LA probes [63:32] are for controlling the count register  
-    assign la_write = ~la_oenb[63:64-BITS] & ~{BITS{valid}};
-    // Assuming LA probes [65:64] are for controlling the count clk & reset  
-    assign clk = (~la_oenb[64]) ? la_data_in[64]: wb_clk_i;
-    assign rst = (~la_oenb[65]) ? la_data_in[65]: wb_rst_i;
-
-    counter #(
-        .BITS(BITS)
-    ) counter(
-        .clk(clk),
-        .reset(rst),
-        .ready(wbs_ack_o),
-        .valid(valid),
-        .rdata(rdata),
-        .wdata(wbs_dat_i[BITS-1:0]),
-        .wstrb(wstrb),
-        .la_write(la_write),
-        .la_input(la_data_in[63:64-BITS]),
-        .count(count)
+        .io_user_irq(user_irq)
     );
 
 endmodule

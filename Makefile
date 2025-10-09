@@ -428,3 +428,9 @@ $(clean-targets): clean-% :
 	rm -f ./mag/$*.mag
 	rm -f ./lef/$*.lef
 	rm -f ./maglef/*.maglef
+
+
+
+generate-verilog:
+	$(MAKE) -C Subsystem_DTU generate-caravel
+	cp Subsystem_DTU/generated/caravel/LerosCaravel.sv verilog/rtl
