@@ -432,5 +432,6 @@ $(clean-targets): clean-% :
 
 
 generate-verilog:
-	$(MAKE) -C Subsystem_DTU generate-caravel
-	cp Subsystem_DTU/generated/caravel/LerosCaravel.sv verilog/rtl
+	$(MAKE) -C Subsystem_DTU generate-caravel MEM=DffRam
+	$(MAKE) -C Subsystem_DTU generate-caravel MEM=OpenRamSky130
+	cp Subsystem_DTU/generated/caravel/* verilog/rtl
