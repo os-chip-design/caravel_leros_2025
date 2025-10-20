@@ -1,20 +1,27 @@
 {
-    "DESIGN_NAME": "LerosCaravelWrapper_DffRam",
+    "DESIGN_NAME": "CaravelMemoryTestWrapper",
     "FP_PDN_MULTILAYER": true,
+    "FP_PDN_CORE_RING": true,
     "VERILOG_FILES": [
         "dir::../../verilog/rtl/defines.v",
-        "dir::../../verilog/rtl/LerosCaravel_DffRam.sv",
-        "dir::../../verilog/rtl/LerosCaravelWrapper_DffRam.v"
+        "dir::../../verilog/rtl/CaravelMemoryTest.sv",
+        "dir::../../verilog/rtl/CaravelMemoryTestWrapper.v"
+    ],
+    "CLOCK_PERIOD": 25,
+    "CLOCK_PORT": "wb_clk_i",
+    "CLOCK_NET": "memtest.clock",
+    "FP_SIZING": "absolute",
+    "DIE_AREA": [
+        0,
+        0,
+        1000,
+        700
     ],
     "MACROS": {
         "RAM256": {
             "instances": {
-                "leros_system.instrMem.m.mem": {
-                "location": [385, 605],
-                "orientation": "N"
-                },
-                "leros_system.dmem.m.mem": {
-                "location": [1590, 605],
+                "memtest.m.mem": {
+                "location": [150, 100],
                 "orientation": "N"
                 }
             },
@@ -39,17 +46,7 @@
             }
         }
     },
-    "PDN_MACRO_CONNECTIONS": ["leros_system.dmem.m.mem vccd1 vssd1 vccd1 vssd1", "leros_system.instrMem.m.mem vccd1 vssd1 vccd1 vssd1"],
-    "CLOCK_PERIOD": 25,
-    "CLOCK_PORT": "wb_clk_i",
-    "CLOCK_NET": "leros_system.clock",
-    "FP_SIZING": "absolute",
-    "DIE_AREA": [
-        0,
-        0,
-        2800,
-        1760
-    ],
+    "PDN_MACRO_CONNECTIONS": ["memtest.m.mem vccd1 vssd1 vccd1 vssd1"],
     "FP_PIN_ORDER_CFG": "dir::pin_order.cfg",
     "MAX_TRANSITION_CONSTRAINT": 1.0,
     "MAX_FANOUT_CONSTRAINT": 16,

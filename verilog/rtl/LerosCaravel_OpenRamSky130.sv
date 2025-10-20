@@ -129,7 +129,7 @@ module Rx(	// leros/src/main/scala/leros/uart/UARTRx.scala:24:7
       rxReg_REG <= 1'h0;	// leros/src/main/scala/leros/uart/UARTRx.scala:24:7, :34:30
       rxReg <= 1'h0;	// leros/src/main/scala/leros/uart/UARTRx.scala:24:7, :34:22
       shiftReg <= 8'h0;	// leros/src/main/scala/leros/uart/UARTRx.scala:37:25
-      cntReg <= 20'h340;	// leros/src/main/scala/leros/uart/UARTRx.scala:38:23
+      cntReg <= 20'h56;	// leros/src/main/scala/leros/uart/UARTRx.scala:38:23
       bitsReg <= 4'h0;	// leros/src/main/scala/leros/uart/UARTRx.scala:39:24
       valReg <= 1'h0;	// leros/src/main/scala/leros/uart/UARTRx.scala:24:7, :40:23
     end
@@ -143,11 +143,11 @@ module Rx(	// leros/src/main/scala/leros/uart/UARTRx.scala:24:7
       if (|cntReg)	// leros/src/main/scala/leros/uart/UARTRx.scala:38:23, :42:15
         cntReg <= cntReg - 20'h1;	// leros/src/main/scala/leros/uart/UARTRx.scala:38:23, :43:22
       else if (|bitsReg) begin	// leros/src/main/scala/leros/uart/UARTRx.scala:39:24, :44:22
-        cntReg <= 20'h340;	// leros/src/main/scala/leros/uart/UARTRx.scala:38:23
+        cntReg <= 20'h56;	// leros/src/main/scala/leros/uart/UARTRx.scala:38:23
         bitsReg <= bitsReg - 4'h1;	// leros/src/main/scala/leros/uart/UARTRx.scala:39:24, :47:24
       end
       else if (~rxReg & falling_REG) begin	// leros/src/main/scala/leros/uart/UARTRx.scala:34:22, :35:{17,24,35}
-        cntReg <= 20'h4E0;	// leros/src/main/scala/leros/uart/UARTRx.scala:38:23, :53:12
+        cntReg <= 20'h80;	// leros/src/main/scala/leros/uart/UARTRx.scala:38:23, :53:12
         bitsReg <= 4'h8;	// leros/src/main/scala/leros/uart/UARTRx.scala:39:24, :54:13
       end
       valReg <=
@@ -215,7 +215,7 @@ module Tx(	// leros/src/main/scala/leros/uart/UARTTx.scala:21:7
         if (io_channel_valid)	// leros/src/main/scala/leros/uart/UARTTx.scala:22:14
           bitsReg <= 4'hB;	// leros/src/main/scala/leros/uart/UARTTx.scala:31:24, :47:17
       end
-      cntReg <= 20'h340;	// leros/src/main/scala/leros/uart/UARTTx.scala:30:23, :38:12
+      cntReg <= 20'h56;	// leros/src/main/scala/leros/uart/UARTTx.scala:30:23, :38:12
     end
     else	// leros/src/main/scala/leros/uart/UARTTx.scala:33:31
       cntReg <= cntReg - 20'h1;	// leros/src/main/scala/leros/uart/UARTTx.scala:30:23, :54:22

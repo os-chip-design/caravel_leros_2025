@@ -991,29 +991,36 @@ module Leros(	// leros/src/main/scala/leros/Leros.scala:13:7
       : _GEN_4 ? 4'h1 << effAddrOffReg : _GEN_6 ? _dmemIO_wrMask_T_1[3:0] : 4'hF;	// leros/src/main/scala/leros/Leros.scala:13:7, :59:30, :65:17, :83:14, :88:20, :115:{21,34}, :122:{21,34}
 endmodule
 
-// external module RAM256
+// external module CF_SRAM_1024x32_wb_wrapper
 
-module DffRam(	// src/main/scala/mem/DffRam.scala:21:7
-  input         clock,	// src/main/scala/mem/DffRam.scala:21:7
-  input  [7:0]  io_wordAddr,	// src/main/scala/mem/DffRam.scala:24:14
-  input  [31:0] io_wrData,	// src/main/scala/mem/DffRam.scala:24:14
-  output [31:0] io_rdData,	// src/main/scala/mem/DffRam.scala:24:14
-  input  [3:0]  io_write,	// src/main/scala/mem/DffRam.scala:24:14
-  input         io_en	// src/main/scala/mem/DffRam.scala:24:14
+module ChipFoundrySram(	// src/main/scala/mem/ChipFoundrySram.scala:19:7
+  input         clock,	// src/main/scala/mem/ChipFoundrySram.scala:19:7
+                reset,	// src/main/scala/mem/ChipFoundrySram.scala:19:7
+                io_valid,	// src/main/scala/mem/ChipFoundrySram.scala:21:14
+  input  [7:0]  io_wordAddr,	// src/main/scala/mem/ChipFoundrySram.scala:21:14
+  input  [31:0] io_wrData,	// src/main/scala/mem/ChipFoundrySram.scala:21:14
+  output [31:0] io_rdData,	// src/main/scala/mem/ChipFoundrySram.scala:21:14
+  input         io_write,	// src/main/scala/mem/ChipFoundrySram.scala:21:14
+  input  [3:0]  io_strb	// src/main/scala/mem/ChipFoundrySram.scala:21:14
 );
 
-  RAM256 mem (	// src/main/scala/mem/DffRam.scala:32:35
-    .CLK (clock),
-    .EN0 (io_en),
-    .A0  (io_wordAddr),
-    .Di0 (io_wrData),
-    .Do0 (io_rdData),
-    .WE0 (io_write)
+  CF_SRAM_1024x32_wb_wrapper mem (	// src/main/scala/mem/ChipFoundrySram.scala:30:19
+    .wb_clk_i  (clock),
+    .wb_rst_i  (reset),
+    .wbs_stb_i (io_valid),
+    .wbs_cyc_i (io_valid),
+    .wbs_we_i  (io_write),
+    .wbs_sel_i (io_strb),
+    .wbs_dat_i (io_wrData),
+    .wbs_adr_i ({24'h0, io_wordAddr}),	// src/main/scala/mem/ChipFoundrySram.scala:42:20
+    .wbs_ack_o (/* unused */),
+    .wbs_dat_o (io_rdData)
   );
 endmodule
 
 module InstructionMemory(	// src/main/scala/dtu/InstructionMemory.scala:30:7
   input         clock,	// src/main/scala/dtu/InstructionMemory.scala:30:7
+                reset,	// src/main/scala/dtu/InstructionMemory.scala:30:7
   input  [9:0]  instrPort_addr,	// src/main/scala/dtu/InstructionMemory.scala:36:21
   output [15:0] instrPort_instr,	// src/main/scala/dtu/InstructionMemory.scala:36:21
   input  [9:0]  apbPort_paddr,	// src/main/scala/dtu/InstructionMemory.scala:37:19
@@ -1026,8 +1033,7 @@ module InstructionMemory(	// src/main/scala/dtu/InstructionMemory.scala:30:7
   output [31:0] apbPort_prdata	// src/main/scala/dtu/InstructionMemory.scala:37:19
 );
 
-  wire [31:0] _m_io_rdData;	// src/main/scala/mem/DffRam.scala:11:19
-  wire        _GEN = apbPort_penable & apbPort_pwrite;	// src/main/scala/dtu/InstructionMemory.scala:57:32
+  wire [31:0] _m_io_rdData;	// src/main/scala/mem/ChipFoundrySram.scala:9:19
   reg         instrPort_instr_REG;	// src/main/scala/dtu/InstructionMemory.scala:70:35
   always @(posedge clock)	// src/main/scala/dtu/InstructionMemory.scala:30:7
     instrPort_instr_REG <= instrPort_addr[0];	// src/main/scala/dtu/InstructionMemory.scala:70:{35,50}
@@ -1049,20 +1055,22 @@ module InstructionMemory(	// src/main/scala/dtu/InstructionMemory.scala:30:7
       `FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/InstructionMemory.scala:30:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  DffRam m (	// src/main/scala/mem/DffRam.scala:11:19
+  ChipFoundrySram m (	// src/main/scala/mem/ChipFoundrySram.scala:9:19
     .clock       (clock),
+    .reset       (reset),
+    .io_valid    (~apbPort_psel | ~apbPort_pwrite | apbPort_penable & apbPort_pwrite),	// src/main/scala/dtu/InstructionMemory.scala:51:22, :55:{10,27}, :57:32, src/main/scala/mem/ChipFoundrySram.scala:49:14
     .io_wordAddr
       (apbPort_psel
          ? (apbPort_pwrite ? apbPort_paddr[9:2] : apbPort_paddr[9:2])
-         : instrPort_addr[8:1]),	// src/main/scala/dtu/InstructionMemory.scala:51:22, :55:27, :56:47, :57:51, :59:22, :67:39, src/main/scala/mem/DffRam.scala:48:17
+         : instrPort_addr[8:1]),	// src/main/scala/dtu/InstructionMemory.scala:51:22, :55:27, :56:47, :57:51, :59:22, :67:39, src/main/scala/mem/ChipFoundrySram.scala:47:17
     .io_wrData   (apbPort_pwdata),
     .io_rdData   (_m_io_rdData),
-    .io_write    (apbPort_psel & apbPort_pwrite & _GEN ? apbPort_pstrb : 4'h0),	// src/main/scala/dtu/InstructionMemory.scala:51:22, :55:27, :57:32, src/main/scala/mem/DffRam.scala:13:16
-    .io_en       (~apbPort_psel | ~apbPort_pwrite | _GEN)	// src/main/scala/dtu/InstructionMemory.scala:51:22, :55:{10,27}, :57:32, src/main/scala/mem/DffRam.scala:47:11
+    .io_write    (apbPort_psel & apbPort_pwrite),	// src/main/scala/dtu/InstructionMemory.scala:51:22, :55:27, src/main/scala/mem/ChipFoundrySram.scala:48:14
+    .io_strb     (apbPort_pstrb)
   );
-  assign instrPort_instr = instrPort_instr_REG ? _m_io_rdData[31:16] : _m_io_rdData[15:0];	// src/main/scala/dtu/InstructionMemory.scala:30:7, :68:19, :69:19, :70:{27,35}, src/main/scala/mem/DffRam.scala:11:19
+  assign instrPort_instr = instrPort_instr_REG ? _m_io_rdData[31:16] : _m_io_rdData[15:0];	// src/main/scala/dtu/InstructionMemory.scala:30:7, :68:19, :69:19, :70:{27,35}, src/main/scala/mem/ChipFoundrySram.scala:9:19
   assign apbPort_pready = apbPort_psel & apbPort_penable;	// src/main/scala/dtu/InstructionMemory.scala:30:7, :45:18, :51:22, :53:20
-  assign apbPort_prdata = _m_io_rdData;	// src/main/scala/dtu/InstructionMemory.scala:30:7, src/main/scala/mem/DffRam.scala:11:19
+  assign apbPort_prdata = _m_io_rdData;	// src/main/scala/dtu/InstructionMemory.scala:30:7, src/main/scala/mem/ChipFoundrySram.scala:9:19
 endmodule
 
 module InstrMem(	// leros/src/main/scala/leros/InstrMem.scala:19:7
@@ -1352,6 +1360,7 @@ endmodule
 
 module DataMemory(	// src/main/scala/dtu/DataMemory.scala:16:7
   input         clock,	// src/main/scala/dtu/DataMemory.scala:16:7
+                reset,	// src/main/scala/dtu/DataMemory.scala:16:7
   input  [7:0]  dmemPort_rdAddr,	// src/main/scala/dtu/DataMemory.scala:20:20
   output [31:0] dmemPort_rdData,	// src/main/scala/dtu/DataMemory.scala:20:20
   input  [7:0]  dmemPort_wrAddr,	// src/main/scala/dtu/DataMemory.scala:20:20
@@ -1360,13 +1369,15 @@ module DataMemory(	// src/main/scala/dtu/DataMemory.scala:16:7
   input  [3:0]  dmemPort_wrMask	// src/main/scala/dtu/DataMemory.scala:20:20
 );
 
-  DffRam m (	// src/main/scala/mem/DffRam.scala:11:19
+  ChipFoundrySram m (	// src/main/scala/mem/ChipFoundrySram.scala:9:19
     .clock       (clock),
-    .io_wordAddr (dmemPort_wr ? dmemPort_wrAddr : dmemPort_rdAddr),	// src/main/scala/dtu/DataMemory.scala:26:21, src/main/scala/mem/DffRam.scala:48:17, :53:17
+    .reset       (reset),
+    .io_valid    (1'h1),	// src/main/scala/mem/ChipFoundrySram.scala:49:14
+    .io_wordAddr (dmemPort_wr ? dmemPort_wrAddr : dmemPort_rdAddr),	// src/main/scala/dtu/DataMemory.scala:26:21, src/main/scala/mem/ChipFoundrySram.scala:47:17, :54:17
     .io_wrData   (dmemPort_wrData),
     .io_rdData   (dmemPort_rdData),
-    .io_write    (dmemPort_wr ? dmemPort_wrMask : 4'h0),	// src/main/scala/dtu/DataMemory.scala:26:21, src/main/scala/mem/DffRam.scala:13:16, :55:14
-    .io_en       (1'h1)	// src/main/scala/mem/DffRam.scala:47:11
+    .io_write    (dmemPort_wr),
+    .io_strb     (dmemPort_wrMask)
   );
 endmodule
 
@@ -1888,7 +1899,7 @@ module DataMemMux(	// src/main/scala/dtu/DataMemMux.scala:21:7
   assign io_targets_3_wr = io_master_wr & io_master_wrAddr[15:1] == 15'h1022;	// src/main/scala/dtu/DataMemMux.scala:21:7, :59:7, :67:38, :70:7, :71:29
 endmodule
 
-module LerosCaravel_DffRam(	// src/main/scala/caravel/LerosCaravel.scala:48:7
+module LerosCaravel_ChipFoundrySram(	// src/main/scala/caravel/LerosCaravel.scala:48:7
   input          clock,	// src/main/scala/caravel/LerosCaravel.scala:48:7
                  reset,	// src/main/scala/caravel/LerosCaravel.scala:48:7
                  io_wb_stb,	// src/main/scala/caravel/LerosCaravel.scala:52:14
@@ -2030,6 +2041,7 @@ module LerosCaravel_DffRam(	// src/main/scala/caravel/LerosCaravel.scala:48:7
   );
   InstructionMemory instrMem (	// src/main/scala/caravel/LerosCaravel.scala:82:24
     .clock           (clock),
+    .reset           (reset),
     .instrPort_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:79:21
     .instrPort_instr (_instrMem_instrPort_instr),
     .apbPort_paddr   (_apbMux_io_targets_0_paddr[9:0]),	// src/main/scala/apb/ApbMux.scala:96:24, :102:16
@@ -2077,6 +2089,7 @@ module LerosCaravel_DffRam(	// src/main/scala/caravel/LerosCaravel.scala:48:7
   );
   DataMemory dmem (	// src/main/scala/caravel/LerosCaravel.scala:88:20
     .clock           (clock),
+    .reset           (reset),
     .dmemPort_rdAddr (_dmemMux_io_targets_0_rdAddr[7:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
     .dmemPort_rdData (_dmem_dmemPort_rdData),
     .dmemPort_wrAddr (_dmemMux_io_targets_0_wrAddr[7:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16

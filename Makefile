@@ -102,12 +102,12 @@ install:
 # Install DV setup
 .PHONY: simenv
 simenv:
-	docker pull chipfoundry/dv:latest
+	#docker pull chipfoundry/dv:latest
 
 # Install cocotb docker
 .PHONY: simenv-cocotb
 simenv-cocotb:
-	docker pull chipfoundry/dv:cocotb
+	#docker pull chipfoundry/dv:cocotb
 
 .PHONY: setup
 setup: check_dependencies install check-env install_mcw openlane pdk-with-ciel setup-timing-scripts setup-cocotb precheck
@@ -123,7 +123,7 @@ cocotb-dv-targets-gl=$(cocotb-dv_patterns:%=cocotb-verify-%-gl)
 dv-targets-gl-sdf=$(dv_patterns:%=verify-%-gl-sdf)
 
 TARGET_PATH=$(shell pwd)
-verify_command="source ~/.bashrc && cd ${TARGET_PATH}/verilog/dv/$* && export SIM=${SIM} && make"
+verify_command=". ~/.bashrc && cd ${TARGET_PATH}/verilog/dv/$* && export SIM=${SIM} && make"
 dv_base_dependencies=simenv
 docker_run_verify=\
 	docker run \
@@ -140,8 +140,8 @@ docker_run_verify=\
 		-e CORE_VERILOG_PATH=$(TARGET_PATH)/mgmt_core_wrapper/verilog \
 		-e CARAVEL_VERILOG_PATH=$(TARGET_PATH)/caravel/verilog \
 		-e MCW_ROOT=$(MCW_ROOT) \
-		chipfoundry/dv:latest \
-		sh -c $(verify_command)
+		chipfoundry/dv:cocotb \
+		bash -c $(verify_command)
 
 .PHONY: verify
 verify: $(dv-targets-rtl)
@@ -434,4 +434,5 @@ $(clean-targets): clean-% :
 generate-verilog:
 	$(MAKE) -C Subsystem_DTU generate-caravel MEM=DffRam
 	$(MAKE) -C Subsystem_DTU generate-caravel MEM=OpenRamSky130
+	$(MAKE) -C Subsystem_DTU generate-caravel MEM=ChipFoundrySram
 	cp Subsystem_DTU/generated/caravel/* verilog/rtl
