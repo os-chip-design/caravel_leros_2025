@@ -58,6 +58,8 @@ endif
 
 ifeq ($(LIBRELANE_USE_NIX),1)
 librelane_run = nix run github:chipfoundry/openlane-2/$(CF_LIBRELANE_TAG) --
+else ifeq ($(LIBRELANE_USE_LOCAL),1)
+librelane_run = librelane
 else
 librelane_docker_args = $(shell test -t 0 || echo "--docker-no-tty")
 librelane_run = $(PROJECT_ROOT)/openlane/.venv/bin/python3 -m librelane $(docker_mounts) $(librelane_docker_args) --dockerized 

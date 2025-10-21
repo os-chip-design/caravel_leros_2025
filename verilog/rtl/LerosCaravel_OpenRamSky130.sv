@@ -1301,27 +1301,27 @@ module Gpio(	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
   input  [1:0]  dmemPort_wrAddr,	// src/main/scala/dtu/peripherals/Gpio.scala:19:20
   input  [31:0] dmemPort_wrData,	// src/main/scala/dtu/peripherals/Gpio.scala:19:20
   input         dmemPort_wr,	// src/main/scala/dtu/peripherals/Gpio.scala:19:20
-  input  [11:0] gpioPort_in,	// src/main/scala/dtu/peripherals/Gpio.scala:20:20
-  output [11:0] gpioPort_out,	// src/main/scala/dtu/peripherals/Gpio.scala:20:20
-                gpioPort_outputEnable	// src/main/scala/dtu/peripherals/Gpio.scala:20:20
+  input  [3:0]  gpioPort_in,	// src/main/scala/dtu/peripherals/Gpio.scala:20:20
+  output [3:0]  gpioPort_out,	// src/main/scala/dtu/peripherals/Gpio.scala:20:20
+                gpioPort_oe	// src/main/scala/dtu/peripherals/Gpio.scala:20:20
 );
 
-  reg  [11:0] outputEnables;	// src/main/scala/dtu/peripherals/Gpio.scala:22:30
-  reg  [11:0] outputs;	// src/main/scala/dtu/peripherals/Gpio.scala:23:24
-  reg  [1:0]  dmemPort_rdData_REG;	// src/main/scala/dtu/peripherals/Gpio.scala:26:39
-  wire        _GEN = dmemPort_wrAddr == 2'h0;	// src/main/scala/dtu/peripherals/Gpio.scala:35:29
+  reg  [3:0] outputEnables;	// src/main/scala/dtu/peripherals/Gpio.scala:22:30
+  reg  [3:0] outputs;	// src/main/scala/dtu/peripherals/Gpio.scala:23:24
+  reg  [1:0] dmemPort_rdData_REG;	// src/main/scala/dtu/peripherals/Gpio.scala:26:39
+  wire       _GEN = dmemPort_wrAddr == 2'h0;	// src/main/scala/dtu/peripherals/Gpio.scala:35:29
   always @(posedge clock) begin	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
     if (reset) begin	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-      outputEnables <= 12'h0;	// src/main/scala/dtu/peripherals/Gpio.scala:22:30
-      outputs <= 12'h0;	// src/main/scala/dtu/peripherals/Gpio.scala:22:30, :23:24
+      outputEnables <= 4'h0;	// src/main/scala/dtu/peripherals/Gpio.scala:22:30
+      outputs <= 4'h0;	// src/main/scala/dtu/peripherals/Gpio.scala:22:30, :23:24
     end
     else begin	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
       if (dmemPort_wr & _GEN)	// src/main/scala/dtu/peripherals/Gpio.scala:22:30, :34:21, :35:29, :37:23
-        outputEnables <= dmemPort_wrData[11:0];	// src/main/scala/dtu/peripherals/Gpio.scala:22:30, :37:23
+        outputEnables <= dmemPort_wrData[3:0];	// src/main/scala/dtu/peripherals/Gpio.scala:22:30, :37:23
       if (~dmemPort_wr | _GEN | dmemPort_wrAddr != 2'h1) begin	// src/main/scala/dtu/peripherals/Gpio.scala:23:24, :26:72, :34:21, :35:29
       end
       else	// src/main/scala/dtu/peripherals/Gpio.scala:23:24, :34:21, :35:29
-        outputs <= dmemPort_wrData[11:0];	// src/main/scala/dtu/peripherals/Gpio.scala:23:24, :37:23
+        outputs <= dmemPort_wrData[3:0];	// src/main/scala/dtu/peripherals/Gpio.scala:23:24, :37:23
     end
     dmemPort_rdData_REG <= dmemPort_rdAddr;	// src/main/scala/dtu/peripherals/Gpio.scala:26:39
   end // always @(posedge)
@@ -1336,9 +1336,9 @@ module Gpio(	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
       `endif // INIT_RANDOM_PROLOG_
       `ifdef RANDOMIZE_REG_INIT	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
         _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-        outputEnables = _RANDOM[/*Zero width*/ 1'b0][11:0];	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30
-        outputs = _RANDOM[/*Zero width*/ 1'b0][23:12];	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30, :23:24
-        dmemPort_rdData_REG = _RANDOM[/*Zero width*/ 1'b0][25:24];	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30, :26:39
+        outputEnables = _RANDOM[/*Zero width*/ 1'b0][3:0];	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30
+        outputs = _RANDOM[/*Zero width*/ 1'b0][7:4];	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30, :23:24
+        dmemPort_rdData_REG = _RANDOM[/*Zero width*/ 1'b0][9:8];	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30, :26:39
       `endif // RANDOMIZE_REG_INIT
     end // initial
     `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
@@ -1346,12 +1346,12 @@ module Gpio(	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
   assign dmemPort_rdData =
-    {20'h0,
+    {28'h0,
      dmemPort_rdData_REG == 2'h2
        ? gpioPort_in
        : dmemPort_rdData_REG == 2'h1 ? outputs : outputEnables};	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30, :23:24, :26:{19,39,72}
   assign gpioPort_out = outputs;	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :23:24
-  assign gpioPort_outputEnable = outputEnables;	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30
+  assign gpioPort_oe = outputEnables;	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30
 endmodule
 
 module DataMemory(	// src/main/scala/dtu/DataMemory.scala:16:7
@@ -1892,24 +1892,24 @@ module DataMemMux(	// src/main/scala/dtu/DataMemMux.scala:21:7
   assign io_targets_3_wr = io_master_wr & io_master_wrAddr[15:1] == 15'h1022;	// src/main/scala/dtu/DataMemMux.scala:21:7, :59:7, :67:38, :70:7, :71:29
 endmodule
 
-module LerosCaravel_OpenRamSky130(	// src/main/scala/caravel/LerosCaravel.scala:48:7
-  input          clock,	// src/main/scala/caravel/LerosCaravel.scala:48:7
-                 reset,	// src/main/scala/caravel/LerosCaravel.scala:48:7
-                 io_wb_stb,	// src/main/scala/caravel/LerosCaravel.scala:52:14
-                 io_wb_cyc,	// src/main/scala/caravel/LerosCaravel.scala:52:14
-                 io_wb_we,	// src/main/scala/caravel/LerosCaravel.scala:52:14
-  input  [3:0]   io_wb_sel,	// src/main/scala/caravel/LerosCaravel.scala:52:14
-  input  [31:0]  io_wb_dat_i,	// src/main/scala/caravel/LerosCaravel.scala:52:14
-                 io_wb_adr,	// src/main/scala/caravel/LerosCaravel.scala:52:14
-  output [31:0]  io_wb_dat_o,	// src/main/scala/caravel/LerosCaravel.scala:52:14
-  output         io_wb_ack,	// src/main/scala/caravel/LerosCaravel.scala:52:14
-  input  [127:0] io_la_in,	// src/main/scala/caravel/LerosCaravel.scala:52:14
-  output [127:0] io_la_out,	// src/main/scala/caravel/LerosCaravel.scala:52:14
-  input  [127:0] io_la_outputEnable,	// src/main/scala/caravel/LerosCaravel.scala:52:14
-  input  [15:0]  io_gpio_in,	// src/main/scala/caravel/LerosCaravel.scala:52:14
-  output [15:0]  io_gpio_out,	// src/main/scala/caravel/LerosCaravel.scala:52:14
-                 io_gpio_outputEnable,	// src/main/scala/caravel/LerosCaravel.scala:52:14
-  output [2:0]   io_user_irq	// src/main/scala/caravel/LerosCaravel.scala:52:14
+module LerosCaravel_OpenRamSky130(	// src/main/scala/caravel/LerosCaravel.scala:49:7
+  input          clock,	// src/main/scala/caravel/LerosCaravel.scala:49:7
+                 reset,	// src/main/scala/caravel/LerosCaravel.scala:49:7
+                 io_wb_stb,	// src/main/scala/caravel/LerosCaravel.scala:53:14
+                 io_wb_cyc,	// src/main/scala/caravel/LerosCaravel.scala:53:14
+                 io_wb_we,	// src/main/scala/caravel/LerosCaravel.scala:53:14
+  input  [3:0]   io_wb_sel,	// src/main/scala/caravel/LerosCaravel.scala:53:14
+  input  [31:0]  io_wb_dat_i,	// src/main/scala/caravel/LerosCaravel.scala:53:14
+                 io_wb_adr,	// src/main/scala/caravel/LerosCaravel.scala:53:14
+  output [31:0]  io_wb_dat_o,	// src/main/scala/caravel/LerosCaravel.scala:53:14
+  output         io_wb_ack,	// src/main/scala/caravel/LerosCaravel.scala:53:14
+  input  [127:0] io_la_in,	// src/main/scala/caravel/LerosCaravel.scala:53:14
+  output [127:0] io_la_out,	// src/main/scala/caravel/LerosCaravel.scala:53:14
+  input  [127:0] io_la_oe,	// src/main/scala/caravel/LerosCaravel.scala:53:14
+  input  [15:0]  io_gpio_in,	// src/main/scala/caravel/LerosCaravel.scala:53:14
+  output [15:0]  io_gpio_out,	// src/main/scala/caravel/LerosCaravel.scala:53:14
+                 io_gpio_oe,	// src/main/scala/caravel/LerosCaravel.scala:53:14
+  output [2:0]   io_user_irq	// src/main/scala/caravel/LerosCaravel.scala:53:14
 );
 
   wire [31:0] _dmemMux_io_master_rdData;	// src/main/scala/dtu/DataMemMux.scala:116:25
@@ -1963,37 +1963,37 @@ module LerosCaravel_OpenRamSky130(	// src/main/scala/caravel/LerosCaravel.scala:
   wire        _bridge_io_apb_pwrite;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire [3:0]  _bridge_io_apb_pstrb;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire [31:0] _bridge_io_apb_pwdata;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire        _uart_uartPins_tx;	// src/main/scala/caravel/LerosCaravel.scala:89:20
-  wire [31:0] _uart_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:89:20
-  wire [31:0] _dmem_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:88:20
-  wire [31:0] _gpio_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:87:20
-  wire [11:0] _gpio_gpioPort_out;	// src/main/scala/caravel/LerosCaravel.scala:87:20
-  wire [11:0] _gpio_gpioPort_outputEnable;	// src/main/scala/caravel/LerosCaravel.scala:87:20
-  wire        _regBlock_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:86:24
-  wire [31:0] _regBlock_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:86:24
-  wire [31:0] _regBlock_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:86:24
-  wire [15:0] _rom_io_instr;	// src/main/scala/caravel/LerosCaravel.scala:83:19
-  wire [15:0] _instrMem_instrPort_instr;	// src/main/scala/caravel/LerosCaravel.scala:82:24
-  wire        _instrMem_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:82:24
-  wire [31:0] _instrMem_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:82:24
-  wire [9:0]  _leros_imemIO_addr;	// src/main/scala/caravel/LerosCaravel.scala:79:21
-  wire [15:0] _leros_dmemIO_rdAddr;	// src/main/scala/caravel/LerosCaravel.scala:79:21
-  wire [15:0] _leros_dmemIO_wrAddr;	// src/main/scala/caravel/LerosCaravel.scala:79:21
-  wire [31:0] _leros_dmemIO_wrData;	// src/main/scala/caravel/LerosCaravel.scala:79:21
-  wire        _leros_dmemIO_wr;	// src/main/scala/caravel/LerosCaravel.scala:79:21
-  wire [3:0]  _leros_dmemIO_wrMask;	// src/main/scala/caravel/LerosCaravel.scala:79:21
-  wire        _ponte_io_uart_tx;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [15:0] _ponte_io_apb_paddr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire        _ponte_io_apb_psel;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire        _ponte_io_apb_penable;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire        _ponte_io_apb_pwrite;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [31:0] _ponte_io_apb_pwdata;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire        _sysCtrl_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:75:23
-  wire [31:0] _sysCtrl_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:75:23
-  wire        _sysCtrl_ctrlPort_lerosReset;	// src/main/scala/caravel/LerosCaravel.scala:75:23
-  wire        _sysCtrl_ctrlPort_lerosBootFromRam;	// src/main/scala/caravel/LerosCaravel.scala:75:23
-  wire        _sysCtrl_ctrlPort_lerosUartLoopBack;	// src/main/scala/caravel/LerosCaravel.scala:75:23
-  SystemControl sysCtrl (	// src/main/scala/caravel/LerosCaravel.scala:75:23
+  wire        _uart_uartPins_tx;	// src/main/scala/caravel/LerosCaravel.scala:72:20
+  wire [31:0] _uart_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:72:20
+  wire [31:0] _dmem_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:71:20
+  wire [31:0] _gpio_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:70:20
+  wire [3:0]  _gpio_gpioPort_out;	// src/main/scala/caravel/LerosCaravel.scala:70:20
+  wire [3:0]  _gpio_gpioPort_oe;	// src/main/scala/caravel/LerosCaravel.scala:70:20
+  wire        _regBlock_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:69:24
+  wire [31:0] _regBlock_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:69:24
+  wire [31:0] _regBlock_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:69:24
+  wire [15:0] _rom_io_instr;	// src/main/scala/caravel/LerosCaravel.scala:66:19
+  wire [15:0] _instrMem_instrPort_instr;	// src/main/scala/caravel/LerosCaravel.scala:65:24
+  wire        _instrMem_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:65:24
+  wire [31:0] _instrMem_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:65:24
+  wire [9:0]  _leros_imemIO_addr;	// src/main/scala/caravel/LerosCaravel.scala:62:21
+  wire [15:0] _leros_dmemIO_rdAddr;	// src/main/scala/caravel/LerosCaravel.scala:62:21
+  wire [15:0] _leros_dmemIO_wrAddr;	// src/main/scala/caravel/LerosCaravel.scala:62:21
+  wire [31:0] _leros_dmemIO_wrData;	// src/main/scala/caravel/LerosCaravel.scala:62:21
+  wire        _leros_dmemIO_wr;	// src/main/scala/caravel/LerosCaravel.scala:62:21
+  wire [3:0]  _leros_dmemIO_wrMask;	// src/main/scala/caravel/LerosCaravel.scala:62:21
+  wire        _ponte_io_uart_tx;	// src/main/scala/caravel/LerosCaravel.scala:59:21
+  wire [15:0] _ponte_io_apb_paddr;	// src/main/scala/caravel/LerosCaravel.scala:59:21
+  wire        _ponte_io_apb_psel;	// src/main/scala/caravel/LerosCaravel.scala:59:21
+  wire        _ponte_io_apb_penable;	// src/main/scala/caravel/LerosCaravel.scala:59:21
+  wire        _ponte_io_apb_pwrite;	// src/main/scala/caravel/LerosCaravel.scala:59:21
+  wire [31:0] _ponte_io_apb_pwdata;	// src/main/scala/caravel/LerosCaravel.scala:59:21
+  wire        _sysCtrl_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:58:23
+  wire [31:0] _sysCtrl_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:58:23
+  wire        _sysCtrl_ctrlPort_lerosReset;	// src/main/scala/caravel/LerosCaravel.scala:58:23
+  wire        _sysCtrl_ctrlPort_lerosBootFromRam;	// src/main/scala/caravel/LerosCaravel.scala:58:23
+  wire        _sysCtrl_ctrlPort_lerosUartLoopBack;	// src/main/scala/caravel/LerosCaravel.scala:58:23
+  SystemControl sysCtrl (	// src/main/scala/caravel/LerosCaravel.scala:58:23
     .clock                      (clock),
     .reset                      (reset),
     .apbPort_psel               (_apbMux_io_targets_2_psel),	// src/main/scala/apb/ApbMux.scala:96:24
@@ -2006,11 +2006,11 @@ module LerosCaravel_OpenRamSky130(	// src/main/scala/caravel/LerosCaravel.scala:
     .ctrlPort_lerosBootFromRam  (_sysCtrl_ctrlPort_lerosBootFromRam),
     .ctrlPort_lerosUartLoopBack (_sysCtrl_ctrlPort_lerosUartLoopBack)
   );
-  Ponte ponte (	// src/main/scala/caravel/LerosCaravel.scala:76:21
+  Ponte ponte (	// src/main/scala/caravel/LerosCaravel.scala:59:21
     .clock          (clock),
     .reset          (reset),
     .io_uart_tx     (_ponte_io_uart_tx),
-    .io_uart_rx     (io_gpio_in[1]),	// src/main/scala/caravel/LerosCaravel.scala:73:27
+    .io_uart_rx     (io_gpio_in[1]),	// src/main/scala/caravel/LerosCaravel.scala:56:27
     .io_apb_paddr   (_ponte_io_apb_paddr),
     .io_apb_psel    (_ponte_io_apb_psel),
     .io_apb_penable (_ponte_io_apb_penable),
@@ -2019,12 +2019,12 @@ module LerosCaravel_OpenRamSky130(	// src/main/scala/caravel/LerosCaravel.scala:
     .io_apb_pready  (_arb_io_masters_0_pready),	// src/main/scala/apb/ApbArbiter.scala:11:21
     .io_apb_prdata  (_arb_io_masters_0_prdata)	// src/main/scala/apb/ApbArbiter.scala:11:21
   );
-  Leros leros (	// src/main/scala/caravel/LerosCaravel.scala:79:21
+  Leros leros (	// src/main/scala/caravel/LerosCaravel.scala:62:21
     .clock         (clock),
-    .reset         (reset | _sysCtrl_ctrlPort_lerosReset),	// src/main/scala/caravel/LerosCaravel.scala:75:23, :80:31
+    .reset         (reset | _sysCtrl_ctrlPort_lerosReset),	// src/main/scala/caravel/LerosCaravel.scala:58:23, :63:31
     .imemIO_addr   (_leros_imemIO_addr),
     .imemIO_instr
-      (_sysCtrl_ctrlPort_lerosBootFromRam ? _instrMem_instrPort_instr : _rom_io_instr),	// src/main/scala/caravel/LerosCaravel.scala:75:23, :82:24, :83:19, :94:28
+      (_sysCtrl_ctrlPort_lerosBootFromRam ? _instrMem_instrPort_instr : _rom_io_instr),	// src/main/scala/caravel/LerosCaravel.scala:58:23, :65:24, :66:19, :77:28
     .dmemIO_rdAddr (_leros_dmemIO_rdAddr),
     .dmemIO_rdData (_dmemMux_io_master_rdData),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemIO_wrAddr (_leros_dmemIO_wrAddr),
@@ -2032,9 +2032,9 @@ module LerosCaravel_OpenRamSky130(	// src/main/scala/caravel/LerosCaravel.scala:
     .dmemIO_wr     (_leros_dmemIO_wr),
     .dmemIO_wrMask (_leros_dmemIO_wrMask)
   );
-  InstructionMemory instrMem (	// src/main/scala/caravel/LerosCaravel.scala:82:24
+  InstructionMemory instrMem (	// src/main/scala/caravel/LerosCaravel.scala:65:24
     .clock           (clock),
-    .instrPort_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:79:21
+    .instrPort_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:62:21
     .instrPort_instr (_instrMem_instrPort_instr),
     .apbPort_paddr   (_apbMux_io_targets_0_paddr[9:0]),	// src/main/scala/apb/ApbMux.scala:96:24, :102:16
     .apbPort_psel    (_apbMux_io_targets_0_psel),	// src/main/scala/apb/ApbMux.scala:96:24
@@ -2045,13 +2045,13 @@ module LerosCaravel_OpenRamSky130(	// src/main/scala/caravel/LerosCaravel.scala:
     .apbPort_pready  (_instrMem_apbPort_pready),
     .apbPort_prdata  (_instrMem_apbPort_prdata)
   );
-  InstrMem rom (	// src/main/scala/caravel/LerosCaravel.scala:83:19
+  InstrMem rom (	// src/main/scala/caravel/LerosCaravel.scala:66:19
     .clock    (clock),
     .reset    (reset),
-    .io_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:79:21
+    .io_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:62:21
     .io_instr (_rom_io_instr)
   );
-  RegBlock regBlock (	// src/main/scala/caravel/LerosCaravel.scala:86:24
+  RegBlock regBlock (	// src/main/scala/caravel/LerosCaravel.scala:69:24
     .clock           (clock),
     .reset           (reset),
     .apbPort_paddr   (_apbMux_io_targets_1_paddr[3:0]),	// src/main/scala/apb/ApbMux.scala:96:24, :102:16
@@ -2067,19 +2067,19 @@ module LerosCaravel_OpenRamSky130(	// src/main/scala/caravel/LerosCaravel.scala:
     .dmemPort_wrData (_dmemMux_io_targets_1_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemPort_wr     (_dmemMux_io_targets_1_wr)	// src/main/scala/dtu/DataMemMux.scala:116:25
   );
-  Gpio gpio (	// src/main/scala/caravel/LerosCaravel.scala:87:20
-    .clock                 (clock),
-    .reset                 (reset),
-    .dmemPort_rdAddr       (_dmemMux_io_targets_2_rdAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
-    .dmemPort_rdData       (_gpio_dmemPort_rdData),
-    .dmemPort_wrAddr       (_dmemMux_io_targets_2_wrAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
-    .dmemPort_wrData       (_dmemMux_io_targets_2_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
-    .dmemPort_wr           (_dmemMux_io_targets_2_wr),	// src/main/scala/dtu/DataMemMux.scala:116:25
-    .gpioPort_in           (io_gpio_in[15:4]),	// src/main/scala/caravel/LerosCaravel.scala:126:33
-    .gpioPort_out          (_gpio_gpioPort_out),
-    .gpioPort_outputEnable (_gpio_gpioPort_outputEnable)
+  Gpio gpio (	// src/main/scala/caravel/LerosCaravel.scala:70:20
+    .clock           (clock),
+    .reset           (reset),
+    .dmemPort_rdAddr (_dmemMux_io_targets_2_rdAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
+    .dmemPort_rdData (_gpio_dmemPort_rdData),
+    .dmemPort_wrAddr (_dmemMux_io_targets_2_wrAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
+    .dmemPort_wrData (_dmemMux_io_targets_2_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
+    .dmemPort_wr     (_dmemMux_io_targets_2_wr),	// src/main/scala/dtu/DataMemMux.scala:116:25
+    .gpioPort_in     (io_gpio_in[7:4]),	// src/main/scala/caravel/LerosCaravel.scala:109:33
+    .gpioPort_out    (_gpio_gpioPort_out),
+    .gpioPort_oe     (_gpio_gpioPort_oe)
   );
-  DataMemory dmem (	// src/main/scala/caravel/LerosCaravel.scala:88:20
+  DataMemory dmem (	// src/main/scala/caravel/LerosCaravel.scala:71:20
     .clock           (clock),
     .dmemPort_rdAddr (_dmemMux_io_targets_0_rdAddr[7:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
     .dmemPort_rdData (_dmem_dmemPort_rdData),
@@ -2088,12 +2088,12 @@ module LerosCaravel_OpenRamSky130(	// src/main/scala/caravel/LerosCaravel.scala:
     .dmemPort_wr     (_dmemMux_io_targets_0_wr),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemPort_wrMask (_dmemMux_io_targets_0_wrMask)	// src/main/scala/dtu/DataMemMux.scala:116:25
   );
-  Uart uart (	// src/main/scala/caravel/LerosCaravel.scala:89:20
+  Uart uart (	// src/main/scala/caravel/LerosCaravel.scala:72:20
     .clock           (clock),
     .reset           (reset),
     .uartPins_tx     (_uart_uartPins_tx),
     .uartPins_rx
-      (_sysCtrl_ctrlPort_lerosUartLoopBack ? _uart_uartPins_tx : io_gpio_in[3]),	// src/main/scala/caravel/LerosCaravel.scala:72:27, :75:23, :89:20, :90:26
+      (_sysCtrl_ctrlPort_lerosUartLoopBack ? _uart_uartPins_tx : io_gpio_in[3]),	// src/main/scala/caravel/LerosCaravel.scala:55:27, :58:23, :72:20, :73:26
     .dmemPort_rdAddr (_dmemMux_io_targets_3_rdAddr[0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
     .dmemPort_rdData (_uart_dmemPort_rdData),
     .dmemPort_wrAddr (_dmemMux_io_targets_3_wrAddr[0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
@@ -2123,11 +2123,11 @@ module LerosCaravel_OpenRamSky130(	// src/main/scala/caravel/LerosCaravel.scala:
   ApbArbiter arb (	// src/main/scala/apb/ApbArbiter.scala:11:21
     .clock                (clock),
     .reset                (reset),
-    .io_masters_0_paddr   ({16'h0, _ponte_io_apb_paddr}),	// src/main/scala/apb/ApbArbiter.scala:16:23, src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_masters_0_psel    (_ponte_io_apb_psel),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_masters_0_penable (_ponte_io_apb_penable),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_masters_0_pwrite  (_ponte_io_apb_pwrite),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_masters_0_pwdata  (_ponte_io_apb_pwdata),	// src/main/scala/caravel/LerosCaravel.scala:76:21
+    .io_masters_0_paddr   ({16'h0, _ponte_io_apb_paddr}),	// src/main/scala/apb/ApbArbiter.scala:16:23, src/main/scala/caravel/LerosCaravel.scala:59:21
+    .io_masters_0_psel    (_ponte_io_apb_psel),	// src/main/scala/caravel/LerosCaravel.scala:59:21
+    .io_masters_0_penable (_ponte_io_apb_penable),	// src/main/scala/caravel/LerosCaravel.scala:59:21
+    .io_masters_0_pwrite  (_ponte_io_apb_pwrite),	// src/main/scala/caravel/LerosCaravel.scala:59:21
+    .io_masters_0_pwdata  (_ponte_io_apb_pwdata),	// src/main/scala/caravel/LerosCaravel.scala:59:21
     .io_masters_0_pready  (_arb_io_masters_0_pready),
     .io_masters_0_prdata  (_arb_io_masters_0_prdata),
     .io_masters_1_paddr   (_bridge_io_apb_paddr),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
@@ -2164,57 +2164,57 @@ module LerosCaravel_OpenRamSky130(	// src/main/scala/caravel/LerosCaravel.scala:
     .io_targets_0_pwrite  (_apbMux_io_targets_0_pwrite),
     .io_targets_0_pstrb   (_apbMux_io_targets_0_pstrb),
     .io_targets_0_pwdata  (_apbMux_io_targets_0_pwdata),
-    .io_targets_0_pready  (_instrMem_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:82:24
-    .io_targets_0_prdata  (_instrMem_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:82:24
+    .io_targets_0_pready  (_instrMem_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:65:24
+    .io_targets_0_prdata  (_instrMem_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:65:24
     .io_targets_1_paddr   (_apbMux_io_targets_1_paddr),
     .io_targets_1_psel    (_apbMux_io_targets_1_psel),
     .io_targets_1_penable (_apbMux_io_targets_1_penable),
     .io_targets_1_pwrite  (_apbMux_io_targets_1_pwrite),
     .io_targets_1_pwdata  (_apbMux_io_targets_1_pwdata),
-    .io_targets_1_pready  (_regBlock_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:86:24
-    .io_targets_1_prdata  (_regBlock_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:86:24
+    .io_targets_1_pready  (_regBlock_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:69:24
+    .io_targets_1_prdata  (_regBlock_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:69:24
     .io_targets_2_psel    (_apbMux_io_targets_2_psel),
     .io_targets_2_penable (_apbMux_io_targets_2_penable),
     .io_targets_2_pwrite  (_apbMux_io_targets_2_pwrite),
     .io_targets_2_pwdata  (_apbMux_io_targets_2_pwdata),
-    .io_targets_2_pready  (_sysCtrl_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:75:23
-    .io_targets_2_prdata  (_sysCtrl_apbPort_prdata)	// src/main/scala/caravel/LerosCaravel.scala:75:23
+    .io_targets_2_pready  (_sysCtrl_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:58:23
+    .io_targets_2_prdata  (_sysCtrl_apbPort_prdata)	// src/main/scala/caravel/LerosCaravel.scala:58:23
   );
   DataMemMux dmemMux (	// src/main/scala/dtu/DataMemMux.scala:116:25
     .clock               (clock),
     .reset               (reset),
-    .io_master_rdAddr    (_leros_dmemIO_rdAddr),	// src/main/scala/caravel/LerosCaravel.scala:79:21
+    .io_master_rdAddr    (_leros_dmemIO_rdAddr),	// src/main/scala/caravel/LerosCaravel.scala:62:21
     .io_master_rdData    (_dmemMux_io_master_rdData),
-    .io_master_wrAddr    (_leros_dmemIO_wrAddr),	// src/main/scala/caravel/LerosCaravel.scala:79:21
-    .io_master_wrData    (_leros_dmemIO_wrData),	// src/main/scala/caravel/LerosCaravel.scala:79:21
-    .io_master_wr        (_leros_dmemIO_wr),	// src/main/scala/caravel/LerosCaravel.scala:79:21
-    .io_master_wrMask    (_leros_dmemIO_wrMask),	// src/main/scala/caravel/LerosCaravel.scala:79:21
+    .io_master_wrAddr    (_leros_dmemIO_wrAddr),	// src/main/scala/caravel/LerosCaravel.scala:62:21
+    .io_master_wrData    (_leros_dmemIO_wrData),	// src/main/scala/caravel/LerosCaravel.scala:62:21
+    .io_master_wr        (_leros_dmemIO_wr),	// src/main/scala/caravel/LerosCaravel.scala:62:21
+    .io_master_wrMask    (_leros_dmemIO_wrMask),	// src/main/scala/caravel/LerosCaravel.scala:62:21
     .io_targets_0_rdAddr (_dmemMux_io_targets_0_rdAddr),
-    .io_targets_0_rdData (_dmem_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:88:20
+    .io_targets_0_rdData (_dmem_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:71:20
     .io_targets_0_wrAddr (_dmemMux_io_targets_0_wrAddr),
     .io_targets_0_wrData (_dmemMux_io_targets_0_wrData),
     .io_targets_0_wr     (_dmemMux_io_targets_0_wr),
     .io_targets_0_wrMask (_dmemMux_io_targets_0_wrMask),
     .io_targets_1_rdAddr (_dmemMux_io_targets_1_rdAddr),
-    .io_targets_1_rdData (_regBlock_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:86:24
+    .io_targets_1_rdData (_regBlock_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:69:24
     .io_targets_1_wrAddr (_dmemMux_io_targets_1_wrAddr),
     .io_targets_1_wrData (_dmemMux_io_targets_1_wrData),
     .io_targets_1_wr     (_dmemMux_io_targets_1_wr),
     .io_targets_2_rdAddr (_dmemMux_io_targets_2_rdAddr),
-    .io_targets_2_rdData (_gpio_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:87:20
+    .io_targets_2_rdData (_gpio_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:70:20
     .io_targets_2_wrAddr (_dmemMux_io_targets_2_wrAddr),
     .io_targets_2_wrData (_dmemMux_io_targets_2_wrData),
     .io_targets_2_wr     (_dmemMux_io_targets_2_wr),
     .io_targets_3_rdAddr (_dmemMux_io_targets_3_rdAddr),
-    .io_targets_3_rdData (_uart_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:89:20
+    .io_targets_3_rdData (_uart_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:72:20
     .io_targets_3_wrAddr (_dmemMux_io_targets_3_wrAddr),
     .io_targets_3_wrData (_dmemMux_io_targets_3_wrData),
     .io_targets_3_wr     (_dmemMux_io_targets_3_wr)
   );
-  assign io_la_out = 128'h0;	// src/main/scala/caravel/LerosCaravel.scala:48:7, :115:13
+  assign io_la_out = 128'h0;	// src/main/scala/caravel/LerosCaravel.scala:49:7, :98:13
   assign io_gpio_out =
-    {_gpio_gpioPort_out, 1'h0, _uart_uartPins_tx, 1'h0, _ponte_io_uart_tx};	// src/main/scala/caravel/LerosCaravel.scala:48:7, :76:21, :87:20, :89:20, :115:13, :119:36
-  assign io_gpio_outputEnable = {_gpio_gpioPort_outputEnable, 4'hA};	// src/main/scala/caravel/LerosCaravel.scala:48:7, :87:20, :125:54
-  assign io_user_irq = 3'h0;	// src/main/scala/caravel/LerosCaravel.scala:48:7, :117:15
+    {8'h0, _gpio_gpioPort_out, 1'h0, _uart_uartPins_tx, 1'h0, _ponte_io_uart_tx};	// src/main/scala/caravel/LerosCaravel.scala:49:7, :59:21, :70:20, :72:20, :98:13, :102:15
+  assign io_gpio_oe = {8'h0, _gpio_gpioPort_oe, 4'hA};	// src/main/scala/caravel/LerosCaravel.scala:49:7, :70:20, :102:15, :108:{14,34}
+  assign io_user_irq = 3'h0;	// src/main/scala/caravel/LerosCaravel.scala:49:7, :100:15
 endmodule
 

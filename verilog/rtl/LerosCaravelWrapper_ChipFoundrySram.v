@@ -35,9 +35,7 @@
  *-------------------------------------------------------------
  */
 
-module LerosCaravelWrapper_ChipFoundrySram #(
-    parameter BITS = 16
-)(
+module LerosCaravelWrapper_ChipFoundrySram (
 `ifdef USE_POWER_PINS
     inout vccd1,	// User area 1 1.8V supply
     inout vssd1,	// User area 1 digital ground
@@ -61,9 +59,9 @@ module LerosCaravelWrapper_ChipFoundrySram #(
     input  [127:0] la_oenb,
 
     // IOs
-    input  [BITS-1:0] io_in,
-    output [BITS-1:0] io_out,
-    output [BITS-1:0] io_oeb,
+    input  [7:0] io_in,
+    output [7:0] io_out,
+    output [7:0] io_oeb,
 
     // IRQ
     output [2:0] user_irq
@@ -83,11 +81,11 @@ module LerosCaravelWrapper_ChipFoundrySram #(
 
         .io_la_in(la_data_in),
         .io_la_out(la_data_out),
-        .io_la_outputEnable(la_oenb),
+        .io_la_oe(la_oenb),
 
         .io_gpio_in(io_in),
         .io_gpio_out(io_out),
-        .io_gpio_outputEnable(io_oeb),
+        .io_gpio_oe(io_oeb),
 
         .io_user_irq(user_irq)
     );

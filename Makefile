@@ -110,7 +110,7 @@ simenv-cocotb:
 	#docker pull chipfoundry/dv:cocotb
 
 .PHONY: setup
-setup: check_dependencies install check-env install_mcw openlane pdk-with-ciel setup-timing-scripts setup-cocotb precheck
+setup: check_dependencies install check-env install_mcw openlane pdk-with-ciel setup-timing-scripts setup-cocotb precheck setup-cfsram
 
 # Openlane
 
@@ -436,3 +436,8 @@ generate-verilog:
 	$(MAKE) -C Subsystem_DTU generate-caravel MEM=OpenRamSky130
 	$(MAKE) -C Subsystem_DTU generate-caravel MEM=ChipFoundrySram
 	cp Subsystem_DTU/generated/caravel/* verilog/rtl
+
+
+setup-cfsram:
+	pip install cf-ipm
+	ipm install CF_SRAM_1024x32
