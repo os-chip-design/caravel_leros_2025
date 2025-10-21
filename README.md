@@ -8,9 +8,20 @@ Checkout with submodules:
 
     git clone --recurse-submodules git@github.com:os-chip-design/caravel_leros_2025.git
 
+Or later:
+
+    git submodule update --init --recursive
+
 Then build the project as described in [the Docs](docs/source/index.md).
 
 This repository contains the DTU subsystem from the [Edu4Chip](https://edu4chip.github.io/) tapeout project.
+
+Build the Leros with the CF RAM memory:
+
+    pip install cf-ipm
+    ipm install CF_SRAM_1024x32
+
+    make leros-cfram
 
 
 ## TODO
@@ -18,18 +29,19 @@ This repository contains the DTU subsystem from the [Edu4Chip](https://edu4chip.
 * [x] Setup Caravel on Mac (MS, TP)
 * [x] Setup Caravel on chipdesign1
 * [x] Harden the example project
-* [ ] Run the provided tests
+* [x] Run the provided tests
 * [x] MPW check
-* [ ] Test upload to ChipFoundry (user is martin-schoeberl)
+* [x] Test upload to ChipFoundry (user is martin-schoeberl)
 * [ ] Change example to Chisel top level (with a simple design) and harden it
 * [ ] Have some basic tests
-* [ ] Add DTU subsystem (inclusive memories)
+* [x] Add DTU subsystem (inclusive memories)
 * [ ] Make sure to use 10 MHz for the serial port
 * [ ] Set pin defines in defines.v
 * [ ] Explore three different memories
   - [ ] OpenRAM
-  - [ ] EF RAM
+  - [x] CF RAM
   - [ ] DFF RAM
+* [ ] Have RV Wishbone test to boot Leros
 * [ ] Maybe have three versions on the same chip
 * [ ] Add a block diagram of the project architecture.
 * [ ] Include instructions on how to build and simulate the project.
