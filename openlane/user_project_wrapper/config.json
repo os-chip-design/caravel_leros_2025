@@ -103,5 +103,11 @@
     "MAGIC_ZEROIZE_ORIGIN": false,
     "meta": {
         "version": 2
-    }
+    },
+
+
+    "QUIT_ON_MAGIC_DRC": false,
+    "MAGIC_EXT_USE_GDS": false,
+    "MAGIC_CAPTURE_ERRORS": false,
+    "QUIT_ON_ILLEGAL_OVERLAPS": false
 }
