@@ -30,7 +30,7 @@
             ],
             "instances": {
                 "mprj": {
-                    "location": [60, 15],
+                    "location": [300, 400],
                     "orientation": "N"
                 }
             },
