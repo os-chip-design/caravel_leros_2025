@@ -3,6 +3,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![UPRJ_CI](https://github.com/chipfoundry/caravel_user_project/actions/workflows/user_project_ci.yml/badge.svg)](https://github.com/chipfoundry/caravel_user_project/actions/workflows/user_project_ci.yml)
 
 This is a user project for the Caravel harness, integrating the open-source Leros CPU core.
+This repository contains the DTU subsystem from the [Edu4Chip](https://edu4chip.github.io/) tapeout project.
 
 Checkout with submodules:
 
@@ -12,17 +13,32 @@ Or later:
 
     git submodule update --init --recursive
 
-Then build the project as described in [the Docs](docs/source/index.md).
+Then build the project start Docker and follow [the Docs](docs/source/index.md), or as follows:
 
-This repository contains the DTU subsystem from the [Edu4Chip](https://edu4chip.github.io/) tapeout project.
+    make setup
 
-Build the Leros with the CF RAM memory:
+For a Mac setup of the CF RAM (it should be included in the `leros-cfram` target on Linux):
 
-    pip install cf-ipm
+    pip3 install --break-system-packages cf-ipm
     ipm install CF_SRAM_1024x32
+
+then build and harden Leros with the CF RAM:
 
     make leros-cfram
 
+and the wrapper for Caravel:
+
+    make user_project_wrapper
+
+Then install the CF tools and the design should be ready for **tapeout** (submit to CF) ;-)
+
+    cf init
+    cf push
+
+Or do a precheck first:
+
+    make precheck
+    DISABLE_LVS=1 make run-precheck
 
 ## TODO
 
@@ -41,11 +57,9 @@ Build the Leros with the CF RAM memory:
   - [ ] OpenRAM
   - [x] CF RAM
   - [ ] DFF RAM
-* [ ] Have RV Wishbone test to boot Leros
+* [ ] Have a RV Wishbone test to boot Leros
 * [ ] Maybe have three versions on the same chip
 * [ ] Add a block diagram of the project architecture.
 * [ ] Include instructions on how to build and simulate the project.
-* [ ] Add more details about the project, its features, and how to use it.
 
-
-Refer to [README](docs/source/index.md) for basic caravel documentation.
+Refer to [README](docs/source/index.md) for basic Caravel documentation.
