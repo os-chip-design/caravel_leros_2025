@@ -54,9 +54,9 @@ module LerosCaravelWrapper_ChipFoundrySram (
     output [31:0] wbs_dat_o,
 
     // Logic Analyzer Signals
-    input  [127:0] la_data_in,
-    output [127:0] la_data_out,
-    input  [127:0] la_oenb,
+    input  [31:0] la_data_in,
+    output [31:0] la_data_out,
+    input  [31:0] la_oenb,
 
     // IOs
     input  [7:0] io_in,

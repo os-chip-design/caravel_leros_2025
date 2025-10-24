@@ -1,98 +1,126 @@
 {
-
-    "meta": {
-        "flow": "Classic",
-        "substituting_steps": {
-            "Yosys.JSONHeader": null,
-            "Odb.SetPowerConnections": null,
-            "Odb.WriteVerilogHeader": null
-        }
-    },
     "DESIGN_NAME": "LerosCaravelWrapper_ChipFoundrySram",
-    "FP_PDN_MULTILAYER": true,
-    "FP_PDN_CORE_RING": false,
+    "CLOCK_PORT": "wb_clk_i",
+    "CLOCK_NET": "leros_system.clock",
+    "CLOCK_PERIOD": 25,
     "VERILOG_FILES": [
-        "dir::../../ip/CF_SRAM_1024x32/hdl/CF_SRAM_1024x32.v",
-        "dir::../../ip/CF_SRAM_1024x32/hdl/controllers/ram_controller_wb.v",
-        "dir::../../ip/CF_SRAM_1024x32/hdl/bus_wrapper/CF_SRAM_1024x32_wb_wrapper.v",
         "dir::../../verilog/rtl/LerosCaravel_ChipFoundrySram.sv",
         "dir::../../verilog/rtl/LerosCaravelWrapper_ChipFoundrySram.v"
     ],
-    "//VERILOG_DEFINES": ["PnR"],
-    "SYNTH_USE_PG_PINS_DEFINES": "USE_POWER_PINS",
-    "ERROR_ON_LINTER_ERRORS": false,
-    "CLOCK_PERIOD": 25,
-    "CLOCK_PORT": "wb_clk_i",
+    "FP_PDN_MULTILAYER": true,
+    "FP_PDN_CORE_RING": true,
     "FP_SIZING": "absolute",
     "DIE_AREA": [
         0,
         0,
-        1600,
-        800
+        870.1,
+        935
     ],
-    "FP_PIN_ORDER_CFG": "dir::pin_order.cfg",
-    "PNR_SDC_FILE": "dir::base.sdc",
-    "SIGNOFF_SDC_FILE": "dir::base.sdc",
     "VDD_NETS": [
-        "VPWR"
+        "vccd1"
     ],
     "GND_NETS": [
-        "VGND"
+        "vssd1"
     ],
-    "EXTRA_VERILOG_MODELS": [
-        "dir::../../ip/CF_SRAM_1024x32/hdl/CF_SRAM_1024x32_stub.v"
+    "MACROS": {
+        "CF_SRAM_1024x32_wrapper": {
+            "instances": {
+                "leros_system.instrMem.m.mem": {
+                    "location": [
+                        100,
+                        489.9
+                    ],
+                    "orientation": "N"
+                },
+                "leros_system.dmem.m.mem": {
+                    "location": [
+                        480,
+                        489.9
+                    ],
+                    "orientation": "N"
+                }
+            },
+            "gds": [
+                "dir::../../gds/CF_SRAM_1024x32_wrapper.gds"
+            ],
+            "lef": [
+                "dir::../../lef/CF_SRAM_1024x32_wrapper.lef"
+            ],
+            "nl": [
+                "dir::../../verilog/gl/CF_SRAM_1024x32_wrapper.v"
+            ],
+            "spef": {
+                "min_*": [
+                    "dir::../../spef/multicorner/CF_SRAM_1024x32_wrapper.min.spef"
+                ],
+                "nom_*": [
+                    "dir::../../spef/multicorner/CF_SRAM_1024x32_wrapper.nom.spef"
+                ],
+                "max_*": [
+                    "dir::../../spef/multicorner/CF_SRAM_1024x32_wrapper.max.spef"
+                ]
+            },
+            "lib": {
+                "*": "dir::../../lib/CF_SRAM_1024x32_wrapper.lib"
+            }
+        }
+    },
+    "PDN_MACRO_CONNECTIONS": [
+        "leros_system.dmem.m.mem vccd1 vssd1 VPWR VGND",
+        "leros_system.instrMem.m.mem vccd1 vssd1 VPWR VGND"
     ],
-    "EXTRA_GDS_FILES": [
-        "dir::../../ip/CF_SRAM_1024x32/gds/CF_SRAM_1024x32.gds"
-    ],
-    "EXTRA_LEFS": [
-        "dir::../../ip/CF_SRAM_1024x32/lef/CF_SRAM_1024x32.lef"
-    ],
-    "EXTRA_LIBS": [
-        "dir::../../ip/CF_SRAM_1024x32/lib/CF_SRAM_1024x32_tt_180V_25C.lib"
-    ],
-    "MACRO_PLACEMENT_CFG": "dir::macro.cfg",
-    "FP_PDN_HORIZONTAL_LAYER": "met3",
-    "FP_PDN_VERTICAL_LAYER": "met2",
-    "RUN_IRDROP_REPORT": false,
-    "FP_PDN_VOFFSET": 5,
-    "FP_PDN_HOFFSET": 5,
-    "FP_PDN_VWIDTH": 1.76,
-    "FP_PDN_HWIDTH": 1.76,
-    "FP_PDN_VSPACING": 10,
-    "FP_PDN_HSPACING": 10,
-    "FP_PDN_VPITCH": 50,
-    "FP_PDN_HPITCH": 50,
-    "FP_PDN_MACRO_HOOKS": [
-        "leros_system.dmem.m.mem.i_sram VPWR VGND vpwra vgnd",
-        "leros_system.dmem.m.mem.i_sram VPWR VGND vpb vnb",
-        "leros_system.dmem.m.mem.i_sram VPWR VGND vpwrp vgnd",
-        "leros_system.dmem.m.mem.i_sram VPWR VGND vpwrm vgnd",
-        "leros_system.instrMem.m.mem.i_sram VPWR VGND vpwra vgnd",
-        "leros_system.instrMem.m.mem.i_sram VPWR VGND vpb vnb",
-        "leros_system.instrMem.m.mem.i_sram VPWR VGND vpwrp vgnd",
-        "leros_system.instrMem.m.mem.i_sram VPWR VGND vpwrm vgnd"
-    ],
-    "FP_PDN_CFG": "dir::pdn.tcl",
-    "QUIT_ON_LINTER_ERRORS": false,
-    "QUIT_ON_SYNTH_CHECKS": false,
-    "QUIT_ON_YOSYS_WARNINGS": false,
-    "GRT_OBS": [
-		"met1 0 40 314 435",
-		"met2 0 40 314 435",
-		"met3 0 40 314 435",
-		"met4 0 40 314 435",
-		"met5 0 40 314 435"
-	],
-    "PL_TARGET_DENSITY": 0.15,
-    "PL_TIME_DRIVEN": false,
-    "PL_ROUTABILITY_DRIVEN": true,
-    "GRT_ALLOW_CONGESTION": true,
-    "GRT_ADJUSTMENT": 0,
-    "GLB_RESIZER_DESIGN_OPTIMIZATIONS": true,
-    "GLB_RESIZER_TIMING_OPTIMIZATIONS": true,
+    "FP_PDN_HPITCH": 51,
+    "FP_PDN_VPITCH": 51,
+    "FP_PIN_ORDER_CFG": "dir::pin_order.cfg",
+    "MAX_TRANSITION_CONSTRAINT": 1.0,
+    "MAX_FANOUT_CONSTRAINT": 16,
+    "PL_RESIZER_SETUP_SLACK_MARGIN": 0.4,
+    "GRT_RESIZER_SETUP_SLACK_MARGIN": 0.2,
+    "GRT_RESIZER_HOLD_SLACK_MARGIN": 0.2,
+    "PL_RESIZER_HOLD_SLACK_MARGIN": 0.4,
+    "CTS_CLK_MAX_WIRE_LENGTH": 500,
+    "MAGIC_DEF_LABELS": false,
+    "SYNTH_ABC_BUFFERING": false,
+    "RUN_HEURISTIC_DIODE_INSERTION": true,
+    "HEURISTIC_ANTENNA_THRESHOLD": 110,
+    "RUN_ANTENNA_REPAIR": true,
+    "RUN_POST_GRT_DESIGN_REPAIR": true,
+    "RUN_POST_GRT_RESIZER_TIMING": true,
+    "FALLBACK_SDC_FILE": "dir::base_user_proj_example.sdc",
+    "MAGIC_DRC_USE_GDS": true,
+    "DPL_CELL_PADDING": 2,
+    "GPL_CELL_PADDING": 2,
     "QUIT_ON_MAGIC_DRC": false,
     "MAGIC_EXT_USE_GDS": false,
     "MAGIC_CAPTURE_ERRORS": false,
-    "QUIT_ON_ILLEGAL_OVERLAPS": false
+    "QUIT_ON_ILLEGAL_OVERLAPS": false,
+    "pdk::sky130*": {
+        "RT_MAX_LAYER": "met4",
+        "scl::sky130_fd_sc_hd": {
+            "CLOCK_PERIOD": 25
+        },
+        "scl::sky130_fd_sc_hdll": {
+            "CLOCK_PERIOD": 10
+        },
+        "scl::sky130_fd_sc_hs": {
+            "CLOCK_PERIOD": 8
+        },
+        "scl::sky130_fd_sc_ls": {
+            "CLOCK_PERIOD": 10,
+            "SYNTH_MAX_FANOUT": 5
+        },
+        "scl::sky130_fd_sc_ms": {
+            "CLOCK_PERIOD": 10
+        }
+    },
+    "pdk::gf180mcuC": {
+        "STD_CELL_LIBRARY": "gf180mcu_fd_sc_mcu7t5v0",
+        "CLOCK_PERIOD": 24.0,
+        "RT_MAX_LAYER": "Metal4",
+        "SYNTH_MAX_FANOUT": 4,
+        "PL_TARGET_DENSITY_PCT": 45
+    },
+    "meta": {
+        "version": 2
+    }
 }

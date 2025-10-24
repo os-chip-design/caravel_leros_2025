@@ -991,12 +991,12 @@ module Leros(	// leros/src/main/scala/leros/Leros.scala:13:7
       : _GEN_4 ? 4'h1 << effAddrOffReg : _GEN_6 ? _dmemIO_wrMask_T_1[3:0] : 4'hF;	// leros/src/main/scala/leros/Leros.scala:13:7, :59:30, :65:17, :83:14, :88:20, :115:{21,34}, :122:{21,34}
 endmodule
 
-// external module CF_SRAM_1024x32_wb_wrapper
+// external module CF_SRAM_1024x32_wrapper
 
 module ChipFoundrySram(	// src/main/scala/mem/ChipFoundrySram.scala:19:7
   input         clock,	// src/main/scala/mem/ChipFoundrySram.scala:19:7
                 reset,	// src/main/scala/mem/ChipFoundrySram.scala:19:7
-                io_valid,	// src/main/scala/mem/ChipFoundrySram.scala:21:14
+                io_read,	// src/main/scala/mem/ChipFoundrySram.scala:21:14
   input  [7:0]  io_wordAddr,	// src/main/scala/mem/ChipFoundrySram.scala:21:14
   input  [31:0] io_wrData,	// src/main/scala/mem/ChipFoundrySram.scala:21:14
   output [31:0] io_rdData,	// src/main/scala/mem/ChipFoundrySram.scala:21:14
@@ -1004,17 +1004,15 @@ module ChipFoundrySram(	// src/main/scala/mem/ChipFoundrySram.scala:19:7
   input  [3:0]  io_strb	// src/main/scala/mem/ChipFoundrySram.scala:21:14
 );
 
-  CF_SRAM_1024x32_wb_wrapper mem (	// src/main/scala/mem/ChipFoundrySram.scala:30:19
-    .wb_clk_i  (clock),
-    .wb_rst_i  (reset),
-    .wbs_stb_i (io_valid),
-    .wbs_cyc_i (io_valid),
-    .wbs_we_i  (io_write),
-    .wbs_sel_i (io_strb),
-    .wbs_dat_i (io_wrData),
-    .wbs_adr_i ({24'h0, io_wordAddr}),	// src/main/scala/mem/ChipFoundrySram.scala:42:20
-    .wbs_ack_o (/* unused */),
-    .wbs_dat_o (io_rdData)
+  CF_SRAM_1024x32_wrapper mem (	// src/main/scala/mem/ChipFoundrySram.scala:30:19
+    .clk_i      (clock),
+    .rst_i      (reset),
+    .addr_i     (io_wordAddr),
+    .read_en_i  (io_read),
+    .write_en_i (io_write),
+    .sel_i      (io_strb),
+    .wr_data_i  (io_wrData),
+    .rd_data_o  (io_rdData)
   );
 endmodule
 
@@ -1058,14 +1056,14 @@ module InstructionMemory(	// src/main/scala/dtu/InstructionMemory.scala:30:7
   ChipFoundrySram m (	// src/main/scala/mem/ChipFoundrySram.scala:9:19
     .clock       (clock),
     .reset       (reset),
-    .io_valid    (~apbPort_psel | ~apbPort_pwrite | apbPort_penable & apbPort_pwrite),	// src/main/scala/dtu/InstructionMemory.scala:51:22, :55:{10,27}, :57:32, src/main/scala/mem/ChipFoundrySram.scala:49:14
+    .io_read     (~apbPort_psel | ~apbPort_pwrite),	// src/main/scala/dtu/InstructionMemory.scala:51:22, :55:{10,27}, src/main/scala/mem/ChipFoundrySram.scala:46:13
     .io_wordAddr
       (apbPort_psel
          ? (apbPort_pwrite ? apbPort_paddr[9:2] : apbPort_paddr[9:2])
-         : instrPort_addr[8:1]),	// src/main/scala/dtu/InstructionMemory.scala:51:22, :55:27, :56:47, :57:51, :59:22, :67:39, src/main/scala/mem/ChipFoundrySram.scala:47:17
+         : instrPort_addr[8:1]),	// src/main/scala/dtu/InstructionMemory.scala:51:22, :55:27, :56:47, :57:51, :59:22, :67:39, src/main/scala/mem/ChipFoundrySram.scala:45:17
     .io_wrData   (apbPort_pwdata),
     .io_rdData   (_m_io_rdData),
-    .io_write    (apbPort_psel & apbPort_pwrite),	// src/main/scala/dtu/InstructionMemory.scala:51:22, :55:27, src/main/scala/mem/ChipFoundrySram.scala:48:14
+    .io_write    (apbPort_psel & apbPort_pwrite & apbPort_penable),	// src/main/scala/dtu/InstructionMemory.scala:51:22, :55:27, src/main/scala/mem/ChipFoundrySram.scala:14:16
     .io_strb     (apbPort_pstrb)
   );
   assign instrPort_instr = instrPort_instr_REG ? _m_io_rdData[31:16] : _m_io_rdData[15:0];	// src/main/scala/dtu/InstructionMemory.scala:30:7, :68:19, :69:19, :70:{27,35}, src/main/scala/mem/ChipFoundrySram.scala:9:19
@@ -1372,8 +1370,8 @@ module DataMemory(	// src/main/scala/dtu/DataMemory.scala:16:7
   ChipFoundrySram m (	// src/main/scala/mem/ChipFoundrySram.scala:9:19
     .clock       (clock),
     .reset       (reset),
-    .io_valid    (1'h1),	// src/main/scala/mem/ChipFoundrySram.scala:49:14
-    .io_wordAddr (dmemPort_wr ? dmemPort_wrAddr : dmemPort_rdAddr),	// src/main/scala/dtu/DataMemory.scala:26:21, src/main/scala/mem/ChipFoundrySram.scala:47:17, :54:17
+    .io_read     (1'h1),	// src/main/scala/mem/ChipFoundrySram.scala:46:13
+    .io_wordAddr (dmemPort_wr ? dmemPort_wrAddr : dmemPort_rdAddr),	// src/main/scala/dtu/DataMemory.scala:26:21, src/main/scala/mem/ChipFoundrySram.scala:45:17, :51:17
     .io_wrData   (dmemPort_wrData),
     .io_rdData   (dmemPort_rdData),
     .io_write    (dmemPort_wr),
