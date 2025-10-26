@@ -54,9 +54,9 @@ module LerosCaravelWrapper_ChipFoundrySram (
     output [31:0] wbs_dat_o,
 
     // Logic Analyzer Signals
-    input  [31:0] la_data_in,
-    output [31:0] la_data_out,
-    input  [31:0] la_oenb,
+    input  [127:0] la_data_in,
+    output [127:0] la_data_out,
+    input  [127:0] la_oenb,
 
     // IOs
     input  [7:0] io_in,
@@ -84,6 +84,7 @@ module LerosCaravelWrapper_ChipFoundrySram (
         .io_la_oe(la_oenb),
 
         .io_gpio_in(io_in),
+        // TODO: there is a msismatch here io_out vs io_gpio_out
         .io_gpio_out(io_out),
         .io_gpio_oe(io_oeb),
 
