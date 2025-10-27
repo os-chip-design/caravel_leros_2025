@@ -37,8 +37,7 @@ module CF_SRAM_1024x32_wrapper #(parameter WIDTH = 12) (
     input clk_i,
     input rst_i,
     input [WIDTH-3:0] addr_i,
-    input read_en_i,
-    input write_en_i,
+    input we_i,
     input [3:0] sel_i,
     input [31:0] wr_data_i,
     output [31:0] rd_data_o
@@ -56,21 +55,9 @@ module CF_SRAM_1024x32_wrapper #(parameter WIDTH = 12) (
     // New wires for the CF_SRAM_1024x32 module's additional pins
     wire sram_scan_out_cc;  // Scan chain output
 
-    reg output_enable;
-
-    always @(posedge clk_i or posedge rst_i) begin
-        if (rst_i) begin
-            output_enable <= 1'b0;
-        end else begin
-            output_enable <= read_en_i;
-        end
-    end
-
-    assign rd_data_o = output_enable ? sram_do : 32'b0;
-
     assign sram_clk_in = clk_i;
-    assign sram_en = read_en_i | write_en_i | output_enable;
-    assign sram_r_wb = !write_en_i;
+    assign sram_en = 1'b1; // Always enabled
+    assign sram_r_wb = !we_i;
     assign sram_ad = addr_i;
     assign sram_di = wr_data_i;
     assign sram_ben = {
@@ -79,6 +66,7 @@ module CF_SRAM_1024x32_wrapper #(parameter WIDTH = 12) (
         {8{sel_i[1]}}, // Replicate sel_i[1] 8 times for BEN[15:8]
         {8{sel_i[0]}}  // Replicate sel_i[0] 8 times for BEN[7:0]
     };
+    assign rd_data_o = sram_do;
     
 
     // Instantiate the CF_SRAM_1024x32 macro

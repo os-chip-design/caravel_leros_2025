@@ -7,17 +7,28 @@
     "PNR_SDC_FILE": "dir::signoff.sdc",
     
     "//": "Hardening strategy variables (this is for 1-Macro-First Hardening). Visit https://docs.google.com/document/d/1pf-wbpgjeNEM-1TcvX2OJTkHjqH_C9p-LURCASS0Zo8 for more info",
-    "SYNTH_ELABORATE_ONLY": true,
-    "RUN_POST_GPL_DESIGN_REPAIR": false,
-    "RUN_POST_CTS_RESIZER_TIMING": false,
-    "DESIGN_REPAIR_BUFFER_INPUT_PORTS": false,
-    "FP_PDN_ENABLE_RAILS": false,
-    "RUN_ANTENNA_REPAIR": false,
-    "RUN_FILL_INSERTION": false,
-    "RUN_TAP_ENDCAP_INSERTION": false,
-    "RUN_CTS": false,
-    "RUN_IRDROP_REPORT": false,
+    "//SYNTH_ELABORATE_ONLY": true,
+    "//RUN_POST_GPL_DESIGN_REPAIR": false,
+    "//RUN_POST_CTS_RESIZER_TIMING": false,
+    "//DESIGN_REPAIR_BUFFER_INPUT_PORTS": false,
+    "//FP_PDN_ENABLE_RAILS": false,
+    "//RUN_ANTENNA_REPAIR": false,
+    "//RUN_FILL_INSERTION": false,
+    "//RUN_CTS": false,
+    "//RUN_IRDROP_REPORT": false,
     "ERROR_ON_SYNTH_CHECKS": false,
+
+    "SYNTH_ELABORATE_ONLY": false,
+    "RUN_POST_GPL_DESIGN_REPAIR": true,
+    "RUN_POST_CTS_RESIZER_TIMING": true,
+    "GRT_RESIZER_DESIGN_OPTIMIZATIONS": true,
+    "GRT_RESIZER_TIMING_OPTIMIZATIONS": true,
+    "DESIGN_REPAIR_BUFFER_INPUT_PORTS": true,
+    "FP_PDN_ENABLE_RAILS": true,
+    "RUN_ANTENNA_REPAIR": true,
+    "RUN_FILL_INSERTION": true,
+    "RUN_TAP_ENDCAP_INSERTION": true,
+
 
     "//": "Macros configurations",
     "MACROS": {
@@ -30,7 +41,7 @@
             ],
             "instances": {
                 "mprj": {
-                    "location": [300, 400],
+                    "location": [400, 400],
                     "orientation": "N"
                 }
             },
@@ -106,8 +117,8 @@
     },
 
 
-    "QUIT_ON_MAGIC_DRC": false,
+    "ERROR_ON_MAGIC_DRC": false,
     "MAGIC_EXT_USE_GDS": false,
     "MAGIC_CAPTURE_ERRORS": false,
-    "QUIT_ON_ILLEGAL_OVERLAPS": false
+    "ERROR_ON_ILLEGAL_OVERLAPS": false
 }

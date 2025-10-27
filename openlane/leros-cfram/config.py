@@ -134,22 +134,22 @@ config.update({
   }
 })
 
-# fix antenna issues
-# config.update({
-#     "GRT_ANTENNA_ITERS": 20,
-#     "GRT_ANTENNA_MARGIN": 20,
-#     "RUN_HEURISTIC_DIODE_INSERTION": True,
-#     "DESIGN_REPAIR_MAX_WIRE_LENGTH": 800,
-#     "PL_WIRE_LENGTH_COEF": 0.05,
-# })
+#fix antenna issues
+config.update({
+    "GRT_ANTENNA_ITERS": 20,
+    "GRT_ANTENNA_MARGIN": 20,
+    "RUN_HEURISTIC_DIODE_INSERTION": True,
+    "DESIGN_REPAIR_MAX_WIRE_LENGTH": 800,
+    "PL_WIRE_LENGTH_COEF": 0.05,
+})
 
-# config.update({
-#     "MAX_TRANSITION_CONSTRAINT": 2.0,
-#     "DESIGN_REPAIR_MAX_SLEW_PCT": 40,
-#     "DESIGN_REPAIR_MAX_CAP_PCT": 40,
-#     "DEFAULT_CORNER": "max_ss_100C_1v60",
-#     "RUN_POST_GRT_DESIGN_REPAIR": True,
-# })
+config.update({
+    "MAX_TRANSITION_CONSTRAINT": 1.5,
+    "DESIGN_REPAIR_MAX_SLEW_PCT": 30,
+    "DESIGN_REPAIR_MAX_CAP_PCT": 30,
+    "DEFAULT_CORNER": "max_ss_100C_1v60",
+    "RUN_POST_GRT_DESIGN_REPAIR": True,
+})
 
 # write to file
 import json
