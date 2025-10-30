@@ -112,9 +112,9 @@ LerosCaravelWrapper_ChipFoundrySram mprj (
 
     // IO Pads
 
-    .io_in (io_in[7:0]),
-    .io_out(io_out[7:0]),
-    .io_oeb(io_oeb[7:0]),
+    .io_in (io_in[15:8]),
+    .io_out(io_out[15:8]),
+    .io_oeb(io_oeb[15:8]),
 
     // IRQ
     .user_irq(user_irq)

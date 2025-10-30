@@ -1948,8 +1948,8 @@ module LerosCaravel_DffRam(	// src/main/scala/caravel/LerosCaravel.scala:49:7
   input  [127:0] io_la_in,	// src/main/scala/caravel/LerosCaravel.scala:53:14
   output [127:0] io_la_out,	// src/main/scala/caravel/LerosCaravel.scala:53:14
   input  [127:0] io_la_oe,	// src/main/scala/caravel/LerosCaravel.scala:53:14
-  input  [15:0]  io_gpio_in,	// src/main/scala/caravel/LerosCaravel.scala:53:14
-  output [15:0]  io_gpio_out,	// src/main/scala/caravel/LerosCaravel.scala:53:14
+  input  [7:0]   io_gpio_in,	// src/main/scala/caravel/LerosCaravel.scala:53:14
+  output [7:0]   io_gpio_out,	// src/main/scala/caravel/LerosCaravel.scala:53:14
                  io_gpio_oe,	// src/main/scala/caravel/LerosCaravel.scala:53:14
   output [2:0]   io_user_irq	// src/main/scala/caravel/LerosCaravel.scala:53:14
 );
@@ -2256,8 +2256,8 @@ module LerosCaravel_DffRam(	// src/main/scala/caravel/LerosCaravel.scala:49:7
   );
   assign io_la_out = 128'h0;	// src/main/scala/caravel/LerosCaravel.scala:49:7, :98:13
   assign io_gpio_out =
-    {8'h0, _gpio_gpioPort_out, 1'h0, _uart_uartPins_tx, 1'h0, _ponte_io_uart_tx};	// src/main/scala/caravel/LerosCaravel.scala:49:7, :59:21, :70:20, :72:20, :98:13, :102:15
-  assign io_gpio_oe = {8'h0, _gpio_gpioPort_oe, 4'hA};	// src/main/scala/caravel/LerosCaravel.scala:49:7, :70:20, :102:15, :108:{14,34}
+    {_gpio_gpioPort_out, 1'h0, _uart_uartPins_tx, 1'h0, _ponte_io_uart_tx};	// src/main/scala/caravel/LerosCaravel.scala:49:7, :59:21, :70:20, :72:20, :98:13, :102:36
+  assign io_gpio_oe = {_gpio_gpioPort_oe, 4'hA};	// src/main/scala/caravel/LerosCaravel.scala:49:7, :70:20, :108:34
   assign io_user_irq = 3'h0;	// src/main/scala/caravel/LerosCaravel.scala:49:7, :100:15
 endmodule
 

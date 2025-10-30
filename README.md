@@ -22,6 +22,10 @@ For a Mac install the CF RAM (it is included in the Makefile on Linux):
     pip3 install --break-system-packages cf-ipm
     ipm install CF_SRAM_1024x32
 
+Generate the Leros Verilog files
+
+    make generate-verilog
+
 then harden the wrapper for the memory
 
     make CF_SRAM_1024x32_wrapper
@@ -57,7 +61,7 @@ Or do a precheck first:
 * [x] Add DTU subsystem (inclusive memories)
 * [ ] Make sure to use 10 MHz for the serial port
 * [ ] Set pin defines in defines.v
-* [ ] TODO: there is a mismatch between io_out vs io_gpio_out
+* [x] TODO: there is a mismatch between io_out vs io_gpio_out
 * [ ] Explore three different memories
   - [ ] OpenRAM
   - [x] CF RAM

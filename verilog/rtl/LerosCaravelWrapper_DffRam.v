@@ -61,9 +61,9 @@ module LerosCaravelWrapper_DffRam #(
     input  [127:0] la_oenb,
 
     // IOs
-    input  [BITS-1:0] io_in,
-    output [BITS-1:0] io_out,
-    output [BITS-1:0] io_oeb,
+    input  [7:0] io_in,
+    output [7:0] io_out,
+    output [7:0] io_oeb,
 
     // IRQ
     output [2:0] user_irq

@@ -84,7 +84,6 @@ module LerosCaravelWrapper_ChipFoundrySram (
         .io_la_oe(la_oenb),
 
         .io_gpio_in(io_in),
-        // TODO: there is a msismatch here io_out vs io_gpio_out
         .io_gpio_out(io_out),
         .io_gpio_oe(io_oeb),
 
