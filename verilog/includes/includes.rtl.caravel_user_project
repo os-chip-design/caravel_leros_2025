@@ -16,5 +16,7 @@
 # Caravel user project includes
 -v $(USER_PROJECT_VERILOG)/rtl/user_project_wrapper.v	     
 -v $(USER_PROJECT_VERILOG)/rtl/user_proj_example.v
-
- 
+-v $(USER_PROJECT_VERILOG)/../ip/CF_SRAM_1024x32/hdl/beh_models/CF_SRAM_1024x32.tt_180V_25C.v
+-v $(USER_PROJECT_VERILOG)/rtl/CF_SRAM_1024x32_wrapper.v
+-v $(USER_PROJECT_VERILOG)/rtl/LerosCaravelWrapper_ChipFoundrySram.v
+-sv $(USER_PROJECT_VERILOG)/rtl/LerosCaravel_ChipFoundrySram.sv
