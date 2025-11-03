@@ -30,9 +30,9 @@ void main(){
     // reset counter 
     LogicAnalyzer_write(2,2);
     LogicAnalyzer_write(2,0);
-    ManagmentGpio_write(1); // configuration finished 
     // writing to any address inside user project address space would reload the counter value
     USER_writeWord(0x7,0x88);
+    ManagmentGpio_write(1); // configuration finished 
     ManagmentGpio_write(0); // start counting from 0
 
     return;

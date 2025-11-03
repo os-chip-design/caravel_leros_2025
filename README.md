@@ -32,11 +32,11 @@ then harden the wrapper for the memory
 
 then build and harden Leros with the CF RAM:
 
-    make leros-cfram
+    make leros-cfram LIBRELANE_USE_NIX=1
 
 and the wrapper for Caravel:
 
-    make user_project_wrapper
+    make user_project_wrapper LIBRELANE_USE_NIX=1
 
 Then install the CF tools and the design should be ready for **tapeout** (submit to CF) ;-)
 
