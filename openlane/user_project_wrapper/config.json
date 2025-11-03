@@ -32,12 +32,12 @@
 
     "//": "Macros configurations",
     "MACROS": {
-        "LerosCaravelWrapper_ChipFoundrySram": {
+        "LerosCaravel_ChipFoundrySram": {
             "gds": [
-                "dir::../../gds/LerosCaravelWrapper_ChipFoundrySram.gds"
+                "dir::../../gds/LerosCaravel_ChipFoundrySram.gds"
             ],
             "lef": [
-                "dir::../../lef/LerosCaravelWrapper_ChipFoundrySram.lef"
+                "dir::../../lef/LerosCaravel_ChipFoundrySram.lef"
             ],
             "instances": {
                 "mprj": {
@@ -46,21 +46,21 @@
                 }
             },
             "nl": [
-                "dir::../../verilog/gl/LerosCaravelWrapper_ChipFoundrySram.v"
+                "dir::../../verilog/gl/LerosCaravel_ChipFoundrySram.v"
             ],
             "spef": {
                 "min_*": [
-                    "dir::../../spef/multicorner/LerosCaravelWrapper_ChipFoundrySram.min.spef"
+                    "dir::../../spef/multicorner/LerosCaravel_ChipFoundrySram.min.spef"
                 ],
                 "nom_*": [
-                    "dir::../../spef/multicorner/LerosCaravelWrapper_ChipFoundrySram.nom.spef"
+                    "dir::../../spef/multicorner/LerosCaravel_ChipFoundrySram.nom.spef"
                 ],
                 "max_*": [
-                    "dir::../../spef/multicorner/LerosCaravelWrapper_ChipFoundrySram.max.spef"
+                    "dir::../../spef/multicorner/LerosCaravel_ChipFoundrySram.max.spef"
                 ]
             },
             "lib": {
-                "*": "dir::../../lib/LerosCaravelWrapper_ChipFoundrySram.lib"
+                "*": "dir::../../lib/LerosCaravel_ChipFoundrySram.lib"
             }
         }
     },

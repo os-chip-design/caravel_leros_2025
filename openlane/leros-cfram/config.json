@@ -1,11 +1,10 @@
 {
-    "DESIGN_NAME": "LerosCaravelWrapper_ChipFoundrySram",
-    "CLOCK_PORT": "wb_clk_i",
-    "CLOCK_NET": "leros_system.clock",
+    "DESIGN_NAME": "LerosCaravel_ChipFoundrySram",
+    "CLOCK_PORT": "clock",
+    "CLOCK_NET": "clock",
     "CLOCK_PERIOD": 25,
     "VERILOG_FILES": [
-        "dir::../../verilog/rtl/LerosCaravel_ChipFoundrySram.sv",
-        "dir::../../verilog/rtl/LerosCaravelWrapper_ChipFoundrySram.v"
+        "dir::../../verilog/rtl/LerosCaravel_ChipFoundrySram.sv"
     ],
     "FP_PDN_MULTILAYER": true,
     "FP_PDN_CORE_RING": true,
@@ -25,14 +24,14 @@
     "MACROS": {
         "CF_SRAM_1024x32_wrapper": {
             "instances": {
-                "leros_system.instrMem.m.mem": {
+                "instrMem.m.mem": {
                     "location": [
                         100,
                         489.9
                     ],
                     "orientation": "N"
                 },
-                "leros_system.dmem.m.mem": {
+                "dmem.m.mem": {
                     "location": [
                         480,
                         489.9
@@ -66,8 +65,8 @@
         }
     },
     "PDN_MACRO_CONNECTIONS": [
-        "leros_system.dmem.m.mem vccd1 vssd1 VPWR VGND",
-        "leros_system.instrMem.m.mem vccd1 vssd1 VPWR VGND"
+        "dmem.m.mem vccd1 vssd1 VPWR VGND",
+        "instrMem.m.mem vccd1 vssd1 VPWR VGND"
     ],
     "FP_PDN_HPITCH": 51,
     "FP_PDN_VPITCH": 51,

@@ -2,13 +2,12 @@
 
 # config is json
 config = {}
-config["DESIGN_NAME"] = "LerosCaravelWrapper_ChipFoundrySram"
-config["CLOCK_PORT"] = "wb_clk_i"
-config["CLOCK_NET"] = "leros_system.clock"
+config["DESIGN_NAME"] = "LerosCaravel_ChipFoundrySram"
+config["CLOCK_PORT"] = "clock"
+config["CLOCK_NET"] = "clock"
 config["CLOCK_PERIOD"] = 25
 config["VERILOG_FILES"] = [
-  "dir::../../verilog/rtl/LerosCaravel_ChipFoundrySram.sv",
-  "dir::../../verilog/rtl/LerosCaravelWrapper_ChipFoundrySram.v"
+  "dir::../../verilog/rtl/LerosCaravel_ChipFoundrySram.sv"
 ]
 
 left_edge_space = 100
@@ -41,11 +40,11 @@ config["GND_NETS"] = ["vssd1"]
 config["MACROS"] = {
   "CF_SRAM_1024x32_wrapper": {
     "instances": {
-        "leros_system.instrMem.m.mem": {
+        "instrMem.m.mem": {
         "location": [sram0_x, sram0_y],
         "orientation": "N"
         },
-        "leros_system.dmem.m.mem": {
+        "dmem.m.mem": {
         "location": [sram1_x, sram1_y],
         "orientation": "N"
         }
@@ -72,8 +71,8 @@ config["MACROS"] = {
 
 
 config["PDN_MACRO_CONNECTIONS"] = [
-    "leros_system.dmem.m.mem vccd1 vssd1 VPWR VGND",
-    "leros_system.instrMem.m.mem vccd1 vssd1 VPWR VGND"
+    "dmem.m.mem vccd1 vssd1 VPWR VGND",
+    "instrMem.m.mem vccd1 vssd1 VPWR VGND"
 ]
 
 config["FP_PDN_HPITCH"] = 51
