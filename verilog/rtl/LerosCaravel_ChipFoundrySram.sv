@@ -1960,6 +1960,10 @@ module DataMemMux(	// src/main/scala/dtu/DataMemMux.scala:21:7
 endmodule
 
 module LerosCaravel_ChipFoundrySram(	// src/main/scala/caravel/LerosCaravel.scala:50:7
+`ifdef USE_POWER_PINS
+    inout vccd1,	// User area 1 1.8V supply
+    inout vssd1,	// User area 1 digital ground
+`endif
   input         clock,	// src/main/scala/caravel/LerosCaravel.scala:50:7
                 reset,	// src/main/scala/caravel/LerosCaravel.scala:50:7
                 io_wb_stb,	// src/main/scala/caravel/LerosCaravel.scala:54:14

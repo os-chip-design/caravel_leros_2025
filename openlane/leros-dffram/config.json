@@ -1,30 +1,63 @@
 {
-    "DESIGN_NAME": "LerosCaravelWrapper_DffRam",
-    "FP_PDN_MULTILAYER": true,
+    "DESIGN_NAME": "LerosCaravel_DffRam",
+    "CLOCK_PORT": "clock",
+    "CLOCK_NET": "clock",
+    "CLOCK_PERIOD": 100,
     "VERILOG_FILES": [
-        "dir::../../verilog/rtl/defines.v",
-        "dir::../../verilog/rtl/LerosCaravel_DffRam.sv",
-        "dir::../../verilog/rtl/LerosCaravelWrapper_DffRam.v"
+        "dir::../../verilog/rtl/LerosCaravel_DffRam.sv"
+    ],
+    "FP_PDN_MULTILAYER": true,
+    "FP_PDN_CORE_RING": true,
+    "FP_SIZING": "absolute",
+    "DIE_AREA": [
+        0,
+        0,
+        1119.6999999999998,
+        1466.24
+    ],
+    "VDD_NETS": [
+        "vccd1"
+    ],
+    "GND_NETS": [
+        "vssd1"
     ],
     "MACROS": {
         "RAM256": {
             "instances": {
-                "leros_system.instrMem.m.mem": {
-                "location": [385, 605],
-                "orientation": "N"
+                "instrMem.m.mem": {
+                    "location": [
+                        300,
+                        100
+                    ],
+                    "orientation": "FN"
                 },
-                "leros_system.dmem.m.mem": {
-                "location": [1590, 605],
-                "orientation": "N"
+                "dmem.m.mem": {
+                    "location": [
+                        300,
+                        833.12
+                    ],
+                    "orientation": "FN"
                 }
             },
-            "gds": ["dir::../../dffram/gds/RAM256.gds"],
-            "lef": ["dir::../../dffram/lef/RAM256.lef"],
-            "nl": ["dir::../../dffram/nl/RAM256.nl.v"],
+            "gds": [
+                "dir::../../dffram/gds/RAM256.gds"
+            ],
+            "lef": [
+                "dir::../../dffram/lef/RAM256.lef"
+            ],
+            "nl": [
+                "dir::../../dffram/nl/RAM256.nl.v"
+            ],
             "spef": {
-                "min_*": ["dir::../../dffram/spef/min/RAM256.min.spef"],
-                "nom_*": ["dir::../../dffram/spef/nom/RAM256.nom.spef"],
-                "max_*": ["dir::../../dffram/spef/max/RAM256.max.spef"]
+                "min_*": [
+                    "dir::../../dffram/spef/min/RAM256.min.spef"
+                ],
+                "nom_*": [
+                    "dir::../../dffram/spef/nom/RAM256.nom.spef"
+                ],
+                "max_*": [
+                    "dir::../../dffram/spef/max/RAM256.max.spef"
+                ]
             },
             "lib": {
                 "min_tt_025C_1v80": "dir::../../dffram/lib/min_tt_025C_1v80/RAM256__min_tt_025C_1v80.lib",
@@ -39,19 +72,14 @@
             }
         }
     },
-    "PDN_MACRO_CONNECTIONS": ["leros_system.dmem.m.mem vccd1 vssd1 vccd1 vssd1", "leros_system.instrMem.m.mem vccd1 vssd1 vccd1 vssd1"],
-    "CLOCK_PERIOD": 25,
-    "CLOCK_PORT": "wb_clk_i",
-    "CLOCK_NET": "leros_system.clock",
-    "FP_SIZING": "absolute",
-    "DIE_AREA": [
-        0,
-        0,
-        2800,
-        1760
+    "PDN_MACRO_CONNECTIONS": [
+        "dmem.m.mem vccd1 vssd1 vccd1 vssd1",
+        "instrMem.m.mem vccd1 vssd1 vccd1 vssd1"
     ],
+    "FP_PDN_HPITCH": 51,
+    "FP_PDN_VPITCH": 51,
     "FP_PIN_ORDER_CFG": "dir::pin_order.cfg",
-    "MAX_TRANSITION_CONSTRAINT": 1.0,
+    "MAX_TRANSITION_CONSTRAINT": 1.5,
     "MAX_FANOUT_CONSTRAINT": 16,
     "PL_RESIZER_SETUP_SLACK_MARGIN": 0.4,
     "GRT_RESIZER_SETUP_SLACK_MARGIN": 0.2,
@@ -65,20 +93,18 @@
     "RUN_ANTENNA_REPAIR": true,
     "RUN_POST_GRT_DESIGN_REPAIR": true,
     "RUN_POST_GRT_RESIZER_TIMING": true,
-    "VDD_NETS": [
-        "vccd1"
-    ],
-    "GND_NETS": [
-        "vssd1"
-    ],
     "FALLBACK_SDC_FILE": "dir::base_user_proj_example.sdc",
     "MAGIC_DRC_USE_GDS": true,
     "DPL_CELL_PADDING": 2,
     "GPL_CELL_PADDING": 2,
+    "QUIT_ON_MAGIC_DRC": false,
+    "MAGIC_EXT_USE_GDS": false,
+    "MAGIC_CAPTURE_ERRORS": false,
+    "QUIT_ON_ILLEGAL_OVERLAPS": false,
     "pdk::sky130*": {
         "RT_MAX_LAYER": "met4",
         "scl::sky130_fd_sc_hd": {
-            "CLOCK_PERIOD": 25
+            "CLOCK_PERIOD": 100
         },
         "scl::sky130_fd_sc_hdll": {
             "CLOCK_PERIOD": 10
@@ -103,5 +129,12 @@
     },
     "meta": {
         "version": 2
-    }
+    },
+    "GRT_ANTENNA_ITERS": 20,
+    "GRT_ANTENNA_MARGIN": 20,
+    "DESIGN_REPAIR_MAX_WIRE_LENGTH": 800,
+    "PL_WIRE_LENGTH_COEF": 0.05,
+    "DESIGN_REPAIR_MAX_SLEW_PCT": 30,
+    "DESIGN_REPAIR_MAX_CAP_PCT": 30,
+    "DEFAULT_CORNER": "max_ss_100C_1v60"
 }

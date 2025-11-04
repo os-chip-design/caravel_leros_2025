@@ -84,10 +84,10 @@ module user_project_wrapper #(
 
 LerosCaravel_ChipFoundrySram mprj (
 
-// `ifdef USE_POWER_PINS
-// 	.vccd1(vccd1),	// User area 1 1.8V power
-// 	.vssd1(vssd1),	// User area 1 digital ground
-// `endif
+`ifdef USE_POWER_PINS
+	.vccd1(vccd1),	// User area 1 1.8V power
+	.vssd1(vssd1),	// User area 1 digital ground
+`endif
 
 
     .clock(wb_clk_i),
