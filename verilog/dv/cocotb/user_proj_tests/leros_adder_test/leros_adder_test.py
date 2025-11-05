@@ -14,12 +14,19 @@
 
 # SPDX-License-Identifier: Apache-2.0
 
-# yaml file contain general design information that would mostly need to be updated in the first run only 
-includes: 
-    - leros_adder_test/leros_adder_test.yaml
-    # - counter_la/counter_la.yaml
-    # - counter_wb/counter_wb.yaml
-    # - counter_la_reset/counter_la_reset.yaml
-    # - counter_la_clk/counter_la_clk.yaml
 
+from caravel_cocotb.caravel_interfaces import test_configure
+from caravel_cocotb.caravel_interfaces import report_test
+import cocotb
 
+@cocotb.test()
+@report_test
+async def leros_adder_test(dut):
+    caravelEnv = await test_configure(dut,timeout_cycles=59848)
+
+    cocotb.log.info(f"[TEST] Start leros_adder_test test")  
+    # wait for start of sending
+    await caravelEnv.release_csb()
+
+    cocotb.log.info(f"[TEST] waiting for test pass signal") 
+    await caravelEnv.wait_mgmt_gpio(1) # wait for leros to finish the test
