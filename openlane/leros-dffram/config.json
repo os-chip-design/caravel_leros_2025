@@ -12,8 +12,8 @@
     "DIE_AREA": [
         0,
         0,
-        1119.6999999999998,
-        1466.24
+        1319.6999999999998,
+        1966.24
     ],
     "VDD_NETS": [
         "vccd1"
@@ -26,15 +26,15 @@
             "instances": {
                 "instrMem.m.mem": {
                     "location": [
-                        300,
-                        100
+                        500,
+                        200
                     ],
                     "orientation": "FN"
                 },
                 "dmem.m.mem": {
                     "location": [
-                        300,
-                        833.12
+                        500,
+                        1233.12
                     ],
                     "orientation": "FN"
                 }

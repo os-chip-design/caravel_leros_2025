@@ -1,32 +1,33 @@
-
+from librelane.flows import Flow
+from librelane.config import Config
 
 # config is json
 config = {}
-config["DESIGN_NAME"] = "LerosCaravel_DffRam"
-config["CLOCK_PORT"] = "clock"
-config["CLOCK_NET"] = "clock"
-config["CLOCK_PERIOD"] = 100
+config["DESIGN_NAME"] = "LerosCaravelWrapper_ChipFoundrySram"
+config["CLOCK_PORT"] = "wb_clk_i"
+config["CLOCK_NET"] = "leros_system.clock"
+config["CLOCK_PERIOD"] = 25
 config["VERILOG_FILES"] = [
-  "dir::../../verilog/rtl/LerosCaravel_DffRam.sv"
+  "dir::../../verilog/rtl/LerosCaravel_ChipFoundrySram.sv",
+  "dir::../../verilog/rtl/LerosCaravelWrapper_ChipFoundrySram.v"
 ]
 
-left_edge_space = 500
+left_edge_space = 100
 right_edge_space = 10.1
-center_space = 500
-top_space = 200
-bottom_space = 200
+center_space = 0
+top_space = 10.1
 
-dffram_width = 809.6
-dffram_height = 533.12
+cf_wb_sram_width = 380
+cf_wb_sram_height = 435
 
-die_width = left_edge_space + dffram_width + right_edge_space
-die_height = top_space + 2 * dffram_height + center_space + bottom_space
+die_width = 2 * cf_wb_sram_width + left_edge_space + right_edge_space + center_space
+die_height = cf_wb_sram_height + 500
 
 sram0_x = left_edge_space
-sram0_y = bottom_space
+sram0_y = die_height - cf_wb_sram_height - top_space
 
-sram1_x = left_edge_space
-sram1_y = bottom_space + dffram_height + center_space
+sram1_x = sram0_x + cf_wb_sram_width + center_space
+sram1_y = sram0_y
 
 
 config["FP_PDN_MULTILAYER"] = True
@@ -39,43 +40,41 @@ config["VDD_NETS"] = ["vccd1"]
 config["GND_NETS"] = ["vssd1"]
 
 config["MACROS"] = {
-  "RAM256": {
+  "CF_SRAM_1024x32_wrapper": {
     "instances": {
-        "instrMem.m.mem": {
+        "leros_system.instrMem.m.mem": {
         "location": [sram0_x, sram0_y],
-        "orientation": "FN"
+        "orientation": "N"
         },
-        "dmem.m.mem": {
+        "leros_system.dmem.m.mem": {
         "location": [sram1_x, sram1_y],
-        "orientation": "FN"
+        "orientation": "N"
         }
     },
-    "gds": ["dir::../../dffram/gds/RAM256.gds"],
-    "lef": ["dir::../../dffram/lef/RAM256.lef"],
-    "nl": ["dir::../../dffram/nl/RAM256.nl.v"],
+    "gds": ["dir::../../gds/CF_SRAM_1024x32_wrapper.gds"],
+    "lef": ["dir::../../lef/CF_SRAM_1024x32_wrapper.lef"],
+    "nl": ["dir::../../verilog/gl/CF_SRAM_1024x32_wrapper.v"],
     "spef": {
-        "min_*": ["dir::../../dffram/spef/min/RAM256.min.spef"],
-        "nom_*": ["dir::../../dffram/spef/nom/RAM256.nom.spef"],
-        "max_*": ["dir::../../dffram/spef/max/RAM256.max.spef"]
+        "min_*": [
+            "dir::../../spef/multicorner/CF_SRAM_1024x32_wrapper.min.spef"
+        ],
+        "nom_*": [
+            "dir::../../spef/multicorner/CF_SRAM_1024x32_wrapper.nom.spef"
+        ],
+        "max_*": [
+            "dir::../../spef/multicorner/CF_SRAM_1024x32_wrapper.max.spef"
+        ]
     },
     "lib": {
-        "min_tt_025C_1v80": "dir::../../dffram/lib/min_tt_025C_1v80/RAM256__min_tt_025C_1v80.lib",
-        "min_ff_n40C_1v95": "dir::../../dffram/lib/min_ff_n40C_1v95/RAM256__min_ff_n40C_1v95.lib",
-        "max_ff_n40C_1v95": "dir::../../dffram/lib/max_ff_n40C_1v95/RAM256__max_ff_n40C_1v95.lib",
-        "nom_tt_025C_1v80": "dir::../../dffram/lib/nom_tt_025C_1v80/RAM256__nom_tt_025C_1v80.lib",
-        "min_ss_100C_1v60": "dir::../../dffram/lib/min_ss_100C_1v60/RAM256__min_ss_100C_1v60.lib",
-        "max_ss_100C_1v60": "dir::../../dffram/lib/max_ss_100C_1v60/RAM256__max_ss_100C_1v60.lib",
-        "max_tt_025C_1v80": "dir::../../dffram/lib/max_tt_025C_1v80/RAM256__max_tt_025C_1v80.lib",
-        "nom_ss_100C_1v60": "dir::../../dffram/lib/nom_ss_100C_1v60/RAM256__nom_ss_100C_1v60.lib",
-        "nom_ff_n40C_1v95": "dir::../../dffram/lib/nom_ff_n40C_1v95/RAM256__nom_ff_n40C_1v95.lib"
+        "*": "dir::../../lib/CF_SRAM_1024x32_wrapper.lib"
     }
   }
 }
 
 
 config["PDN_MACRO_CONNECTIONS"] = [
-    "dmem.m.mem vccd1 vssd1 vccd1 vssd1",
-    "instrMem.m.mem vccd1 vssd1 vccd1 vssd1"
+    "leros_system.dmem.m.mem vccd1 vssd1 VPWR VGND",
+    "leros_system.instrMem.m.mem vccd1 vssd1 VPWR VGND"
 ]
 
 config["FP_PDN_HPITCH"] = 51
@@ -108,7 +107,7 @@ config.update({
   "pdk::sky130*": {
       "RT_MAX_LAYER": "met4",
       "scl::sky130_fd_sc_hd": {
-          "CLOCK_PERIOD": 100
+          "CLOCK_PERIOD": 25
       },
       "scl::sky130_fd_sc_hdll": {
           "CLOCK_PERIOD": 10
@@ -153,7 +152,18 @@ config.update({
     "RUN_POST_GRT_DESIGN_REPAIR": True,
 })
 
-# write to file
-import json
-with open("config.json", "w") as f:
-    json.dump(config, f, indent=4)
+
+Classic = Flow.factory.get("Classic")
+print(dir(Classic))
+
+
+conf = Config.load(
+  config, 
+  flow_config_vars=Classic.config_vars, 
+  design_dir=".", 
+  pdk="sky130A", 
+  pdk_root="/Users/tjape/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af", 
+  scl="sky130_fd_sc_hd"
+)
+
+#Classic.run(conf)

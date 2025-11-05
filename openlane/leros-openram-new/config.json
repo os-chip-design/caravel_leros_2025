@@ -1,10 +1,10 @@
 {
-    "DESIGN_NAME": "LerosCaravel_ChipFoundrySram",
+    "DESIGN_NAME": "LerosCaravel_OpenRamSky130",
     "CLOCK_PORT": "clock",
     "CLOCK_NET": "clock",
     "CLOCK_PERIOD": 25,
     "VERILOG_FILES": [
-        "dir::../../verilog/rtl/LerosCaravel_ChipFoundrySram.sv"
+        "dir::../../verilog/rtl/LerosCaravel_OpenRamSky130.sv"
     ],
     "FP_PDN_MULTILAYER": true,
     "FP_PDN_CORE_RING": true,
@@ -12,8 +12,8 @@
     "DIE_AREA": [
         0,
         0,
-        840,
-        785
+        1109.56,
+        647.5
     ],
     "VDD_NETS": [
         "vccd1"
@@ -22,51 +22,40 @@
         "vssd1"
     ],
     "MACROS": {
-        "CF_SRAM_1024x32_wrapper": {
+        "sky130_sram_1kbyte_1rw1r_32x256_8": {
             "instances": {
                 "instrMem.m.mem": {
                     "location": [
-                        40,
-                        339.9
+                        50,
+                        239.9
                     ],
-                    "orientation": "N"
+                    "orientation": "FN"
                 },
                 "dmem.m.mem": {
                     "location": [
-                        420,
-                        339.9
+                        579.78,
+                        239.9
                     ],
                     "orientation": "N"
                 }
             },
             "gds": [
-                "dir::../../gds/CF_SRAM_1024x32_wrapper.gds"
+                "pdk_dir::libs.ref/sky130_sram_macros/gds/sky130_sram_1kbyte_1rw1r_32x256_8.gds"
             ],
             "lef": [
-                "dir::../../lef/CF_SRAM_1024x32_wrapper.lef"
+                "pdk_dir::libs.ref/sky130_sram_macros/lef/sky130_sram_1kbyte_1rw1r_32x256_8.lef"
             ],
             "nl": [
-                "dir::../../verilog/gl/CF_SRAM_1024x32_wrapper.v"
+                "pdk_dir::libs.ref/sky130_sram_macros/verilog/sky130_sram_1kbyte_1rw1r_32x256_8.v"
             ],
-            "spef": {
-                "min_*": [
-                    "dir::../../spef/multicorner/CF_SRAM_1024x32_wrapper.min.spef"
-                ],
-                "nom_*": [
-                    "dir::../../spef/multicorner/CF_SRAM_1024x32_wrapper.nom.spef"
-                ],
-                "max_*": [
-                    "dir::../../spef/multicorner/CF_SRAM_1024x32_wrapper.max.spef"
-                ]
-            },
             "lib": {
-                "*": "dir::../../lib/CF_SRAM_1024x32_wrapper.lib"
+                "*": "pdk_dir::libs.ref/sky130_sram_macros/lib/sky130_sram_1kbyte_1rw1r_32x256_8_TT_1p8V_25C.lib"
             }
         }
     },
     "PDN_MACRO_CONNECTIONS": [
-        "dmem.m.mem vccd1 vssd1 VPWR VGND",
-        "instrMem.m.mem vccd1 vssd1 VPWR VGND"
+        "dmem.m.mem vccd1 vssd1 vccd1 vssd1",
+        "instrMem.m.mem vccd1 vssd1 vccd1 vssd1"
     ],
     "FP_PDN_HPITCH": 51,
     "FP_PDN_VPITCH": 51,
@@ -113,10 +102,12 @@
     "RUN_POST_GRT_RESIZER_TIMING": true,
     "GRT_ANTENNA_ITERS": 20,
     "GRT_ANTENNA_MARGIN": 15,
+    "DESIGN_REPAIR_MAX_WIRE_LENGTH": 800,
+    "PL_WIRE_LENGTH_COEF": 0.05,
     "DESIGN_REPAIR_MAX_SLEW_PCT": 30,
     "DESIGN_REPAIR_MAX_CAP_PCT": 30,
     "MAGIC_DEF_LABELS": false,
-    "RUN_KLAYOUT_DRC": true,
+    "RUN_KLAYOUT_DRC": false,
     "RUN_MAGIC_DRC": true,
     "MAGIC_DRC_USE_GDS": true,
     "QUIT_ON_MAGIC_DRC": false,

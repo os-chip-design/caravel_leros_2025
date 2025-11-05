@@ -82,12 +82,12 @@ module user_project_wrapper #(
 /* User project is instantiated  here   */
 /*--------------------------------------*/
 
-LerosCaravel_ChipFoundrySram mprj (
+CaravelTop mprj (
 
-`ifdef USE_POWER_PINS
-	.vccd1(vccd1),	// User area 1 1.8V power
-	.vssd1(vssd1),	// User area 1 digital ground
-`endif
+// `ifdef USE_POWER_PINS
+// 	.vccd1(vccd1),	// User area 1 1.8V power
+// 	.vssd1(vssd1),	// User area 1 digital ground
+// `endif
 
 
     .clock(wb_clk_i),
@@ -106,14 +106,13 @@ LerosCaravel_ChipFoundrySram mprj (
 
     // Logic Analyzer
 
-    .io_dbg_pc(la_data_out[9:0]),
-    .io_dbg_acc(la_data_out[61:32]),
+    .io_la_out(la_data_out),
 
     // IO Pads
 
-    .io_gpio_in(io_in[15:8]),
-    .io_gpio_out(io_out[15:8]),
-    .io_gpio_oe(io_oeb[15:8])
+    .io_gpio_in(io_in[35:12]),
+    .io_gpio_out(io_out[35:12]),
+    .io_gpio_oe(io_oeb[35:12])
 );
 
 endmodule	// user_project_wrapper

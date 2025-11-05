@@ -2,29 +2,31 @@
 
 # config is json
 config = {}
-config["DESIGN_NAME"] = "LerosCaravel_ChipFoundrySram"
+config["DESIGN_NAME"] = "LerosCaravel_OpenRamSky130"
 config["CLOCK_PORT"] = "clock"
 config["CLOCK_NET"] = "clock"
 config["CLOCK_PERIOD"] = 25
 config["VERILOG_FILES"] = [
-  "dir::../../verilog/rtl/LerosCaravel_ChipFoundrySram.sv"
+  "dir::../../verilog/rtl/LerosCaravel_OpenRamSky130.sv"
 ]
 
-left_edge_space = 40
-right_edge_space = 40
-center_space = 0
+left_edge_space = 50
+right_edge_space = 50
+center_space = 50
 top_space = 10.1
 
-cf_wb_sram_width = 380
-cf_wb_sram_height = 435
 
-die_width = 2 * cf_wb_sram_width + left_edge_space + right_edge_space + center_space
-die_height = cf_wb_sram_height + 350
+openram_dir = "pdk_dir::libs.ref/sky130_sram_macros"
+openram_sram_width = 479.78
+openram_sram_height = 397.5
+
+die_width = 2 * openram_sram_width + left_edge_space + right_edge_space + center_space
+die_height = openram_sram_height + 250
 
 sram0_x = left_edge_space
-sram0_y = die_height - cf_wb_sram_height - top_space
+sram0_y = die_height - openram_sram_height - top_space
 
-sram1_x = sram0_x + cf_wb_sram_width + center_space
+sram1_x = sram0_x + openram_sram_width + center_space
 sram1_y = sram0_y
 
 
@@ -38,41 +40,30 @@ config["VDD_NETS"] = ["vccd1"]
 config["GND_NETS"] = ["vssd1"]
 
 config["MACROS"] = {
-  "CF_SRAM_1024x32_wrapper": {
+  "sky130_sram_1kbyte_1rw1r_32x256_8": {
     "instances": {
         "instrMem.m.mem": {
         "location": [sram0_x, sram0_y],
-        "orientation": "N"
+        "orientation": "FN"
         },
         "dmem.m.mem": {
         "location": [sram1_x, sram1_y],
         "orientation": "N"
         }
     },
-    "gds": ["dir::../../gds/CF_SRAM_1024x32_wrapper.gds"],
-    "lef": ["dir::../../lef/CF_SRAM_1024x32_wrapper.lef"],
-    "nl": ["dir::../../verilog/gl/CF_SRAM_1024x32_wrapper.v"],
-    "spef": {
-        "min_*": [
-            "dir::../../spef/multicorner/CF_SRAM_1024x32_wrapper.min.spef"
-        ],
-        "nom_*": [
-            "dir::../../spef/multicorner/CF_SRAM_1024x32_wrapper.nom.spef"
-        ],
-        "max_*": [
-            "dir::../../spef/multicorner/CF_SRAM_1024x32_wrapper.max.spef"
-        ]
-    },
+    "gds": [f"{openram_dir}/gds/sky130_sram_1kbyte_1rw1r_32x256_8.gds"],
+    "lef": [f"{openram_dir}/lef/sky130_sram_1kbyte_1rw1r_32x256_8.lef"],
+    "nl": [f"{openram_dir}/verilog/sky130_sram_1kbyte_1rw1r_32x256_8.v"],
     "lib": {
-        "*": "dir::../../lib/CF_SRAM_1024x32_wrapper.lib"
+        "*": f"{openram_dir}/lib/sky130_sram_1kbyte_1rw1r_32x256_8_TT_1p8V_25C.lib"
     }
   }
 }
 
 
 config["PDN_MACRO_CONNECTIONS"] = [
-    "dmem.m.mem vccd1 vssd1 VPWR VGND",
-    "instrMem.m.mem vccd1 vssd1 VPWR VGND"
+    "dmem.m.mem vccd1 vssd1 vccd1 vssd1",
+    "instrMem.m.mem vccd1 vssd1 vccd1 vssd1"
 ]
 
 config["FP_PDN_HPITCH"] = 51
@@ -137,8 +128,8 @@ config.update({
 config.update({
     "GRT_ANTENNA_ITERS": 20,
     "GRT_ANTENNA_MARGIN": 15,
-    #"DESIGN_REPAIR_MAX_WIRE_LENGTH": 800,
-    #"PL_WIRE_LENGTH_COEF": 0.05,
+    "DESIGN_REPAIR_MAX_WIRE_LENGTH": 800,
+    "PL_WIRE_LENGTH_COEF": 0.05,
 })
 
 config.update({
@@ -151,8 +142,8 @@ config.update({
 
 config.update({ # Klayout seems to be upset by something in the openram metadata (lef?)
     "MAGIC_DEF_LABELS": False,
-    "RUN_KLAYOUT_DRC": True,
-    "RUN_MAGIC_DRC": True,
+    "RUN_KLAYOUT_DRC": False,
+    "RUN_MAGIC_DRC": True, # TODO: this is only turned of for faster turnaround, should be on for final runs
     "MAGIC_DRC_USE_GDS": True,
     "QUIT_ON_MAGIC_DRC": False,
     "MAGIC_EXT_USE_GDS": False,
