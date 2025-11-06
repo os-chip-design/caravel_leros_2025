@@ -444,4 +444,4 @@ setup-cfsram:
 	ipm install CF_SRAM_1024x32
 
 
-harden-all: CF_SRAM_1024x32_wrapper leros-cfram user_project_wrapper
+harden-all: CF_SRAM_1024x32_wrapper leros-cfram leros-openram user_project_wrapper
