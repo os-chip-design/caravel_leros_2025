@@ -78,80 +78,41 @@ module user_project_wrapper #(
     output [2:0] user_irq
 );
 
-    wire [3:0] decode;
-    assign decode = wbs_adr_i[19:16];
-
-    reg wb_cyc_leros;
-    reg wb_stb_leros;
-    reg wb_ack_leros;
-    reg [31:0] wb_dat_o_leros;
-
-    reg wbs_ack_value;
-    reg [31:0] wbs_dat_o_value;
-
-    // I do not like the difference between wire and reg in the output ports...
-    assign wbs_ack_o = wbs_ack_value;
-    assign wbs_dat_o = wbs_dat_o_value;
-
-    always @(*) begin
-
-
-        case (decode)
-            4'h0: begin
-                wb_cyc_leros = wbs_cyc_i;
-                wb_stb_leros = wbs_stb_i;
-                wbs_ack_value = wb_ack_leros;
-                wbs_dat_o_value = wb_dat_o_leros;
-            end
-            default: begin
-                wb_cyc_leros = 1'b0;
-                wb_stb_leros = 1'b0;
-                wbs_ack_value = 1'b0;
-                wbs_dat_o_value = 32'b0;
-            end
-        endcase
-    end
-
 /*--------------------------------------*/
 /* User project is instantiated  here   */
 /*--------------------------------------*/
 
-LerosCaravelWrapper_ChipFoundrySram mprj (
+CaravelTop mprj (
 
-`ifdef USE_POWER_PINS
-	.vccd1(vccd1),	// User area 1 1.8V power
-	.vssd1(vssd1),	// User area 1 digital ground
-`endif
+// `ifdef USE_POWER_PINS
+// 	.vccd1(vccd1),	// User area 1 1.8V power
+// 	.vssd1(vssd1),	// User area 1 digital ground
+// `endif
 
 
-    .wb_clk_i(wb_clk_i),
-    .wb_rst_i(wb_rst_i),
+    .clock(wb_clk_i),
+    .reset(wb_rst_i),
 
     // MGMT SoC Wishbone Slave
 
-    .wbs_cyc_i(wb_cyc_leros),
-    .wbs_stb_i(wb_stb_leros),
-    .wbs_we_i(wbs_we_i),
-    .wbs_sel_i(wbs_sel_i),
-    .wbs_adr_i({16'b0, wbs_adr_i[15:0]}), // pad to 32 bits
-    .wbs_dat_i(wbs_dat_i),
-    .wbs_ack_o(wb_ack_leros),
-    .wbs_dat_o(wb_dat_o_leros),
+    .io_wb_cyc(wbs_cyc_i),
+    .io_wb_stb(wbs_stb_i),
+    .io_wb_we(wbs_we_i),
+    .io_wb_sel(wbs_sel_i),
+    .io_wb_adr({12'b0, wbs_adr_i[19:0]}),
+    .io_wb_dat_i(wbs_dat_i),
+    .io_wb_ack(wbs_ack_o),
+    .io_wb_dat_o(wbs_dat_o),
 
     // Logic Analyzer
 
-    .la_data_in(la_data_in),
-    .la_data_out(la_data_out),
-    .la_oenb (la_oenb),
+    .io_la_out(la_data_out),
 
     // IO Pads
 
-    .io_in (io_in[15:8]),
-    .io_out(io_out[15:8]),
-    .io_oeb(io_oeb[15:8]),
-
-    // IRQ
-    .user_irq(user_irq)
+    .io_gpio_in(io_in[35:12]),
+    .io_gpio_out(io_out[35:12]),
+    .io_gpio_oe(io_oeb[35:12])
 );
 
 endmodule	// user_project_wrapper

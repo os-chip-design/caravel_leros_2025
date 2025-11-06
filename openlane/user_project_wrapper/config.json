@@ -2,6 +2,7 @@
     "//": "Design files",
     "VERILOG_FILES": [
         "dir::../../verilog/rtl/defines.v",
+        "dir::../../verilog/rtl/CaravelTop.sv",
         "dir::../../verilog/rtl/user_project_wrapper.v"
     ],
     "PNR_SDC_FILE": "dir::signoff.sdc",
@@ -32,39 +33,48 @@
 
     "//": "Macros configurations",
     "MACROS": {
-        "LerosCaravelWrapper_ChipFoundrySram": {
-            "gds": [
-                "dir::../../gds/LerosCaravelWrapper_ChipFoundrySram.gds"
-            ],
-            "lef": [
-                "dir::../../lef/LerosCaravelWrapper_ChipFoundrySram.lef"
-            ],
+
+        "LerosCaravel_ChipFoundrySram": {
             "instances": {
-                "mprj": {
-                    "location": [400, 400],
+                "mprj.lerosCfram": {
+                    "location": [300, 1500],
                     "orientation": "N"
                 }
             },
-            "nl": [
-                "dir::../../verilog/gl/LerosCaravelWrapper_ChipFoundrySram.v"
-            ],
+            "gds": ["dir::../../gds/LerosCaravel_ChipFoundrySram.gds"],
+            "lef": ["dir::../../lef/LerosCaravel_ChipFoundrySram.lef"],
+            "nl": ["dir::../../verilog/gl/LerosCaravel_ChipFoundrySram.v"],
             "spef": {
-                "min_*": [
-                    "dir::../../spef/multicorner/LerosCaravelWrapper_ChipFoundrySram.min.spef"
-                ],
-                "nom_*": [
-                    "dir::../../spef/multicorner/LerosCaravelWrapper_ChipFoundrySram.nom.spef"
-                ],
-                "max_*": [
-                    "dir::../../spef/multicorner/LerosCaravelWrapper_ChipFoundrySram.max.spef"
-                ]
+                "min_*": ["dir::../../spef/multicorner/LerosCaravel_ChipFoundrySram.min.spef"],
+                "nom_*": ["dir::../../spef/multicorner/LerosCaravel_ChipFoundrySram.nom.spef"],
+                "max_*": ["dir::../../spef/multicorner/LerosCaravel_ChipFoundrySram.max.spef"]
             },
             "lib": {
-                "*": "dir::../../lib/LerosCaravelWrapper_ChipFoundrySram.lib"
+                "*": "dir::../../lib/LerosCaravel_ChipFoundrySram.lib"
+            }
+        },
+
+        "LerosCaravel_OpenRamSky130": {
+            "instances": {
+                "mprj.lerosSky130": {
+                    "location": [1700, 1500],
+                    "orientation": "N"
+                }
+            },
+            "gds": ["dir::../../gds/LerosCaravel_OpenRamSky130.gds"],
+            "lef": ["dir::../../lef/LerosCaravel_OpenRamSky130.lef"],
+            "nl": ["dir::../../verilog/gl/LerosCaravel_OpenRamSky130.v"],
+            "spef": {
+                "min_*": ["dir::../../spef/multicorner/LerosCaravel_OpenRamSky130.min.spef"],
+                "nom_*": ["dir::../../spef/multicorner/LerosCaravel_OpenRamSky130.nom.spef"],
+                "max_*": ["dir::../../spef/multicorner/LerosCaravel_OpenRamSky130.max.spef"]
+            },
+            "lib": {
+                "*": "dir::../../lib/LerosCaravel_OpenRamSky130.lib"
             }
         }
     },
-    "PDN_MACRO_CONNECTIONS": ["mprj vccd2 vssd2 vccd1 vssd1"],
+    "PDN_MACRO_CONNECTIONS": ["mprj.lerosSky130 vccd2 vssd2 vccd1 vssd1", "mprj.lerosCfram vccd2 vssd2 vccd1 vssd1"],
 
     "//": "PDN configurations",
     "FP_PDN_VOFFSET": 5,
@@ -108,6 +118,7 @@
     "FP_PDN_CORE_RING_VSPACING": 1.7,
     "FP_PDN_CORE_RING_HSPACING": 1.7,
     "CLOCK_PORT": "wb_clk_i",
+    "CLOCK_NET": "mprj.clock",
     "SIGNOFF_SDC_FILE": "dir::signoff.sdc",
     "MAGIC_DEF_LABELS": false,
     "CLOCK_PERIOD": 25,
@@ -120,5 +131,6 @@
     "ERROR_ON_MAGIC_DRC": false,
     "MAGIC_EXT_USE_GDS": false,
     "MAGIC_CAPTURE_ERRORS": false,
-    "ERROR_ON_ILLEGAL_OVERLAPS": false
+    "ERROR_ON_ILLEGAL_OVERLAPS": false,
+    "RUN_KLAYOUT_DRC": false
 }

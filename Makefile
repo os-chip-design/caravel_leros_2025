@@ -435,6 +435,7 @@ generate-verilog:
 	$(MAKE) -C Subsystem_DTU generate-caravel MEM=DffRam
 	$(MAKE) -C Subsystem_DTU generate-caravel MEM=OpenRamSky130
 	$(MAKE) -C Subsystem_DTU generate-caravel MEM=ChipFoundrySram
+	$(MAKE) -C Subsystem_DTU generate-caravel-top
 	cp Subsystem_DTU/generated/caravel/* verilog/rtl
 
 
