@@ -78,6 +78,40 @@ module user_project_wrapper #(
     output [2:0] user_irq
 );
 
+    wire [3:0] decode;
+    assign decode = wbs_adr_i[19:16];
+
+    reg wb_cyc_leros;
+    reg wb_stb_leros;
+    reg wb_ack_leros;
+    reg [31:0] wb_dat_o_leros;
+
+    reg wbs_ack_value;
+    reg [31:0] wbs_dat_o_value;
+
+    // I do not like the difference between wire and reg in the output ports...
+    assign wbs_ack_o = wbs_ack_value;
+    assign wbs_dat_o = wbs_dat_o_value;
+
+    always @(*) begin
+
+
+        case (decode)
+            4'h0: begin
+                wb_cyc_leros = wbs_cyc_i;
+                wb_stb_leros = wbs_stb_i;
+                wbs_ack_value = wb_ack_leros;
+                wbs_dat_o_value = wb_dat_o_leros;
+            end
+            default: begin
+                wb_cyc_leros = 1'b0;
+                wb_stb_leros = 1'b0;
+                wbs_ack_value = 1'b0;
+                wbs_dat_o_value = 32'b0;
+            end
+        endcase
+    end
+
 /*--------------------------------------*/
 /* User project is instantiated  here   */
 /*--------------------------------------*/
@@ -95,14 +129,14 @@ LerosCaravelWrapper_ChipFoundrySram mprj (
 
     // MGMT SoC Wishbone Slave
 
-    .wbs_cyc_i(wbs_cyc_i),
-    .wbs_stb_i(wbs_stb_i),
+    .wbs_cyc_i(wb_cyc_leros),
+    .wbs_stb_i(wb_stb_leros),
     .wbs_we_i(wbs_we_i),
     .wbs_sel_i(wbs_sel_i),
-    .wbs_adr_i({12'b0, wbs_adr_i[19:0]}), // pad to 32 bits
+    .wbs_adr_i({16'b0, wbs_adr_i[15:0]}), // pad to 32 bits
     .wbs_dat_i(wbs_dat_i),
-    .wbs_ack_o(wbs_ack_o),
-    .wbs_dat_o(wbs_dat_o),
+    .wbs_ack_o(wb_ack_leros),
+    .wbs_dat_o(wb_dat_o_leros),
 
     // Logic Analyzer
 
