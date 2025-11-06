@@ -1,0 +1,9 @@
+CARAVEL_ROOT: /Users/tjape/Projects/leros-caravel/caravel
+MCW_ROOT: /Users/tjape/Projects/leros-caravel/mgmt_core_wrapper
+PDK: sky130A
+PDK_ROOT: /Users/tjape/.ciel/ciel/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A
+USER_PROJECT_ROOT: /Users/tjape/Projects/leros-caravel
+caravan: false
+clk: 25
+emailto:
+- null

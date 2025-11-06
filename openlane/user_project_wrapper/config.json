@@ -131,5 +131,6 @@
     "ERROR_ON_MAGIC_DRC": false,
     "MAGIC_EXT_USE_GDS": false,
     "MAGIC_CAPTURE_ERRORS": false,
-    "ERROR_ON_ILLEGAL_OVERLAPS": false
+    "ERROR_ON_ILLEGAL_OVERLAPS": false,
+    "RUN_KLAYOUT_DRC": false
 }
