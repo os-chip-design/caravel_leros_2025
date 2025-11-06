@@ -442,3 +442,6 @@ generate-verilog:
 setup-cfsram:
 	pip install cf-ipm
 	ipm install CF_SRAM_1024x32
+
+
+harden-all: CF_SRAM_1024x32_wrapper leros-cfram user_project_wrapper

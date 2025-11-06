@@ -48,6 +48,10 @@ Or do a precheck first:
     make precheck
     DISABLE_LVS=1 make run-precheck
 
+The Leros test case can be run with cocotb:
+
+    make cocotb-verify-leros_adder_test-rtl
+
 ## TODO
 
 * [x] Setup Caravel on Mac (MS, TP)
@@ -59,7 +63,7 @@ Or do a precheck first:
 * [ ] Change example to Chisel top level (with a simple design) and harden it
 * [ ] Have some basic tests
 * [x] Add DTU subsystem (inclusive memories)
-* [ ] Make sure to use 10 MHz for the serial port
+* [x] Make sure to use 10 MHz for the serial port
 * [ ] Set pin defines in defines.v
 * [x] TODO: there is a mismatch between io_out vs io_gpio_out
 * [ ] Explore three different memories
@@ -68,7 +72,19 @@ Or do a precheck first:
   - [ ] DFF RAM
 * [ ] Have a RV Wishbone test to boot Leros
 * [ ] Maybe have three versions on the same chip
+* [ ] Add some more simple example on the top level (WB IO, Sylvan's RF, ttsky25-tapeout/SKY130_register_file_testing)
 * [ ] Add a block diagram of the project architecture.
 * [ ] Include instructions on how to build and simulate the project.
 
 Refer to [README](docs/source/index.md) for basic Caravel documentation.
+
+## Address Map
+
+Wishbone User space is mapped as follows: 0x3000_0000 - 0x300F_FFFF
+
+Let us decide on 0x300n_xxxx where n is:
+- 0: Leros CPU 1
+- 1: Leros CPU 2
+- 2: Leros CPU 3
+- 3: Sylvan's Register File
+- 4: Maybe a plain WB GPIO
