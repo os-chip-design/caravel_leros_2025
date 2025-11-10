@@ -140,15 +140,21 @@ config.update({
     "RUN_POST_GRT_DESIGN_REPAIR": True,
 })
 
-config.update({ # Klayout seems to be upset by something in the openram metadata (lef?)
+config.update({
+    "RUN_KLAYOUT_DRC": True,
+    "RUN_MAGIC_DRC": False,
+
+    "RUN_KLAYOUT_XOR": False,
+
     "MAGIC_DEF_LABELS": False,
-    "RUN_KLAYOUT_DRC": False,
-    "RUN_MAGIC_DRC": True, # TODO: this is only turned of for faster turnaround, should be on for final runs
     "MAGIC_DRC_USE_GDS": True,
-    "QUIT_ON_MAGIC_DRC": False,
     "MAGIC_EXT_USE_GDS": False,
+    "QUIT_ON_MAGIC_DRC": False, 
     "MAGIC_CAPTURE_ERRORS": False,
+
     "QUIT_ON_ILLEGAL_OVERLAPS": False,
+
+    "PRIMARY_GDSII_STREAMOUT_TOOL": "klayout"
 })
 
 # write to file

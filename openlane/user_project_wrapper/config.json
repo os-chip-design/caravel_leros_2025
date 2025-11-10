@@ -88,7 +88,7 @@
     "ERROR_ON_PDN_VIOLATIONS": false,
 
     "//": "Magic variables",
-    "MAGIC_DRC_USE_GDS": true,
+    
 
     "DRT_THREADS": 1,
     "MAX_TRANSITION_CONSTRAINT": 1.5,
@@ -120,17 +120,25 @@
     "CLOCK_PORT": "wb_clk_i",
     "CLOCK_NET": "mprj.clock",
     "SIGNOFF_SDC_FILE": "dir::signoff.sdc",
-    "MAGIC_DEF_LABELS": false,
+    
     "CLOCK_PERIOD": 25,
     "MAGIC_ZEROIZE_ORIGIN": false,
     "meta": {
         "version": 2
     },
 
+    "PRIMARY_GDSII_STREAMOUT_TOOL": "klayout",
 
-    "ERROR_ON_MAGIC_DRC": false,
+    "RUN_KLAYOUT_DRC": true,
+    "RUN_MAGIC_DRC": false,
+    "RUN_KLAYOUT_XOR": false,
+    
     "MAGIC_EXT_USE_GDS": false,
     "MAGIC_CAPTURE_ERRORS": false,
-    "ERROR_ON_ILLEGAL_OVERLAPS": false,
-    "RUN_KLAYOUT_DRC": false
+    "MAGIC_DEF_LABELS": false,
+    "MAGIC_DRC_USE_GDS": true,
+
+    "ERROR_ON_MAGIC_DRC": false,
+    "ERROR_ON_ILLEGAL_OVERLAPS": false
+    
 }

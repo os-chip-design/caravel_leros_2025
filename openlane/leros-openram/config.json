@@ -106,12 +106,14 @@
     "PL_WIRE_LENGTH_COEF": 0.05,
     "DESIGN_REPAIR_MAX_SLEW_PCT": 30,
     "DESIGN_REPAIR_MAX_CAP_PCT": 30,
+    "RUN_KLAYOUT_DRC": true,
+    "RUN_MAGIC_DRC": false,
+    "RUN_KLAYOUT_XOR": false,
     "MAGIC_DEF_LABELS": false,
-    "RUN_KLAYOUT_DRC": false,
-    "RUN_MAGIC_DRC": true,
     "MAGIC_DRC_USE_GDS": true,
-    "QUIT_ON_MAGIC_DRC": false,
     "MAGIC_EXT_USE_GDS": false,
+    "QUIT_ON_MAGIC_DRC": false,
     "MAGIC_CAPTURE_ERRORS": false,
-    "QUIT_ON_ILLEGAL_OVERLAPS": false
+    "QUIT_ON_ILLEGAL_OVERLAPS": false,
+    "PRIMARY_GDSII_STREAMOUT_TOOL": "klayout"
 }
