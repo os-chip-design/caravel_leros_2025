@@ -102,12 +102,12 @@ install:
 # Install DV setup
 .PHONY: simenv
 simenv:
-	#docker pull chipfoundry/dv:latest
+	docker pull docker.io/chipfoundry/dv:latest
 
 # Install cocotb docker
 .PHONY: simenv-cocotb
 simenv-cocotb:
-	#docker pull chipfoundry/dv:cocotb
+	docker pull docker.io/chipfoundry/dv:cocotb
 
 .PHONY: setup
 setup: check_dependencies install check-env install_mcw openlane pdk-with-ciel setup-timing-scripts setup-cocotb precheck setup-cfsram
@@ -318,7 +318,7 @@ install-caravel-cocotb:
 	rm -rf ./venv-cocotb
 	$(PYTHON_BIN) -m venv ./venv-cocotb
 	./venv-cocotb/bin/$(PYTHON_BIN) -m pip install --upgrade --no-cache-dir pip
-	./venv-cocotb/bin/$(PYTHON_BIN) -m pip install --upgrade --no-cache-dir caravel-cocotb
+	source venv-cocotb/bin/activate && pip install --upgrade --no-cache-dir caravel-cocotb
 
 .PHONY: setup-cocotb-env
 setup-cocotb-env:
