@@ -28,11 +28,15 @@ Generate the Leros Verilog files
 
 then harden the wrapper for the memory
 
-    make CF_SRAM_1024x32_wrapper
+    make CF_SRAM_1024x32_wrapper LIBRELANE_USE_NIX=1
 
 then build and harden Leros with the CF RAM:
 
     make leros-cfram LIBRELANE_USE_NIX=1
+
+and build and harden Leros with OpenRAM:
+
+    make leros-openram LIBRELANE_USE_NIX=1
 
 and the wrapper for Caravel:
 
@@ -67,10 +71,10 @@ The Leros test case can be run with cocotb:
 * [ ] Set pin defines in defines.v
 * [x] TODO: there is a mismatch between io_out vs io_gpio_out
 * [ ] Explore three different memories
-  - [ ] OpenRAM
+  - [x] OpenRAM
   - [x] CF RAM
   - [ ] DFF RAM
-* [ ] Have a RV Wishbone test to boot Leros
+* [x] Have a RV Wishbone test to boot Leros
 * [ ] Maybe have three versions on the same chip
 * [ ] Add some more simple example on the top level (WB IO, Sylvan's RF, ttsky25-tapeout/SKY130_register_file_testing)
 * [ ] Add a block diagram of the project architecture.
