@@ -318,7 +318,7 @@ install-caravel-cocotb:
 	rm -rf ./venv-cocotb
 	$(PYTHON_BIN) -m venv ./venv-cocotb
 	./venv-cocotb/bin/$(PYTHON_BIN) -m pip install --upgrade --no-cache-dir pip
-	source venv-cocotb/bin/activate && pip install --upgrade --no-cache-dir caravel-cocotb
+	bash -c "source venv-cocotb/bin/activate && pip install --upgrade --no-cache-dir caravel-cocotb"
 
 .PHONY: setup-cocotb-env
 setup-cocotb-env:
@@ -432,9 +432,10 @@ $(clean-targets): clean-% :
 
 
 generate-verilog:
-	$(MAKE) -C Subsystem_DTU generate-caravel MEM=DffRam
-	$(MAKE) -C Subsystem_DTU generate-caravel MEM=OpenRamSky130
-	$(MAKE) -C Subsystem_DTU generate-caravel MEM=ChipFoundrySram
+	$(MAKE) -C Subsystem_DTU generate-caravel MEM_TYPE=DffRam
+	$(MAKE) -C Subsystem_DTU generate-caravel MEM_TYPE=OpenRamSky130
+	$(MAKE) -C Subsystem_DTU generate-caravel MEM_TYPE=ChipFoundrySram
+	$(MAKE) -C Subsystem_DTU generate-caravel MEM_TYPE=RtlSyncMemory IMEM=256 DMEM=128
 	$(MAKE) -C Subsystem_DTU generate-caravel-top
 	cp Subsystem_DTU/generated/caravel/* verilog/rtl
 
@@ -442,6 +443,8 @@ generate-verilog:
 setup-cfsram:
 	pip install cf-ipm
 	ipm install CF_SRAM_1024x32
+	ipm install DFFRAM256x32
+	gunzip ip/DFFRAM256x32/layout/gds/DFFRAM256x32.gds.gz
 
 
 harden-all: CF_SRAM_1024x32_wrapper leros-cfram leros-openram user_project_wrapper

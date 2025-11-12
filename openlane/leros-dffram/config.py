@@ -11,13 +11,13 @@ config["VERILOG_FILES"] = [
 ]
 
 left_edge_space = 500
-right_edge_space = 10.1
-center_space = 500
+right_edge_space = 50
+center_space = 0
 top_space = 200
 bottom_space = 200
 
-dffram_width = 809.6
-dffram_height = 533.12
+dffram_width = 1152.795
+dffram_height = 535.550
 
 die_width = left_edge_space + dffram_width + right_edge_space
 die_height = top_space + 2 * dffram_height + center_space + bottom_space
@@ -38,8 +38,10 @@ config["DIE_AREA"] = [0, 0, die_width, die_height]
 config["VDD_NETS"] = ["vccd1"]
 config["GND_NETS"] = ["vssd1"]
 
+dffram_dir = "dir::../../ip/DFFRAM256x32"
+
 config["MACROS"] = {
-  "RAM256": {
+  "DFFRAM256x32": {
     "instances": {
         "instrMem.m.mem": {
         "location": [sram0_x, sram0_y],
@@ -47,27 +49,27 @@ config["MACROS"] = {
         },
         "dmem.m.mem": {
         "location": [sram1_x, sram1_y],
-        "orientation": "FN"
+        "orientation": "S"
         }
     },
-    "gds": ["dir::../../dffram/gds/RAM256.gds"],
-    "lef": ["dir::../../dffram/lef/RAM256.lef"],
-    "nl": ["dir::../../dffram/nl/RAM256.nl.v"],
+    "gds": [f"{dffram_dir}/layout/gds/DFFRAM256x32.gds"],
+    "lef": [f"{dffram_dir}/layout/lef/DFFRAM256x32.lef"],
+    "nl": [f"{dffram_dir}/hdl/gl/DFFRAM256x32.v"],
     "spef": {
-        "min_*": ["dir::../../dffram/spef/min/RAM256.min.spef"],
-        "nom_*": ["dir::../../dffram/spef/nom/RAM256.nom.spef"],
-        "max_*": ["dir::../../dffram/spef/max/RAM256.max.spef"]
+        "min_*": [f"{dffram_dir}/timing/spef/DFFRAM256x32.min.spef"],
+        "nom_*": [f"{dffram_dir}/timing/spef/DFFRAM256x32.nom.spef"],
+        "max_*": [f"{dffram_dir}/timing/spef/DFFRAM256x32.max.spef"]
     },
     "lib": {
-        "min_tt_025C_1v80": "dir::../../dffram/lib/min_tt_025C_1v80/RAM256__min_tt_025C_1v80.lib",
-        "min_ff_n40C_1v95": "dir::../../dffram/lib/min_ff_n40C_1v95/RAM256__min_ff_n40C_1v95.lib",
-        "max_ff_n40C_1v95": "dir::../../dffram/lib/max_ff_n40C_1v95/RAM256__max_ff_n40C_1v95.lib",
-        "nom_tt_025C_1v80": "dir::../../dffram/lib/nom_tt_025C_1v80/RAM256__nom_tt_025C_1v80.lib",
-        "min_ss_100C_1v60": "dir::../../dffram/lib/min_ss_100C_1v60/RAM256__min_ss_100C_1v60.lib",
-        "max_ss_100C_1v60": "dir::../../dffram/lib/max_ss_100C_1v60/RAM256__max_ss_100C_1v60.lib",
-        "max_tt_025C_1v80": "dir::../../dffram/lib/max_tt_025C_1v80/RAM256__max_tt_025C_1v80.lib",
-        "nom_ss_100C_1v60": "dir::../../dffram/lib/nom_ss_100C_1v60/RAM256__nom_ss_100C_1v60.lib",
-        "nom_ff_n40C_1v95": "dir::../../dffram/lib/nom_ff_n40C_1v95/RAM256__nom_ff_n40C_1v95.lib"
+        "max_ff_*": f"{dffram_dir}/timing/lib/max/DFFRAM256x32.Fastest.lib",
+        "max_ss_*": f"{dffram_dir}/timing/lib/max/DFFRAM256x32.Slowest.lib",
+        "max_tt_*": f"{dffram_dir}/timing/lib/max/DFFRAM256x32.Typical.lib",
+        "min_ff_*": f"{dffram_dir}/timing/lib/min/DFFRAM256x32.Fastest.lib",
+        "min_ss_*": f"{dffram_dir}/timing/lib/min/DFFRAM256x32.Slowest.lib",
+        "min_tt_*": f"{dffram_dir}/timing/lib/min/DFFRAM256x32.Typical.lib",
+        "nom_ff_*": f"{dffram_dir}/timing/lib/nom/DFFRAM256x32.Fastest.lib",
+        "nom_ss_*": f"{dffram_dir}/timing/lib/nom/DFFRAM256x32.Slowest.lib",
+        "nom_tt_*": f"{dffram_dir}/timing/lib/nom/DFFRAM256x32.Typical.lib"
     }
   }
 }

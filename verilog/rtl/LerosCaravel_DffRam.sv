@@ -1002,7 +1002,7 @@ module Leros(	// leros/src/main/scala/leros/Leros.scala:13:7
   assign io_dbg_pc_bore = pcReg;	// leros/src/main/scala/leros/Leros.scala:13:7, :23:22
 endmodule
 
-// external module RAM256
+// external module DFFRAM256x32
 
 module DffRam(	// src/main/scala/mem/DffRam.scala:21:7
   input         clock,	// src/main/scala/mem/DffRam.scala:21:7
@@ -1012,7 +1012,7 @@ module DffRam(	// src/main/scala/mem/DffRam.scala:21:7
   input  [3:0]  io_write	// src/main/scala/mem/DffRam.scala:24:14
 );
 
-  RAM256 mem (	// src/main/scala/mem/DffRam.scala:32:35
+  DFFRAM256x32 mem (	// src/main/scala/mem/DffRam.scala:32:35
     .CLK (clock),
     .EN0 (1'h1),	// src/main/scala/mem/DffRam.scala:24:14, :32:35
     .A0  (io_wordAddr),

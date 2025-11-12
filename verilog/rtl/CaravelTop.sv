@@ -577,8 +577,7 @@ module AluAccu(	// leros/src/main/scala/leros/AluAccu.scala:13:7
   input         io_enaByte,	// leros/src/main/scala/leros/AluAccu.scala:14:14
                 io_enaHalf,	// leros/src/main/scala/leros/AluAccu.scala:14:14
   input  [1:0]  io_off,	// leros/src/main/scala/leros/AluAccu.scala:14:14
-  output [31:0] io_accu,	// leros/src/main/scala/leros/AluAccu.scala:14:14
-                io_dbg_acc_bore	// src/main/scala/caravel/LerosCaravel.scala:114:33
+  output [31:0] io_accu	// leros/src/main/scala/leros/AluAccu.scala:14:14
 );
 
   reg  [31:0] accuReg;	// leros/src/main/scala/leros/AluAccu.scala:24:24
@@ -651,7 +650,6 @@ module AluAccu(	// leros/src/main/scala/leros/AluAccu.scala:13:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
   assign io_accu = accuReg;	// leros/src/main/scala/leros/AluAccu.scala:13:7, :24:24
-  assign io_dbg_acc_bore = accuReg;	// leros/src/main/scala/leros/AluAccu.scala:13:7, :24:24
 endmodule
 
 module Decode(	// leros/src/main/scala/leros/Decode.scala:47:7
@@ -801,9 +799,7 @@ module Leros(	// leros/src/main/scala/leros/Leros.scala:13:7
   output [15:0] dmemIO_wrAddr,	// leros/src/main/scala/leros/Leros.scala:16:18
   output [31:0] dmemIO_wrData,	// leros/src/main/scala/leros/Leros.scala:16:18
   output        dmemIO_wr,	// leros/src/main/scala/leros/Leros.scala:16:18
-  output [3:0]  dmemIO_wrMask,	// leros/src/main/scala/leros/Leros.scala:16:18
-  output [9:0]  io_dbg_pc_bore,	// src/main/scala/caravel/LerosCaravel.scala:113:32
-  output [31:0] io_dbg_acc_bore	// src/main/scala/caravel/LerosCaravel.scala:114:33
+  output [3:0]  dmemIO_wrMask	// leros/src/main/scala/leros/Leros.scala:16:18
 );
 
   wire [7:0]  vecAccu_3;	// leros/src/main/scala/leros/Leros.scala:50:16, :88:20
@@ -957,16 +953,15 @@ module Leros(	// leros/src/main/scala/leros/Leros.scala:13:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
   AluAccu alu (	// leros/src/main/scala/leros/Leros.scala:18:19
-    .clock           (clock),
-    .reset           (reset),
-    .io_op           (decReg_op),	// leros/src/main/scala/leros/Leros.scala:40:23
-    .io_din          (decReg_useDecOpd ? decReg_operand : dmemIO_rdData),	// leros/src/main/scala/leros/Leros.scala:40:23, :75:20
-    .io_enaMask      (_GEN ? 4'h0 : decReg_enaMask),	// leros/src/main/scala/leros/Decode.scala:32:15, leros/src/main/scala/leros/Leros.scala:40:23, :69:18, :80:25, :82:{18,29}, :83:14, :85:20
-    .io_enaByte      (decReg_enaByte),	// leros/src/main/scala/leros/Leros.scala:40:23
-    .io_enaHalf      (decReg_enaHalf),	// leros/src/main/scala/leros/Leros.scala:40:23
-    .io_off          (effAddrOffReg),	// leros/src/main/scala/leros/Leros.scala:59:30
-    .io_accu         (_alu_io_accu),
-    .io_dbg_acc_bore (io_dbg_acc_bore)
+    .clock      (clock),
+    .reset      (reset),
+    .io_op      (decReg_op),	// leros/src/main/scala/leros/Leros.scala:40:23
+    .io_din     (decReg_useDecOpd ? decReg_operand : dmemIO_rdData),	// leros/src/main/scala/leros/Leros.scala:40:23, :75:20
+    .io_enaMask (_GEN ? 4'h0 : decReg_enaMask),	// leros/src/main/scala/leros/Decode.scala:32:15, leros/src/main/scala/leros/Leros.scala:40:23, :69:18, :80:25, :82:{18,29}, :83:14, :85:20
+    .io_enaByte (decReg_enaByte),	// leros/src/main/scala/leros/Leros.scala:40:23
+    .io_enaHalf (decReg_enaHalf),	// leros/src/main/scala/leros/Leros.scala:40:23
+    .io_off     (effAddrOffReg),	// leros/src/main/scala/leros/Leros.scala:59:30
+    .io_accu    (_alu_io_accu)
   );
   Decode dec (	// leros/src/main/scala/leros/Leros.scala:37:19
     .io_din               (instr),	// leros/src/main/scala/leros/Leros.scala:33:18
@@ -999,7 +994,6 @@ module Leros(	// leros/src/main/scala/leros/Leros.scala:13:7
     _GEN_7
       ? 4'hF
       : _GEN_4 ? 4'h1 << effAddrOffReg : _GEN_6 ? _dmemIO_wrMask_T_1[3:0] : 4'hF;	// leros/src/main/scala/leros/Leros.scala:13:7, :59:30, :65:17, :83:14, :88:20, :115:{21,34}, :122:{21,34}
-  assign io_dbg_pc_bore = pcReg;	// leros/src/main/scala/leros/Leros.scala:13:7, :23:22
 endmodule
 
 // external module CF_SRAM_1024x32_wrapper
@@ -2034,8 +2028,6 @@ module LerosCaravel_ChipFoundrySram(	// src/main/scala/caravel/LerosCaravel.scal
   input  [11:0] io_wb_adr,	// src/main/scala/caravel/LerosCaravel.scala:54:14
   output [31:0] io_wb_dat_o,	// src/main/scala/caravel/LerosCaravel.scala:54:14
   output        io_wb_ack,	// src/main/scala/caravel/LerosCaravel.scala:54:14
-  output [9:0]  io_dbg_pc,	// src/main/scala/caravel/LerosCaravel.scala:54:14
-  output [31:0] io_dbg_acc,	// src/main/scala/caravel/LerosCaravel.scala:54:14
   input  [11:0] io_gpio_in,	// src/main/scala/caravel/LerosCaravel.scala:54:14
   output [11:0] io_gpio_out,	// src/main/scala/caravel/LerosCaravel.scala:54:14
                 io_gpio_oe	// src/main/scala/caravel/LerosCaravel.scala:54:14
@@ -2174,19 +2166,17 @@ module LerosCaravel_ChipFoundrySram(	// src/main/scala/caravel/LerosCaravel.scal
     .io_apb_prdata  (_arb_io_masters_0_prdata)	// src/main/scala/apb/ApbArbiter.scala:13:21
   );
   Leros leros (	// src/main/scala/caravel/LerosCaravel.scala:77:21
-    .clock           (clock),
-    .reset           (leros_reset_REG),	// src/main/scala/caravel/LerosCaravel.scala:78:25
-    .imemIO_addr     (_leros_imemIO_addr),
+    .clock         (clock),
+    .reset         (leros_reset_REG),	// src/main/scala/caravel/LerosCaravel.scala:78:25
+    .imemIO_addr   (_leros_imemIO_addr),
     .imemIO_instr
       (_sysCtrl_ctrlPort_lerosBootFromRam ? _instrMem_instrPort_instr : _rom_io_instr),	// src/main/scala/caravel/LerosCaravel.scala:73:23, :80:24, :81:19, :92:28
-    .dmemIO_rdAddr   (_leros_dmemIO_rdAddr),
-    .dmemIO_rdData   (_dmemMux_io_master_rdData),	// src/main/scala/dtu/DataMemMux.scala:116:25
-    .dmemIO_wrAddr   (_leros_dmemIO_wrAddr),
-    .dmemIO_wrData   (_leros_dmemIO_wrData),
-    .dmemIO_wr       (_leros_dmemIO_wr),
-    .dmemIO_wrMask   (_leros_dmemIO_wrMask),
-    .io_dbg_pc_bore  (io_dbg_pc),
-    .io_dbg_acc_bore (io_dbg_acc)
+    .dmemIO_rdAddr (_leros_dmemIO_rdAddr),
+    .dmemIO_rdData (_dmemMux_io_master_rdData),	// src/main/scala/dtu/DataMemMux.scala:116:25
+    .dmemIO_wrAddr (_leros_dmemIO_wrAddr),
+    .dmemIO_wrData (_leros_dmemIO_wrData),
+    .dmemIO_wr     (_leros_dmemIO_wr),
+    .dmemIO_wrMask (_leros_dmemIO_wrMask)
   );
   InstructionMemory instrMem (	// src/main/scala/caravel/LerosCaravel.scala:80:24
     .clock           (clock),
@@ -2489,8 +2479,6 @@ module LerosCaravel_OpenRamSky130(	// src/main/scala/caravel/LerosCaravel.scala:
   input  [11:0] io_wb_adr,	// src/main/scala/caravel/LerosCaravel.scala:54:14
   output [31:0] io_wb_dat_o,	// src/main/scala/caravel/LerosCaravel.scala:54:14
   output        io_wb_ack,	// src/main/scala/caravel/LerosCaravel.scala:54:14
-  output [9:0]  io_dbg_pc,	// src/main/scala/caravel/LerosCaravel.scala:54:14
-  output [31:0] io_dbg_acc,	// src/main/scala/caravel/LerosCaravel.scala:54:14
   input  [11:0] io_gpio_in,	// src/main/scala/caravel/LerosCaravel.scala:54:14
   output [11:0] io_gpio_out,	// src/main/scala/caravel/LerosCaravel.scala:54:14
                 io_gpio_oe	// src/main/scala/caravel/LerosCaravel.scala:54:14
@@ -2629,19 +2617,17 @@ module LerosCaravel_OpenRamSky130(	// src/main/scala/caravel/LerosCaravel.scala:
     .io_apb_prdata  (_arb_io_masters_0_prdata)	// src/main/scala/apb/ApbArbiter.scala:13:21
   );
   Leros leros (	// src/main/scala/caravel/LerosCaravel.scala:77:21
-    .clock           (clock),
-    .reset           (leros_reset_REG),	// src/main/scala/caravel/LerosCaravel.scala:78:25
-    .imemIO_addr     (_leros_imemIO_addr),
+    .clock         (clock),
+    .reset         (leros_reset_REG),	// src/main/scala/caravel/LerosCaravel.scala:78:25
+    .imemIO_addr   (_leros_imemIO_addr),
     .imemIO_instr
       (_sysCtrl_ctrlPort_lerosBootFromRam ? _instrMem_instrPort_instr : _rom_io_instr),	// src/main/scala/caravel/LerosCaravel.scala:73:23, :80:24, :81:19, :92:28
-    .dmemIO_rdAddr   (_leros_dmemIO_rdAddr),
-    .dmemIO_rdData   (_dmemMux_io_master_rdData),	// src/main/scala/dtu/DataMemMux.scala:116:25
-    .dmemIO_wrAddr   (_leros_dmemIO_wrAddr),
-    .dmemIO_wrData   (_leros_dmemIO_wrData),
-    .dmemIO_wr       (_leros_dmemIO_wr),
-    .dmemIO_wrMask   (_leros_dmemIO_wrMask),
-    .io_dbg_pc_bore  (io_dbg_pc),
-    .io_dbg_acc_bore (io_dbg_acc)
+    .dmemIO_rdAddr (_leros_dmemIO_rdAddr),
+    .dmemIO_rdData (_dmemMux_io_master_rdData),	// src/main/scala/dtu/DataMemMux.scala:116:25
+    .dmemIO_wrAddr (_leros_dmemIO_wrAddr),
+    .dmemIO_wrData (_leros_dmemIO_wrData),
+    .dmemIO_wr     (_leros_dmemIO_wr),
+    .dmemIO_wrMask (_leros_dmemIO_wrMask)
   );
   InstructionMemory_1 instrMem (	// src/main/scala/caravel/LerosCaravel.scala:80:24
     .clock           (clock),
@@ -2986,14 +2972,10 @@ module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:20:7
   wire [31:0] _wbMux_io_targets_1_adr;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [31:0] _lerosSky130_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:56:11
   wire        _lerosSky130_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:56:11
-  wire [9:0]  _lerosSky130_io_dbg_pc;	// src/main/scala/caravel/CaravelTop.scala:56:11
-  wire [31:0] _lerosSky130_io_dbg_acc;	// src/main/scala/caravel/CaravelTop.scala:56:11
   wire [11:0] _lerosSky130_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:56:11
   wire [11:0] _lerosSky130_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:56:11
   wire [31:0] _lerosCfram_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:51:11
   wire        _lerosCfram_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:51:11
-  wire [9:0]  _lerosCfram_io_dbg_pc;	// src/main/scala/caravel/CaravelTop.scala:51:11
-  wire [31:0] _lerosCfram_io_dbg_acc;	// src/main/scala/caravel/CaravelTop.scala:51:11
   wire [11:0] _lerosCfram_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:51:11
   wire [11:0] _lerosCfram_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:51:11
   LerosCaravel_ChipFoundrySram lerosCfram (	// src/main/scala/caravel/CaravelTop.scala:51:11
@@ -3007,8 +2989,6 @@ module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:20:7
     .io_wb_adr   (_wbMux_io_targets_0_adr[11:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
     .io_wb_dat_o (_lerosCfram_io_wb_dat_o),
     .io_wb_ack   (_lerosCfram_io_wb_ack),
-    .io_dbg_pc   (_lerosCfram_io_dbg_pc),
-    .io_dbg_acc  (_lerosCfram_io_dbg_acc),
     .io_gpio_in  (io_gpio_in[11:0]),	// src/main/scala/caravel/CaravelTop.scala:53:38
     .io_gpio_out (_lerosCfram_io_gpio_out),
     .io_gpio_oe  (_lerosCfram_io_gpio_oe)
@@ -3024,8 +3004,6 @@ module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:20:7
     .io_wb_adr   (_wbMux_io_targets_1_adr[11:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
     .io_wb_dat_o (_lerosSky130_io_wb_dat_o),
     .io_wb_ack   (_lerosSky130_io_wb_ack),
-    .io_dbg_pc   (_lerosSky130_io_dbg_pc),
-    .io_dbg_acc  (_lerosSky130_io_dbg_acc),
     .io_gpio_in  (io_gpio_in[23:12]),	// src/main/scala/caravel/CaravelTop.scala:58:39
     .io_gpio_out (_lerosSky130_io_gpio_out),
     .io_gpio_oe  (_lerosSky130_io_gpio_oe)
@@ -3058,13 +3036,7 @@ module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:20:7
     .io_targets_1_dat_o (_lerosSky130_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:56:11
     .io_targets_1_ack   (_lerosSky130_io_wb_ack)	// src/main/scala/caravel/CaravelTop.scala:56:11
   );
-  assign io_la_out =
-    {_lerosSky130_io_dbg_acc,
-     22'h0,
-     _lerosSky130_io_dbg_pc,
-     _lerosCfram_io_dbg_acc,
-     22'h0,
-     _lerosCfram_io_dbg_pc};	// src/main/scala/caravel/CaravelTop.scala:20:7, :51:11, :56:11, :69:19, :72:19
+  assign io_la_out = 128'h0;	// src/main/scala/caravel/CaravelTop.scala:20:7, :72:13
   assign io_gpio_out = {_lerosSky130_io_gpio_out, _lerosCfram_io_gpio_out};	// src/main/scala/caravel/CaravelTop.scala:20:7, :51:11, :56:11, :66:21
   assign io_gpio_oe = {_lerosSky130_io_gpio_oe, _lerosCfram_io_gpio_oe};	// src/main/scala/caravel/CaravelTop.scala:20:7, :51:11, :56:11, :67:20
 endmodule
