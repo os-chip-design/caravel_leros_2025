@@ -13,16 +13,18 @@ Or later:
 
     git submodule update --init --recursive
 
-Then build the project start Docker and follow [the Docs](docs/source/index.md), or as follows:
+Then start Docker and follow [the Docs](docs/source/index.md), or as follows:
 
     make setup
 
-For a Mac install the CF RAM (it is included in the Makefile on Linux):
+Install the CF RAM and the DFF RAM (it should be included in the Makefile on Linux, below is for Mac):
 
     pip3 install --break-system-packages cf-ipm
     ipm install CF_SRAM_1024x32
+    ipm install DFFRAM256x32
+    gunzip ip/DFFRAM256x32/layout/gds/DFFRAM256x32.gds.gz
 
-Generate the Leros Verilog files
+Generate the Leros Verilog files (not needed as the SV files are included):
 
     make generate-verilog
 
@@ -30,15 +32,19 @@ then harden the wrapper for the memory
 
     make CF_SRAM_1024x32_wrapper LIBRELANE_USE_NIX=1
 
-then build and harden Leros with the CF RAM:
+and the register based memories
+
+    make regmem_128 LIBRELANE_USE_NIX=1
+    make regmem_256 LIBRELANE_USE_NIX=1
+
+then build and harden different Leros versions:
 
     make leros-cfram LIBRELANE_USE_NIX=1
-
-and build and harden Leros with OpenRAM:
-
     make leros-openram LIBRELANE_USE_NIX=1
+    make leros-dffram LIBRELANE_USE_NIX=1
+    make leros-regmem LIBRELANE_USE_NIX=1
 
-and the wrapper for Caravel:
+and then include all in the wrapper for Caravel:
 
     make user_project_wrapper LIBRELANE_USE_NIX=1
 
@@ -70,10 +76,10 @@ The Leros test case can be run with cocotb:
 * [x] Make sure to use 10 MHz for the serial port
 * [ ] Set pin defines in defines.v
 * [x] TODO: there is a mismatch between io_out vs io_gpio_out
-* [ ] Explore three different memories
+* [x] Explore three different memories
   - [x] OpenRAM
   - [x] CF RAM
-  - [ ] DFF RAM
+  - [x] DFF RAM
 * [x] Have a RV Wishbone test to boot Leros
 * [ ] Maybe have three versions on the same chip
 * [ ] Add some more simple example on the top level (WB IO, Sylvan's RF, ttsky25-tapeout/SKY130_register_file_testing)
