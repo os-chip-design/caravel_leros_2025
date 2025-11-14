@@ -447,7 +447,7 @@ setup-cfsram:
 	gunzip ip/DFFRAM256x32/layout/gds/DFFRAM256x32.gds.gz
 
 
-harden-all: CF_SRAM_1024x32_wrapper leros-cfram leros-openram user_project_wrapper
+harden-all: CF_SRAM_1024x32_wrapper leros-cfram leros-openram leros-dffram regmem_128 regmem_256 leros-regmem user_project_wrapper
 
 clean-old-runs:
 	$(MAKE) -C openlane clean-old-runs
