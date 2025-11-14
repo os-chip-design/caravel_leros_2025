@@ -451,3 +451,6 @@ harden-all: CF_SRAM_1024x32_wrapper leros-cfram leros-openram leros-dffram regme
 
 clean-old-runs:
 	$(MAKE) -C openlane clean-old-runs
+
+clean-runs:
+	$(MAKE) -C openlane clean-runs
