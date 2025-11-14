@@ -5,7 +5,7 @@ config = {}
 config["DESIGN_NAME"] = "LerosCaravel_DffRam"
 config["CLOCK_PORT"] = "clock"
 config["CLOCK_NET"] = "clock"
-config["CLOCK_PERIOD"] = 50
+config["CLOCK_PERIOD"] = 100
 config["VERILOG_FILES"] = [
   "dir::../../verilog/rtl/LerosCaravel_DffRam.sv"
 ]

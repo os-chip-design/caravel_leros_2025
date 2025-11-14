@@ -37,7 +37,7 @@
         "LerosCaravel_ChipFoundrySram": {
             "instances": {
                 "mprj.lerosCfram": {
-                    "location": [100, 2500],
+                    "location": [70, 2500],
                     "orientation": "N"
                 }
             },
@@ -57,7 +57,7 @@
         "LerosCaravel_OpenRamSky130": {
             "instances": {
                 "mprj.lerosSky130": {
-                    "location": [955, 2500],
+                    "location": [965, 2500],
                     "orientation": "N"
                 }
             },
@@ -96,7 +96,7 @@
         "LerosCaravel_RtlSyncMemory": {
             "instances": {
                 "mprj.lerosRtlRam": {
-                    "location": [2150, 1600],
+                    "location": [2155, 1600],
                     "orientation": "N"
                 }
             },
