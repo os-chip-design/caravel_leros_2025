@@ -85,6 +85,21 @@ $(designs):
 		eval $$cmd; \
 	fi
 
+clean-old-runs:
+	@for dir in $(designs); do \
+		echo "--- [$$dir] ----------------------"; \
+		if [ ! -d "$(PROJECT_ROOT)/openlane/$$dir/runs" ]; then \
+			echo "no runs directory"; \
+			echo ""; \
+			continue; \
+		fi; \
+		find "$(PROJECT_ROOT)/openlane/$$dir/runs" -maxdepth 1 -mindepth 1 -type d | sed '$$d' | while IFS= read -r run; do \
+			echo "deleting $$run"; \
+			rm -r "$$run"; \
+		done; \
+		echo ""; \
+	done
+
 librelane: librelane-venv librelane-docker-image
 
 .PHONY: librelane-docker-image

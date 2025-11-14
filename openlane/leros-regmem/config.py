@@ -16,11 +16,11 @@ center_space = 50
 top_space = 50
 bottom_space = 50
 
-mem_32x32_width = 300
-mem_32x32_height = 450
+mem_32x32_width = 400
+mem_32x32_height = 400
 
-mem_64x32_width = 750
-mem_64x32_height = 350
+mem_64x32_width = 400
+mem_64x32_height = 700
 
 die_width = left_edge_space + mem_64x32_width + right_edge_space
 die_height = top_space + mem_64x32_height + center_space + mem_32x32_height + bottom_space

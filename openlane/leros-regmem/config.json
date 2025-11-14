@@ -12,8 +12,8 @@
     "DIE_AREA": [
         0,
         0,
-        1050,
-        950
+        700,
+        1250
     ],
     "VDD_NETS": [
         "vccd1"
@@ -27,7 +27,7 @@
                 "instrMem.m.mem_ext": {
                     "location": [
                         250,
-                        550
+                        500
                     ],
                     "orientation": "N"
                 }
@@ -60,7 +60,7 @@
             "instances": {
                 "dmem.m.mem_ext": {
                     "location": [
-                        700,
+                        250,
                         50
                     ],
                     "orientation": "N"

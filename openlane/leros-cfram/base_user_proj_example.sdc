@@ -116,12 +116,8 @@ set_input_transition -min 0.09  [get_ports {io_wb_we}]
 set_input_transition -min 0.15  [get_ports {io_wb_stb}]
 
 # Output delays
-set_output_delay -max 1.0  -clock [get_clocks {clk}] [get_ports {io_dbg_pc[*]}]
-set_output_delay -max 1.0  -clock [get_clocks {clk}] [get_ports {io_dbg_acc[*]}]
 set_output_delay -max 3.62 -clock [get_clocks {clk}] [get_ports {io_wb_dat_o[*]}]
 set_output_delay -max 8.41 -clock [get_clocks {clk}] [get_ports {io_wb_ack}]
-set_output_delay -min 0    -clock [get_clocks {clk}] [get_ports {io_dbg_pc[*]}]
-set_output_delay -min 0    -clock [get_clocks {clk}] [get_ports {io_dbg_acc[*]}]
 set_output_delay -min 1.13 -clock [get_clocks {clk}] [get_ports {io_wb_dat_o[*]}]
 set_output_delay -min 1.37 -clock [get_clocks {clk}] [get_ports {io_wb_ack}]
 if { $::env(IO_SYNC) } {

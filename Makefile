@@ -448,3 +448,6 @@ setup-cfsram:
 
 
 harden-all: CF_SRAM_1024x32_wrapper leros-cfram leros-openram user_project_wrapper
+
+clean-old-runs:
+	$(MAKE) -C openlane clean-old-runs

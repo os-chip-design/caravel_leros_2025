@@ -5,7 +5,7 @@ config = {}
 config["DESIGN_NAME"] = "LerosCaravel_DffRam"
 config["CLOCK_PORT"] = "clock"
 config["CLOCK_NET"] = "clock"
-config["CLOCK_PERIOD"] = 100
+config["CLOCK_PERIOD"] = 50
 config["VERILOG_FILES"] = [
   "dir::../../verilog/rtl/LerosCaravel_DffRam.sv"
 ]
@@ -110,7 +110,7 @@ config.update({
   "pdk::sky130*": {
       "RT_MAX_LAYER": "met4",
       "scl::sky130_fd_sc_hd": {
-          "CLOCK_PERIOD": 100
+          "CLOCK_PERIOD": config["CLOCK_PERIOD"]
       },
       "scl::sky130_fd_sc_hdll": {
           "CLOCK_PERIOD": 10

@@ -99,20 +99,18 @@ CaravelTop mprj (
     .io_wb_stb(wbs_stb_i),
     .io_wb_we(wbs_we_i),
     .io_wb_sel(wbs_sel_i),
-    .io_wb_adr({12'b0, wbs_adr_i[19:0]}),
+    .io_wb_adr(wbs_adr_i[19:0]),
     .io_wb_dat_i(wbs_dat_i),
     .io_wb_ack(wbs_ack_o),
     .io_wb_dat_o(wbs_dat_o),
 
     // Logic Analyzer
 
-    .io_la_out(la_data_out),
-
     // IO Pads
 
-    .io_gpio_in(io_in[35:12]),
-    .io_gpio_out(io_out[35:12]),
-    .io_gpio_oe(io_oeb[35:12])
+    .io_gpio_in(io_in[37:6]),
+    .io_gpio_out(io_out[37:6]),
+    .io_gpio_oe(io_oeb[37:6])
 );
 
 endmodule	// user_project_wrapper
