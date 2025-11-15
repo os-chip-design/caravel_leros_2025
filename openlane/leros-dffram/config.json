@@ -26,14 +26,14 @@
             "instances": {
                 "instrMem.m.mem": {
                     "location": [
-                        500,
+                        300,
                         200
                     ],
                     "orientation": "FN"
                 },
                 "dmem.m.mem": {
                     "location": [
-                        500,
+                        300,
                         735.55
                     ],
                     "orientation": "S"
