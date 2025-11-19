@@ -1007,7 +1007,9 @@ module Sky130Sram256(	// src/main/scala/mem/Sky130SramMacros.scala:21:7
   input  [3:0]  io_mask	// src/main/scala/mem/Sky130SramMacros.scala:27:14
 );
 
-  sky130_sram_1kbyte_1rw1r_32x256_8 mem (	// src/main/scala/mem/Sky130SramMacros.scala:35:39
+  sky130_sram_1kbyte_1rw1r_32x256_8 #(
+    .VERBOSE(0)
+  ) mem (	// src/main/scala/mem/Sky130SramMacros.scala:35:39
     .clk0   (clock),
     .csb0   (1'h0),	// src/main/scala/mem/Sky130SramMacros.scala:42:15
     .web0   (~io_write),	// src/main/scala/mem/Sky130SramMacros.scala:43:18
