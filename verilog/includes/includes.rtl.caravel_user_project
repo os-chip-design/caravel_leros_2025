@@ -19,5 +19,6 @@
 -v $(USER_PROJECT_VERILOG)/../ip/CF_SRAM_1024x32/hdl/CF_SRAM_1024x32.v
 -v $(USER_PROJECT_VERILOG)/../ip/CF_SRAM_1024x32/hdl/beh_models/CF_SRAM_1024x32.tt_180V_25C.v
 -v $(USER_PROJECT_VERILOG)/rtl/CF_SRAM_1024x32_wrapper.v
--v $(PDK_ROOT)/libs.ref/sky130_sram_macros/verilog/sky130_sram_1kbyte_1rw1r_32x256_8.v
+-v $(PDK_ROOT)/sky130A/libs.ref/sky130_sram_macros/verilog/sky130_sram_1kbyte_1rw1r_32x256_8.v
+-v $(USER_PROJECT_VERILOG)/../ip/DFFRAM256x32/hdl/sim/DFFRAM256x32.v
 -sv $(USER_PROJECT_VERILOG)/rtl/CaravelTop.sv
