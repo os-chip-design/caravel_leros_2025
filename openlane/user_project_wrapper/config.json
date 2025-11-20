@@ -37,7 +37,7 @@
         "LerosCaravel_ChipFoundrySram": {
             "instances": {
                 "mprj.lerosCfram": {
-                    "location": [70, 2500],
+                    "location": [300, 2500],
                     "orientation": "N"
                 }
             },
@@ -57,7 +57,7 @@
         "LerosCaravel_OpenRamSky130": {
             "instances": {
                 "mprj.lerosSky130": {
-                    "location": [50, 500],
+                    "location": [200, 700],
                     "orientation": "N"
                 }
             },
@@ -77,7 +77,7 @@
         "LerosCaravel_DffRam": {
             "instances": {
                 "mprj.lerosDffRam": {
-                    "location": [1100, 50],
+                    "location": [1450, 50],
                     "orientation": "N"
                 }
             },
@@ -96,7 +96,7 @@
         "LerosCaravel_RtlSyncMemory": {
             "instances": {
                 "mprj.lerosRtlRam": {
-                    "location": [2155, 1600],
+                    "location": [1700, 1900],
                     "orientation": "N"
                 }
             },
@@ -164,6 +164,7 @@
     "CLOCK_PORT": "wb_clk_i",
     "CLOCK_NET": "mprj.clock",
     "SIGNOFF_SDC_FILE": "dir::signoff.sdc",
+    "FALLBACK_SDC_FILE": "dir::signoff.sdc",
     
     "CLOCK_PERIOD": 25,
     "MAGIC_ZEROIZE_ORIGIN": false,
