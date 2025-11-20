@@ -16,8 +16,7 @@
 
 # yaml file contain general design information that would mostly need to be updated in the first run only 
 includes: 
-    #- leros_adder_test/leros_adder_test.yaml
-    - two_leros_adder_test/two_leros_adder_test.yaml
+    - leros_adder_test/leros_adder_test.yaml
     # - counter_la/counter_la.yaml
     # - counter_wb/counter_wb.yaml
     # - counter_la_reset/counter_la_reset.yaml

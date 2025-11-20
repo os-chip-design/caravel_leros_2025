@@ -4,7 +4,7 @@
     "CLOCK_NET": "clock",
     "CLOCK_PERIOD": 25,
     "VERILOG_FILES": [
-        "dir::../../verilog/rtl/LerosCaravel_RtlSyncMemory.sv"
+        "dir::../../verilog/rtl/CaravelTop.sv"
     ],
     "FP_PDN_MULTILAYER": true,
     "FP_PDN_CORE_RING": true,
@@ -12,8 +12,8 @@
     "DIE_AREA": [
         0,
         0,
-        700,
-        1250
+        1010.1,
+        1090.1
     ],
     "VDD_NETS": [
         "vccd1"
@@ -26,8 +26,8 @@
             "instances": {
                 "instrMem.m.mem_ext": {
                     "location": [
-                        250,
-                        500
+                        400,
+                        580
                     ],
                     "orientation": "N"
                 }
@@ -60,8 +60,8 @@
             "instances": {
                 "dmem.m.mem_ext": {
                     "location": [
-                        250,
-                        50
+                        400,
+                        80
                     ],
                     "orientation": "N"
                 }

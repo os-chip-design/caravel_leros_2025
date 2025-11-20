@@ -7,7 +7,7 @@ config["CLOCK_PORT"] = "clock"
 config["CLOCK_NET"] = "clock"
 config["CLOCK_PERIOD"] = 25
 config["VERILOG_FILES"] = [
-  "dir::../../verilog/rtl/LerosCaravel_ChipFoundrySram.sv"
+  "dir::../../verilog/rtl/CaravelTop.sv"
 ]
 
 left_edge_space = 40
@@ -19,7 +19,7 @@ cf_wb_sram_width = 380
 cf_wb_sram_height = 435
 
 die_width = 2 * cf_wb_sram_width + left_edge_space + right_edge_space + center_space
-die_height = cf_wb_sram_height + 350
+die_height = cf_wb_sram_height + 300
 
 sram0_x = left_edge_space
 sram0_y = die_height - cf_wb_sram_height - top_space
@@ -160,7 +160,11 @@ config.update({ # Klayout seems to be upset by something in the openram metadata
     "QUIT_ON_ILLEGAL_OVERLAPS": False,
 })
 
+# get python file dir
+import os 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
 # write to file
 import json
-with open("config.json", "w") as f:
+with open(f"{dir_path}/config.json", "w") as f:
     json.dump(config, f, indent=4)

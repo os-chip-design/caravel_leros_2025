@@ -5,16 +5,16 @@ config = {}
 config["DESIGN_NAME"] = "LerosCaravel_DffRam"
 config["CLOCK_PORT"] = "clock"
 config["CLOCK_NET"] = "clock"
-config["CLOCK_PERIOD"] = 100
+config["CLOCK_PERIOD"] = 50
 config["VERILOG_FILES"] = [
-  "dir::../../verilog/rtl/LerosCaravel_DffRam.sv"
+  "dir::../../verilog/rtl/CaravelTop.sv"
 ]
 
-left_edge_space = 500
-right_edge_space = 50
-center_space = 0
-top_space = 200
-bottom_space = 200
+left_edge_space = 100
+right_edge_space = 100
+center_space = 350
+top_space = 10.1
+bottom_space = 10.1
 
 dffram_width = 1152.795
 dffram_height = 535.550
@@ -45,11 +45,11 @@ config["MACROS"] = {
     "instances": {
         "instrMem.m.mem": {
         "location": [sram0_x, sram0_y],
-        "orientation": "FN"
+        "orientation": "FS"
         },
         "dmem.m.mem": {
         "location": [sram1_x, sram1_y],
-        "orientation": "S"
+        "orientation": "N"
         }
     },
     "gds": [f"{dffram_dir}/layout/gds/DFFRAM256x32.gds"],
@@ -82,6 +82,12 @@ config["PDN_MACRO_CONNECTIONS"] = [
 
 config["FP_PDN_HPITCH"] = 51
 config["FP_PDN_VPITCH"] = 51
+
+config["STA_CORNERS"] = [
+    "nom_tt_025C_1v80",
+    "min_tt_025C_1v80",
+    "max_tt_025C_1v80"
+]
 
 config.update({
   "FP_PIN_ORDER_CFG": "dir::pin_order.cfg",
@@ -155,7 +161,11 @@ config.update({
     "RUN_POST_GRT_DESIGN_REPAIR": True,
 })
 
+# get python file dir
+import os 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
 # write to file
 import json
-with open("config.json", "w") as f:
+with open(f"{dir_path}/config.json", "w") as f:
     json.dump(config, f, indent=4)

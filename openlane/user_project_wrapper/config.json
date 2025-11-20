@@ -57,7 +57,7 @@
         "LerosCaravel_OpenRamSky130": {
             "instances": {
                 "mprj.lerosSky130": {
-                    "location": [965, 2500],
+                    "location": [50, 500],
                     "orientation": "N"
                 }
             },

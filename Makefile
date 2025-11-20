@@ -432,12 +432,8 @@ $(clean-targets): clean-% :
 
 
 generate-verilog:
-	$(MAKE) -C Subsystem_DTU generate-caravel MEM_TYPE=DffRam
-	$(MAKE) -C Subsystem_DTU generate-caravel MEM_TYPE=OpenRamSky130
-	$(MAKE) -C Subsystem_DTU generate-caravel MEM_TYPE=ChipFoundrySram
-	$(MAKE) -C Subsystem_DTU generate-caravel MEM_TYPE=RtlSyncMemory IMEM=256 DMEM=128
 	$(MAKE) -C Subsystem_DTU generate-caravel-top
-	cp Subsystem_DTU/generated/caravel/* verilog/rtl
+	cp Subsystem_DTU/generated/caravel/CaravelTop.sv verilog/rtl
 
 
 setup-cfsram:

@@ -4,7 +4,7 @@
     "CLOCK_NET": "clock",
     "CLOCK_PERIOD": 25,
     "VERILOG_FILES": [
-        "dir::../../verilog/rtl/LerosCaravel_OpenRamSky130.sv"
+        "dir::../../verilog/rtl/CaravelTop.sv"
     ],
     "FP_PDN_MULTILAYER": true,
     "FP_PDN_CORE_RING": true,
@@ -12,8 +12,8 @@
     "DIE_AREA": [
         0,
         0,
-        1109.56,
-        647.5
+        639.88,
+        1115.1999999999998
     ],
     "VDD_NETS": [
         "vccd1"
@@ -26,17 +26,17 @@
             "instances": {
                 "instrMem.m.mem": {
                     "location": [
-                        50,
-                        239.9
+                        10.1,
+                        10.1
                     ],
-                    "orientation": "FN"
+                    "orientation": "S"
                 },
                 "dmem.m.mem": {
                     "location": [
-                        579.78,
-                        239.9
+                        10.1,
+                        707.6
                     ],
-                    "orientation": "N"
+                    "orientation": "FN"
                 }
             },
             "gds": [

@@ -4,7 +4,7 @@
     "CLOCK_NET": "clock",
     "CLOCK_PERIOD": 25,
     "VERILOG_FILES": [
-        "dir::../../verilog/rtl/LerosCaravel_ChipFoundrySram.sv"
+        "dir::../../verilog/rtl/CaravelTop.sv"
     ],
     "FP_PDN_MULTILAYER": true,
     "FP_PDN_CORE_RING": true,
@@ -13,7 +13,7 @@
         0,
         0,
         840,
-        785
+        735
     ],
     "VDD_NETS": [
         "vccd1"
@@ -27,14 +27,14 @@
                 "instrMem.m.mem": {
                     "location": [
                         40,
-                        339.9
+                        289.9
                     ],
                     "orientation": "N"
                 },
                 "dmem.m.mem": {
                     "location": [
                         420,
-                        339.9
+                        289.9
                     ],
                     "orientation": "N"
                 }

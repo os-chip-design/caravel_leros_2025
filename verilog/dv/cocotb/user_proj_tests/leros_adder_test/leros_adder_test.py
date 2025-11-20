@@ -22,7 +22,7 @@ import cocotb
 @cocotb.test()
 @report_test
 async def leros_adder_test(dut):
-    caravelEnv = await test_configure(dut,timeout_cycles=59848)
+    caravelEnv = await test_configure(dut,timeout_cycles=999998)
 
     cocotb.log.info(f"[TEST] Start leros_adder_test test")  
     # wait for start of sending

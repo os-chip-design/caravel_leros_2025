@@ -7,27 +7,27 @@ config["CLOCK_PORT"] = "clock"
 config["CLOCK_NET"] = "clock"
 config["CLOCK_PERIOD"] = 25
 config["VERILOG_FILES"] = [
-  "dir::../../verilog/rtl/LerosCaravel_OpenRamSky130.sv"
+  "dir::../../verilog/rtl/CaravelTop.sv"
 ]
 
-left_edge_space = 50
-right_edge_space = 50
-center_space = 50
+left_edge_space = 10.1
+right_edge_space = 150
+center_space = 300
 top_space = 10.1
-
+bottom_space = 10.1
 
 openram_dir = "pdk_dir::libs.ref/sky130_sram_macros"
 openram_sram_width = 479.78
 openram_sram_height = 397.5
 
-die_width = 2 * openram_sram_width + left_edge_space + right_edge_space + center_space
-die_height = openram_sram_height + 250
+die_width =left_edge_space + openram_sram_width + right_edge_space
+die_height = top_space + openram_sram_height + center_space + openram_sram_height + bottom_space
 
 sram0_x = left_edge_space
-sram0_y = die_height - openram_sram_height - top_space
+sram0_y = bottom_space
 
-sram1_x = sram0_x + openram_sram_width + center_space
-sram1_y = sram0_y
+sram1_x = left_edge_space
+sram1_y = bottom_space + openram_sram_height + center_space
 
 
 config["FP_PDN_MULTILAYER"] = True
@@ -44,11 +44,11 @@ config["MACROS"] = {
     "instances": {
         "instrMem.m.mem": {
         "location": [sram0_x, sram0_y],
-        "orientation": "FN"
+        "orientation": "S"
         },
         "dmem.m.mem": {
         "location": [sram1_x, sram1_y],
-        "orientation": "N"
+        "orientation": "FN"
         }
     },
     "gds": [f"{openram_dir}/gds/sky130_sram_1kbyte_1rw1r_32x256_8.gds"],
@@ -157,7 +157,11 @@ config.update({
     "PRIMARY_GDSII_STREAMOUT_TOOL": "klayout"
 })
 
+# get python file dir
+import os 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
 # write to file
 import json
-with open("config.json", "w") as f:
+with open(f"{dir_path}/config.json", "w") as f:
     json.dump(config, f, indent=4)

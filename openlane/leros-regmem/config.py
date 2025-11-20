@@ -7,20 +7,20 @@ config["CLOCK_PORT"] = "clock"
 config["CLOCK_NET"] = "clock"
 config["CLOCK_PERIOD"] = 25
 config["VERILOG_FILES"] = [
-  "dir::../../verilog/rtl/LerosCaravel_RtlSyncMemory.sv"
+  "dir::../../verilog/rtl/CaravelTop.sv"
 ]
 
-left_edge_space = 250
-right_edge_space = 50
-center_space = 50
-top_space = 50
-bottom_space = 50
+left_edge_space = 400
+right_edge_space = 10.1
+center_space = 100
+top_space = 10.1
+bottom_space = 80
 
-mem_32x32_width = 400
+mem_32x32_width = 600
 mem_32x32_height = 400
 
-mem_64x32_width = 400
-mem_64x32_height = 700
+mem_64x32_width = 600
+mem_64x32_height = 500
 
 die_width = left_edge_space + mem_64x32_width + right_edge_space
 die_height = top_space + mem_64x32_height + center_space + mem_32x32_height + bottom_space
@@ -28,7 +28,7 @@ die_height = top_space + mem_64x32_height + center_space + mem_32x32_height + bo
 mem_64x32_x = left_edge_space
 mem_64x32_y = bottom_space + mem_32x32_height + center_space
 
-mem_32x32_x = left_edge_space + mem_64x32_width - mem_32x32_width
+mem_32x32_x = left_edge_space
 mem_32x32_y = bottom_space
 
 
@@ -176,7 +176,11 @@ config.update({
     "RUN_POST_GRT_DESIGN_REPAIR": True,
 })
 
+# get python file dir
+import os 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
 # write to file
 import json
-with open("config.json", "w") as f:
+with open(f"{dir_path}/config.json", "w") as f:
     json.dump(config, f, indent=4)
