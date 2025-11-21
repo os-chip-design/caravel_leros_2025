@@ -5,7 +5,7 @@ config = {}
 config["DESIGN_NAME"] = "LerosCaravel_DffRam"
 config["CLOCK_PORT"] = "clock"
 config["CLOCK_NET"] = "clock"
-config["CLOCK_PERIOD"] = 50
+config["CLOCK_PERIOD"] = 55
 config["VERILOG_FILES"] = [
   "dir::../../verilog/rtl/CaravelTop.sv"
 ]
@@ -82,12 +82,6 @@ config["PDN_MACRO_CONNECTIONS"] = [
 
 config["FP_PDN_HPITCH"] = 51
 config["FP_PDN_VPITCH"] = 51
-
-config["STA_CORNERS"] = [
-    "nom_tt_025C_1v80",
-    "min_tt_025C_1v80",
-    "max_tt_025C_1v80"
-]
 
 config.update({
   "FP_PIN_ORDER_CFG": "dir::pin_order.cfg",
