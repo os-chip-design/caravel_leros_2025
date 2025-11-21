@@ -92,9 +92,21 @@ Refer to [README](docs/source/index.md) for basic Caravel documentation.
 
 Wishbone User space is mapped as follows: 0x3000_0000 - 0x300F_FFFF
 
-Let us decide on 0x300n_xxxx where n is:
-- 0: Leros CPU 1
-- 1: Leros CPU 2
-- 2: Leros CPU 3
-- 3: Sylvan's Register File
-- 4: Maybe a plain WB GPIO
+| Address Range                 | Description                    |
+|-------------------------------|--------------------------------|
+| 0x3000_0000 - 0x3000_0FFF     | Leros with CF SRAM             |
+| 0x3000_1000 - 0x3000_1FFF     | Leros with OpenRAM SRAM        |
+| 0x3000_2000 - 0x3000_2FFF     | Leros with DFF RAM             |
+| 0x3000_3000 - 0x3000_3FFF     | Leros with RTL Register File   |
+| 0x3000_4000 - 0x3000_4FFF     | Sylvan's Register File         |
+
+## GPIO Mapping
+
+| Range         | Description                  |
+|---------------|------------------------------|
+| 37:32         | Leros with OpenRAM SRAM      |
+| 31:26         | Leros with CF SRAM           |
+| 25:20         | Leros with RTL Register File |
+| 19:14         | Leros with DFF RAM           |
+| 13:7          | free                         |
+| 6:0           | Blocked by caravel           |

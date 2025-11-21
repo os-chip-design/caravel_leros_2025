@@ -10,17 +10,17 @@ config["VERILOG_FILES"] = [
   "dir::../../verilog/rtl/CaravelTop.sv"
 ]
 
-left_edge_space = 400
-right_edge_space = 10.1
-center_space = 100
+left_edge_space = 250
+right_edge_space = 50
+center_space = 250
 top_space = 10.1
-bottom_space = 80
+bottom_space = 10.1
 
-mem_32x32_width = 600
-mem_32x32_height = 400
+mem_32x32_width = 500
+mem_32x32_height = 300
 
 mem_64x32_width = 600
-mem_64x32_height = 500
+mem_64x32_height = 470
 
 die_width = left_edge_space + mem_64x32_width + right_edge_space
 die_height = top_space + mem_64x32_height + center_space + mem_32x32_height + bottom_space
@@ -28,7 +28,7 @@ die_height = top_space + mem_64x32_height + center_space + mem_32x32_height + bo
 mem_64x32_x = left_edge_space
 mem_64x32_y = bottom_space + mem_32x32_height + center_space
 
-mem_32x32_x = left_edge_space
+mem_32x32_x = left_edge_space + mem_64x32_width - mem_32x32_width
 mem_32x32_y = bottom_space
 
 
