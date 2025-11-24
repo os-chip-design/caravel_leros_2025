@@ -1,0 +1,45 @@
+{
+    "DESIGN_NAME": "rf_wrapper",
+    "FP_PDN_MULTILAYER": true,
+    "VERILOG_FILES": [
+        "dir::../../macro/rf_wrapper.v",
+        "dir::../../macro/rf_top.v"
+    ],
+    "CLOCK_PERIOD": 25,
+    "CLOCK_PORT": "clk",
+    "FP_SIZING": "absolute",
+    "DIE_AREA": [
+        0,
+        0,
+        1000,
+        500
+    ],
+      "MACROS": {
+    "rf_top": {
+      "instances": {
+        "i_rf": {
+          "location": [20, 60],
+          "orientation": "E"
+        }
+      },
+      "gds": ["dir::../../macro/rf_top.gds.gz"],
+      "lef": ["dir::../../macro/rf_top.lef"],
+      "lib": {
+        "*": ["dir::../../macro/rf_top.lib"]
+      }
+    }
+  },
+      "VDD_NETS": [
+        "vccd1"
+    ],
+    "GND_NETS": [
+        "vssd1"
+    ],
+      "FP_PDN_HPITCH": 35,
+    "FP_PDN_VPITCH": 35,
+      "PDN_MACRO_CONNECTIONS": [
+        "i_rf vccd1 vssd1 VDPWR VGND"
+    ],
+    "RUN_KLAYOUT_XOR": 0
+
+}
