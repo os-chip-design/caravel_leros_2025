@@ -10,25 +10,25 @@ config["VERILOG_FILES"] = [
   "dir::../../verilog/rtl/CaravelTop.sv"
 ]
 
-left_edge_space = 250
-right_edge_space = 50
-center_space = 250
+left_edge_space = 10.1
+right_edge_space = 10.1
+center_space = 400
 top_space = 10.1
-bottom_space = 10.1
+bottom_space = 40
 
-mem_32x32_width = 500
-mem_32x32_height = 300
+mem_32x32_width = 300
+mem_32x32_height = 500
 
-mem_64x32_width = 600
-mem_64x32_height = 470
+mem_64x32_width = 470
+mem_64x32_height = 600
 
-die_width = left_edge_space + mem_64x32_width + right_edge_space
-die_height = top_space + mem_64x32_height + center_space + mem_32x32_height + bottom_space
+die_width = left_edge_space + mem_64x32_width + center_space + mem_32x32_width + right_edge_space
+die_height = top_space + mem_64x32_height + bottom_space
 
 mem_64x32_x = left_edge_space
-mem_64x32_y = bottom_space + mem_32x32_height + center_space
+mem_64x32_y = bottom_space
 
-mem_32x32_x = left_edge_space + mem_64x32_width - mem_32x32_width
+mem_32x32_x = left_edge_space + mem_64x32_width + center_space
 mem_32x32_y = bottom_space
 
 
@@ -175,6 +175,12 @@ config.update({
     "DEFAULT_CORNER": "max_ss_100C_1v60",
     "RUN_POST_GRT_DESIGN_REPAIR": True,
 })
+
+config["STA_CORNERS"] = [
+    "nom_tt_025C_1v80",
+    "min_tt_025C_1v80",
+    "max_tt_025C_1v80"
+]
 
 # get python file dir
 import os 

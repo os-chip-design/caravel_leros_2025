@@ -12,8 +12,8 @@
     "DIE_AREA": [
         0,
         0,
-        930,
-        1070.1999999999998
+        1190.1999999999998,
+        650.1
     ],
     "VDD_NETS": [
         "vccd1"
@@ -26,8 +26,8 @@
             "instances": {
                 "instrMem.m.mem_ext": {
                     "location": [
-                        280,
-                        560.1
+                        10.1,
+                        40
                     ],
                     "orientation": "N"
                 }
@@ -60,8 +60,8 @@
             "instances": {
                 "dmem.m.mem_ext": {
                     "location": [
-                        380,
-                        10.1
+                        880.1,
+                        40
                     ],
                     "orientation": "N"
                 }
@@ -155,5 +155,10 @@
     "PL_WIRE_LENGTH_COEF": 0.05,
     "DESIGN_REPAIR_MAX_SLEW_PCT": 30,
     "DESIGN_REPAIR_MAX_CAP_PCT": 30,
-    "DEFAULT_CORNER": "max_ss_100C_1v60"
+    "DEFAULT_CORNER": "max_ss_100C_1v60",
+    "STA_CORNERS": [
+        "nom_tt_025C_1v80",
+        "min_tt_025C_1v80",
+        "max_tt_025C_1v80"
+    ]
 }

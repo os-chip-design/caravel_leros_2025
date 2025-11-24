@@ -10,16 +10,17 @@ config["VERILOG_FILES"] = [
   "dir::../../verilog/rtl/CaravelTop.sv"
 ]
 
-left_edge_space = 40
-right_edge_space = 40
-center_space = 0
-top_space = 10.1
+left_edge_space = 0
+right_edge_space = 0
+center_space = 360
+bottom_space = 50
+top_space = 30
 
 cf_wb_sram_width = 380
 cf_wb_sram_height = 435
 
 die_width = 2 * cf_wb_sram_width + left_edge_space + right_edge_space + center_space
-die_height = cf_wb_sram_height + 300
+die_height = cf_wb_sram_height + top_space + bottom_space
 
 sram0_x = left_edge_space
 sram0_y = die_height - cf_wb_sram_height - top_space
@@ -46,7 +47,7 @@ config["MACROS"] = {
         },
         "dmem.m.mem": {
         "location": [sram1_x, sram1_y],
-        "orientation": "N"
+        "orientation": "FN"
         }
     },
     "gds": ["dir::../../gds/CF_SRAM_1024x32_wrapper.gds"],
@@ -137,8 +138,8 @@ config.update({
 config.update({
     "GRT_ANTENNA_ITERS": 20,
     "GRT_ANTENNA_MARGIN": 15,
-    #"DESIGN_REPAIR_MAX_WIRE_LENGTH": 800,
-    #"PL_WIRE_LENGTH_COEF": 0.05,
+    "DESIGN_REPAIR_MAX_WIRE_LENGTH": 800,
+    "PL_WIRE_LENGTH_COEF": 0.05,
 })
 
 config.update({

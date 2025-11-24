@@ -94,11 +94,12 @@ Wishbone User space is mapped as follows: 0x3000_0000 - 0x300F_FFFF
 
 | Address Range                 | Description                    |
 |-------------------------------|--------------------------------|
-| 0x3000_0000 - 0x3000_0FFF     | Leros with CF SRAM             |
-| 0x3000_1000 - 0x3000_1FFF     | Leros with OpenRAM SRAM        |
-| 0x3000_2000 - 0x3000_2FFF     | Leros with DFF RAM             |
-| 0x3000_3000 - 0x3000_3FFF     | Leros with RTL Register File   |
-| 0x3000_4000 - 0x3000_4FFF     | Sylvan's Register File         |
+| 0x3000_0000 - 0x3000_FFFF     | Leros with CF SRAM             |
+| 0x3001_0000 - 0x3001_FFFF     | Leros with OpenRAM SRAM        |
+| 0x3002_0000 - 0x3002_FFFF     | Leros with DFF RAM             |
+| 0x3003_0000 - 0x3003_FFFF     | Leros with RTL Register File   |
+| 0x3004_0000 - 0x3004_FFFF     | Sylvan's Register File         |
+| 0x3005_0000 - 0x3005_FFFF     | Wishbone 6-bit GPIO            |
 
 ## GPIO Mapping
 

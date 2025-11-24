@@ -97,6 +97,10 @@ wire [5:0] leros_regmem_gpio_in;
 wire [5:0] leros_regmem_gpio_out;
 wire [5:0] leros_regmem_gpio_oe;
 
+wire [5:0] wb_gpio_in;
+wire [5:0] wb_gpio_out;
+wire [5:0] wb_gpio_oe;
+
 assign leros_cfram_gpio_in   = io_in[24:19];
 assign io_out[24:19]         = leros_cfram_gpio_out;
 assign io_oeb[24:19]         = leros_cfram_gpio_oe;
@@ -112,6 +116,10 @@ assign io_oeb[12:7]          = leros_dffram_gpio_oe;
 assign leros_regmem_gpio_in  = io_in[18:13];
 assign io_out[18:13]         = leros_regmem_gpio_out;
 assign io_oeb[18:13]         = leros_regmem_gpio_oe;
+
+assign wb_gpio_in            = io_in[36:31];
+assign io_out[36:31]         = wb_gpio_out;
+assign io_oeb[36:31]         = wb_gpio_oe;
 
 CaravelTop mprj (
 
@@ -139,15 +147,18 @@ CaravelTop mprj (
 
     // IO Pads
 
-    .io_gpio_in({leros_regmem_gpio_in,
+    .io_gpio_in({wb_gpio_in,
+                 leros_regmem_gpio_in,
                  leros_dffram_gpio_in,
                  leros_openram_gpio_in,
                  leros_cfram_gpio_in}),
-    .io_gpio_out({leros_regmem_gpio_out,
+    .io_gpio_out({wb_gpio_out,
+                  leros_regmem_gpio_out,
                   leros_dffram_gpio_out,
                   leros_openram_gpio_out,
                   leros_cfram_gpio_out}),
-    .io_gpio_oe({leros_regmem_gpio_oe,
+    .io_gpio_oe({wb_gpio_oe,
+                 leros_regmem_gpio_oe,
                  leros_dffram_gpio_oe,
                  leros_openram_gpio_oe,
                  leros_cfram_gpio_oe})
