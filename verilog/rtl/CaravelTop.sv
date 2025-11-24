@@ -797,6 +797,1577 @@ endmodule
 module Leros(	// leros/src/main/scala/leros/Leros.scala:13:7
   input         clock,	// leros/src/main/scala/leros/Leros.scala:13:7
                 reset,	// leros/src/main/scala/leros/Leros.scala:13:7
+  output [11:0] imemIO_addr,	// leros/src/main/scala/leros/Leros.scala:15:18
+  input  [15:0] imemIO_instr,	// leros/src/main/scala/leros/Leros.scala:15:18
+  output [15:0] dmemIO_rdAddr,	// leros/src/main/scala/leros/Leros.scala:16:18
+  input  [31:0] dmemIO_rdData,	// leros/src/main/scala/leros/Leros.scala:16:18
+  output [15:0] dmemIO_wrAddr,	// leros/src/main/scala/leros/Leros.scala:16:18
+  output [31:0] dmemIO_wrData,	// leros/src/main/scala/leros/Leros.scala:16:18
+  output        dmemIO_wr,	// leros/src/main/scala/leros/Leros.scala:16:18
+  output [3:0]  dmemIO_wrMask	// leros/src/main/scala/leros/Leros.scala:16:18
+);
+
+  wire [7:0]  vecAccu_3;	// leros/src/main/scala/leros/Leros.scala:50:16, :88:20
+  wire [7:0]  vecAccu_2;	// leros/src/main/scala/leros/Leros.scala:50:16, :88:20
+  wire [7:0]  vecAccu_1;	// leros/src/main/scala/leros/Leros.scala:50:16, :88:20
+  wire [31:0] _dec_io_dout_operand;	// leros/src/main/scala/leros/Leros.scala:37:19
+  wire [3:0]  _dec_io_dout_enaMask;	// leros/src/main/scala/leros/Leros.scala:37:19
+  wire [2:0]  _dec_io_dout_op;	// leros/src/main/scala/leros/Leros.scala:37:19
+  wire [9:0]  _dec_io_dout_off;	// leros/src/main/scala/leros/Leros.scala:37:19
+  wire [11:0] _dec_io_dout_brOff;	// leros/src/main/scala/leros/Leros.scala:37:19
+  wire        _dec_io_dout_useDecOpd;	// leros/src/main/scala/leros/Leros.scala:37:19
+  wire [3:0]  _dec_io_dout_nextState;	// leros/src/main/scala/leros/Leros.scala:37:19
+  wire        _dec_io_dout_enaByte;	// leros/src/main/scala/leros/Leros.scala:37:19
+  wire        _dec_io_dout_enaHalf;	// leros/src/main/scala/leros/Leros.scala:37:19
+  wire        _dec_io_dout_isDataAccess;	// leros/src/main/scala/leros/Leros.scala:37:19
+  wire [3:0]  _dec_io_dout_brType;	// leros/src/main/scala/leros/Leros.scala:37:19
+  wire [31:0] _alu_io_accu;	// leros/src/main/scala/leros/Leros.scala:18:19
+  reg  [11:0] pcReg;	// leros/src/main/scala/leros/Leros.scala:23:22
+  reg  [15:0] addrReg;	// leros/src/main/scala/leros/Leros.scala:24:24
+  reg         firstClockReg;	// leros/src/main/scala/leros/Leros.scala:26:30
+  wire [11:0] _dmemIO_wrData_T_6 = pcReg + 12'h1;	// leros/src/main/scala/leros/Leros.scala:23:22, :29:34
+  wire [15:0] instr = firstClockReg ? 16'h0 : imemIO_instr;	// leros/src/main/scala/leros/Leros.scala:24:24, :26:30, :33:18
+  reg  [31:0] decReg_operand;	// leros/src/main/scala/leros/Leros.scala:40:23
+  reg  [3:0]  decReg_enaMask;	// leros/src/main/scala/leros/Leros.scala:40:23
+  reg  [2:0]  decReg_op;	// leros/src/main/scala/leros/Leros.scala:40:23
+  reg  [11:0] decReg_brOff;	// leros/src/main/scala/leros/Leros.scala:40:23
+  reg         decReg_useDecOpd;	// leros/src/main/scala/leros/Leros.scala:40:23
+  reg         decReg_enaByte;	// leros/src/main/scala/leros/Leros.scala:40:23
+  reg         decReg_enaHalf;	// leros/src/main/scala/leros/Leros.scala:40:23
+  reg  [3:0]  decReg_brType;	// leros/src/main/scala/leros/Leros.scala:40:23
+  wire [15:0] _effAddr_T_1 = addrReg + {{6{_dec_io_dout_off[9]}}, _dec_io_dout_off};	// leros/src/main/scala/leros/Leros.scala:24:24, :37:19, :44:33
+  wire [13:0] memAddr =
+    _dec_io_dout_isDataAccess ? _effAddr_T_1[15:2] : {6'h0, instr[7:0]};	// leros/src/main/scala/leros/Leros.scala:33:18, :37:19, :44:33, :45:30, :57:{20,60}
+  reg  [13:0] memAddrReg;	// leros/src/main/scala/leros/Leros.scala:58:27
+  reg  [1:0]  effAddrOffReg;	// leros/src/main/scala/leros/Leros.scala:59:30
+  reg  [3:0]  stateReg;	// leros/src/main/scala/leros/Leros.scala:80:25
+  wire        _GEN = stateReg == 4'h1;	// leros/src/main/scala/leros/Leros.scala:80:25, :82:{18,29}, :83:14
+  wire        _GEN_0 = stateReg == 4'h2;	// leros/src/main/scala/leros/Leros.scala:80:25, :88:20
+  wire        _GEN_1 = stateReg == 4'h3;	// leros/src/main/scala/leros/Leros.scala:80:25, :88:20
+  wire        _GEN_2 = stateReg == 4'h4;	// leros/src/main/scala/leros/Leros.scala:80:25, :88:20
+  wire        _GEN_3 = stateReg == 4'h5;	// leros/src/main/scala/leros/Leros.scala:80:25, :88:20
+  wire        _GEN_4 = stateReg == 4'h6;	// leros/src/main/scala/leros/Leros.scala:80:25, :88:20
+  wire [7:0]  _GEN_5 = (&effAddrOffReg) ? _alu_io_accu[7:0] : _alu_io_accu[31:24];	// leros/src/main/scala/leros/Leros.scala:18:19, :50:{16,23}, :59:30, :116:30
+  wire        _GEN_6 = stateReg == 4'h7;	// leros/src/main/scala/leros/Leros.scala:80:25, :88:20
+  wire [4:0]  _dmemIO_wrMask_T_1 = 5'h3 << effAddrOffReg;	// leros/src/main/scala/leros/Leros.scala:59:30, :122:34
+  wire        _GEN_7 = _GEN | _GEN_0 | _GEN_1 | _GEN_2 | _GEN_3;	// leros/src/main/scala/leros/Leros.scala:65:17, :80:25, :82:{18,29}, :83:14, :88:20
+  assign vecAccu_1 =
+    _GEN_7 | ~((_GEN_4 | _GEN_6 & effAddrOffReg[1]) & effAddrOffReg == 2'h1)
+      ? _alu_io_accu[15:8]
+      : _alu_io_accu[7:0];	// leros/src/main/scala/leros/Leros.scala:13:7, :18:19, :50:{16,23}, :59:30, :65:17, :88:20, :116:30, :124:{29,36}
+  assign vecAccu_2 =
+    _GEN_7 | ~((_GEN_4 | _GEN_6) & effAddrOffReg == 2'h2)
+      ? _alu_io_accu[23:16]
+      : _alu_io_accu[7:0];	// leros/src/main/scala/leros/Leros.scala:13:7, :18:19, :50:{16,23}, :59:30, :65:17, :88:20, :116:30, :124:36
+  assign vecAccu_3 =
+    _GEN_7
+      ? _alu_io_accu[31:24]
+      : _GEN_4
+          ? _GEN_5
+          : _GEN_6
+              ? (effAddrOffReg[1] ? _alu_io_accu[15:8] : _GEN_5)
+              : _alu_io_accu[31:24];	// leros/src/main/scala/leros/Leros.scala:18:19, :50:{16,23}, :59:30, :65:17, :88:20, :116:30, :123:30, :124:{29,36}
+  wire        _GEN_8 = stateReg == 4'h8;	// leros/src/main/scala/leros/Leros.scala:80:25, :88:20
+  wire        _GEN_9 = stateReg == 4'h9;	// leros/src/main/scala/leros/Leros.scala:80:25, :88:20, :130:29
+  wire [11:0] pcNext =
+    _GEN | _GEN_0 | _GEN_1 | _GEN_2 | _GEN_3 | _GEN_4 | _GEN_6
+      ? _dmemIO_wrData_T_6
+      : _GEN_8
+          ? (decReg_brType == 4'h8
+             | (decReg_brType == 4'h9
+                  ? _alu_io_accu == 32'h0
+                  : decReg_brType == 4'hA
+                      ? (|_alu_io_accu)
+                      : decReg_brType == 4'hB
+                          ? ~(_alu_io_accu[31])
+                          : decReg_brType == 4'hC & _alu_io_accu[31])
+               ? pcReg + decReg_brOff
+               : _dmemIO_wrData_T_6)
+          : _GEN_9 ? _alu_io_accu[11:0] : _dmemIO_wrData_T_6;	// leros/src/main/scala/leros/Decode.scala:31:15, leros/src/main/scala/leros/Leros.scala:18:19, :23:22, :29:{27,34}, :40:23, :80:25, :82:{18,29}, :83:14, :88:20, :129:33, :130:29, :131:37, :132:{38,46}, :133:{39,47}, :134:{38,45,50}, :135:{38,45}, :137:23, :138:{16,33}, :143:14
+  always @(posedge clock) begin	// leros/src/main/scala/leros/Leros.scala:13:7
+    if (reset) begin	// leros/src/main/scala/leros/Leros.scala:13:7
+      pcReg <= 12'hFFF;	// leros/src/main/scala/leros/Leros.scala:23:22
+      addrReg <= 16'h0;	// leros/src/main/scala/leros/Leros.scala:24:24
+      firstClockReg <= 1'h1;	// leros/src/main/scala/leros/Leros.scala:26:30
+      decReg_operand <= 32'h0;	// leros/src/main/scala/leros/Decode.scala:31:15, leros/src/main/scala/leros/Leros.scala:40:23
+      decReg_enaMask <= 4'h0;	// leros/src/main/scala/leros/Decode.scala:32:15, leros/src/main/scala/leros/Leros.scala:40:23
+      decReg_op <= 3'h0;	// leros/src/main/scala/leros/Leros.scala:13:7, :40:23
+      decReg_brOff <= 12'h0;	// leros/src/main/scala/leros/Decode.scala:35:13, leros/src/main/scala/leros/Leros.scala:40:23
+      decReg_useDecOpd <= 1'h0;	// leros/src/main/scala/leros/Leros.scala:27:17, :40:23
+      decReg_enaByte <= 1'h0;	// leros/src/main/scala/leros/Leros.scala:27:17, :40:23
+      decReg_enaHalf <= 1'h0;	// leros/src/main/scala/leros/Leros.scala:27:17, :40:23
+      decReg_brType <= 4'h0;	// leros/src/main/scala/leros/Decode.scala:32:15, leros/src/main/scala/leros/Leros.scala:40:23
+      stateReg <= 4'h1;	// leros/src/main/scala/leros/Leros.scala:80:25, :83:14
+    end
+    else begin	// leros/src/main/scala/leros/Leros.scala:13:7
+      if (_GEN) begin	// leros/src/main/scala/leros/Leros.scala:80:25, :82:{18,29}, :83:14
+        decReg_operand <= _dec_io_dout_operand;	// leros/src/main/scala/leros/Leros.scala:37:19, :40:23
+        decReg_enaMask <= _dec_io_dout_enaMask;	// leros/src/main/scala/leros/Leros.scala:37:19, :40:23
+        decReg_op <= _dec_io_dout_op;	// leros/src/main/scala/leros/Leros.scala:37:19, :40:23
+        decReg_brOff <= _dec_io_dout_brOff;	// leros/src/main/scala/leros/Leros.scala:37:19, :40:23
+        decReg_useDecOpd <= _dec_io_dout_useDecOpd;	// leros/src/main/scala/leros/Leros.scala:37:19, :40:23
+        decReg_enaByte <= _dec_io_dout_enaByte;	// leros/src/main/scala/leros/Leros.scala:37:19, :40:23
+        decReg_enaHalf <= _dec_io_dout_enaHalf;	// leros/src/main/scala/leros/Leros.scala:37:19, :40:23
+        decReg_brType <= _dec_io_dout_brType;	// leros/src/main/scala/leros/Leros.scala:37:19, :40:23
+        stateReg <= _dec_io_dout_nextState;	// leros/src/main/scala/leros/Leros.scala:37:19, :80:25
+      end
+      else begin	// leros/src/main/scala/leros/Leros.scala:80:25, :82:{18,29}, :83:14
+        pcReg <= pcNext;	// leros/src/main/scala/leros/Leros.scala:23:22, :29:27, :88:20
+        stateReg <= 4'h1;	// leros/src/main/scala/leros/Leros.scala:80:25, :83:14
+      end
+      if (_GEN | ~_GEN_0) begin	// leros/src/main/scala/leros/Leros.scala:24:24, :80:25, :82:{18,29}, :83:14, :88:20
+      end
+      else	// leros/src/main/scala/leros/Leros.scala:24:24, :88:20
+        addrReg <= dmemIO_rdData[15:0];	// leros/src/main/scala/leros/Leros.scala:24:24, :97:15
+      firstClockReg <= 1'h0;	// leros/src/main/scala/leros/Leros.scala:26:30, :27:17
+    end
+    memAddrReg <= memAddr;	// leros/src/main/scala/leros/Leros.scala:57:20, :58:27
+    effAddrOffReg <= _effAddr_T_1[1:0];	// leros/src/main/scala/leros/Leros.scala:44:33, :47:25, :59:30
+  end // always @(posedge)
+  `ifdef ENABLE_INITIAL_REG_	// leros/src/main/scala/leros/Leros.scala:13:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// leros/src/main/scala/leros/Leros.scala:13:7
+      `FIRRTL_BEFORE_INITIAL	// leros/src/main/scala/leros/Leros.scala:13:7
+    `endif // FIRRTL_BEFORE_INITIAL
+    logic [31:0] _RANDOM[0:3];	// leros/src/main/scala/leros/Leros.scala:13:7
+    initial begin	// leros/src/main/scala/leros/Leros.scala:13:7
+      `ifdef INIT_RANDOM_PROLOG_	// leros/src/main/scala/leros/Leros.scala:13:7
+        `INIT_RANDOM_PROLOG_	// leros/src/main/scala/leros/Leros.scala:13:7
+      `endif // INIT_RANDOM_PROLOG_
+      `ifdef RANDOMIZE_REG_INIT	// leros/src/main/scala/leros/Leros.scala:13:7
+        for (logic [2:0] i = 3'h0; i < 3'h4; i += 3'h1) begin
+          _RANDOM[i[1:0]] = `RANDOM;	// leros/src/main/scala/leros/Leros.scala:13:7
+        end	// leros/src/main/scala/leros/Leros.scala:13:7
+        pcReg = _RANDOM[2'h0][11:0];	// leros/src/main/scala/leros/Leros.scala:13:7, :23:22
+        addrReg = _RANDOM[2'h0][27:12];	// leros/src/main/scala/leros/Leros.scala:13:7, :23:22, :24:24
+        firstClockReg = _RANDOM[2'h0][28];	// leros/src/main/scala/leros/Leros.scala:13:7, :23:22, :26:30
+        decReg_operand = {_RANDOM[2'h0][31:29], _RANDOM[2'h1][28:0]};	// leros/src/main/scala/leros/Leros.scala:13:7, :23:22, :40:23
+        decReg_enaMask = {_RANDOM[2'h1][31:29], _RANDOM[2'h2][0]};	// leros/src/main/scala/leros/Leros.scala:13:7, :40:23
+        decReg_op = _RANDOM[2'h2][3:1];	// leros/src/main/scala/leros/Leros.scala:13:7, :40:23
+        decReg_brOff = _RANDOM[2'h2][25:14];	// leros/src/main/scala/leros/Leros.scala:13:7, :40:23
+        decReg_useDecOpd = _RANDOM[2'h2][27];	// leros/src/main/scala/leros/Leros.scala:13:7, :40:23
+        decReg_enaByte = _RANDOM[2'h3][0];	// leros/src/main/scala/leros/Leros.scala:13:7, :40:23
+        decReg_enaHalf = _RANDOM[2'h3][1];	// leros/src/main/scala/leros/Leros.scala:13:7, :40:23
+        decReg_brType = _RANDOM[2'h3][6:3];	// leros/src/main/scala/leros/Leros.scala:13:7, :40:23
+        memAddrReg = _RANDOM[2'h3][20:7];	// leros/src/main/scala/leros/Leros.scala:13:7, :40:23, :58:27
+        effAddrOffReg = _RANDOM[2'h3][22:21];	// leros/src/main/scala/leros/Leros.scala:13:7, :40:23, :59:30
+        stateReg = _RANDOM[2'h3][27:24];	// leros/src/main/scala/leros/Leros.scala:13:7, :40:23, :80:25
+      `endif // RANDOMIZE_REG_INIT
+    end // initial
+    `ifdef FIRRTL_AFTER_INITIAL	// leros/src/main/scala/leros/Leros.scala:13:7
+      `FIRRTL_AFTER_INITIAL	// leros/src/main/scala/leros/Leros.scala:13:7
+    `endif // FIRRTL_AFTER_INITIAL
+  `endif // ENABLE_INITIAL_REG_
+  AluAccu alu (	// leros/src/main/scala/leros/Leros.scala:18:19
+    .clock      (clock),
+    .reset      (reset),
+    .io_op      (decReg_op),	// leros/src/main/scala/leros/Leros.scala:40:23
+    .io_din     (decReg_useDecOpd ? decReg_operand : dmemIO_rdData),	// leros/src/main/scala/leros/Leros.scala:40:23, :75:20
+    .io_enaMask (_GEN ? 4'h0 : decReg_enaMask),	// leros/src/main/scala/leros/Decode.scala:32:15, leros/src/main/scala/leros/Leros.scala:40:23, :69:18, :80:25, :82:{18,29}, :83:14, :85:20
+    .io_enaByte (decReg_enaByte),	// leros/src/main/scala/leros/Leros.scala:40:23
+    .io_enaHalf (decReg_enaHalf),	// leros/src/main/scala/leros/Leros.scala:40:23
+    .io_off     (effAddrOffReg),	// leros/src/main/scala/leros/Leros.scala:59:30
+    .io_accu    (_alu_io_accu)
+  );
+  Decode dec (	// leros/src/main/scala/leros/Leros.scala:37:19
+    .io_din               (instr),	// leros/src/main/scala/leros/Leros.scala:33:18
+    .io_dout_operand      (_dec_io_dout_operand),
+    .io_dout_enaMask      (_dec_io_dout_enaMask),
+    .io_dout_op           (_dec_io_dout_op),
+    .io_dout_off          (_dec_io_dout_off),
+    .io_dout_brOff        (_dec_io_dout_brOff),
+    .io_dout_useDecOpd    (_dec_io_dout_useDecOpd),
+    .io_dout_nextState    (_dec_io_dout_nextState),
+    .io_dout_enaByte      (_dec_io_dout_enaByte),
+    .io_dout_enaHalf      (_dec_io_dout_enaHalf),
+    .io_dout_isDataAccess (_dec_io_dout_isDataAccess),
+    .io_dout_brType       (_dec_io_dout_brType)
+  );
+  assign imemIO_addr = pcNext;	// leros/src/main/scala/leros/Leros.scala:13:7, :29:27, :88:20
+  assign dmemIO_rdAddr = {2'h0, memAddr};	// leros/src/main/scala/leros/Leros.scala:13:7, :57:20, :60:17
+  assign dmemIO_wrAddr = {2'h0, memAddrReg};	// leros/src/main/scala/leros/Leros.scala:13:7, :58:27, :62:17
+  assign dmemIO_wrData =
+    _GEN_7
+      ? _alu_io_accu
+      : _GEN_4
+          ? {vecAccu_3, vecAccu_2, vecAccu_1, _alu_io_accu[7:0]}
+          : _GEN_6
+              ? {vecAccu_3, vecAccu_2, vecAccu_1, _alu_io_accu[7:0]}
+              : _GEN_8 | ~_GEN_9 ? _alu_io_accu : {20'h0, _dmemIO_wrData_T_6};	// leros/src/main/scala/leros/Leros.scala:13:7, :18:19, :29:{27,34}, :50:{16,23}, :63:17, :65:17, :88:20, :117:{21,63}, :125:{21,63}, :143:14, :145:21
+  assign dmemIO_wr =
+    ~(_GEN | _GEN_0 | _GEN_1) & (_GEN_2 | _GEN_3 | _GEN_4 | _GEN_6 | ~_GEN_8 & _GEN_9);	// leros/src/main/scala/leros/Leros.scala:13:7, :64:13, :80:25, :82:{18,29}, :83:14, :88:20, :105:17, :109:17, :114:17, :121:17
+  assign dmemIO_wrMask =
+    _GEN_7
+      ? 4'hF
+      : _GEN_4 ? 4'h1 << effAddrOffReg : _GEN_6 ? _dmemIO_wrMask_T_1[3:0] : 4'hF;	// leros/src/main/scala/leros/Leros.scala:13:7, :59:30, :65:17, :83:14, :88:20, :115:{21,34}, :122:{21,34}
+endmodule
+
+// external module CF_SRAM_1024x32_wrapper
+
+module ChipFoundrySram(	// src/main/scala/mem/ChipFoundrySram.scala:18:7
+  input         clock,	// src/main/scala/mem/ChipFoundrySram.scala:18:7
+                reset,	// src/main/scala/mem/ChipFoundrySram.scala:18:7
+  input  [9:0]  io_wordAddr,	// src/main/scala/mem/ChipFoundrySram.scala:20:14
+  input  [31:0] io_wrData,	// src/main/scala/mem/ChipFoundrySram.scala:20:14
+  output [31:0] io_rdData,	// src/main/scala/mem/ChipFoundrySram.scala:20:14
+  input         io_we,	// src/main/scala/mem/ChipFoundrySram.scala:20:14
+  input  [3:0]  io_strb	// src/main/scala/mem/ChipFoundrySram.scala:20:14
+);
+
+  CF_SRAM_1024x32_wrapper mem (	// src/main/scala/mem/ChipFoundrySram.scala:28:19
+    .clk_i     (clock),
+    .rst_i     (reset),
+    .addr_i    (io_wordAddr),
+    .we_i      (io_we),
+    .sel_i     (io_strb),
+    .wr_data_i (io_wrData),
+    .rd_data_o (io_rdData)
+  );
+endmodule
+
+module InstructionMemory(	// src/main/scala/dtu/InstructionMemory.scala:29:7
+  input         clock,	// src/main/scala/dtu/InstructionMemory.scala:29:7
+                reset,	// src/main/scala/dtu/InstructionMemory.scala:29:7
+  input  [11:0] instrPort_addr,	// src/main/scala/dtu/InstructionMemory.scala:35:21
+  output [15:0] instrPort_instr,	// src/main/scala/dtu/InstructionMemory.scala:35:21
+  input  [11:0] apbPort_paddr,	// src/main/scala/dtu/InstructionMemory.scala:36:19
+  input         apbPort_psel,	// src/main/scala/dtu/InstructionMemory.scala:36:19
+                apbPort_penable,	// src/main/scala/dtu/InstructionMemory.scala:36:19
+                apbPort_pwrite,	// src/main/scala/dtu/InstructionMemory.scala:36:19
+  input  [3:0]  apbPort_pstrb,	// src/main/scala/dtu/InstructionMemory.scala:36:19
+  input  [31:0] apbPort_pwdata,	// src/main/scala/dtu/InstructionMemory.scala:36:19
+  output        apbPort_pready,	// src/main/scala/dtu/InstructionMemory.scala:36:19
+  output [31:0] apbPort_prdata	// src/main/scala/dtu/InstructionMemory.scala:36:19
+);
+
+  wire [31:0] _m_io_rdData;	// src/main/scala/mem/ChipFoundrySram.scala:9:19
+  reg         ackReg;	// src/main/scala/dtu/InstructionMemory.scala:47:23
+  reg         instrPort_instr_REG;	// src/main/scala/dtu/InstructionMemory.scala:67:12
+  wire        _GEN = apbPort_psel & apbPort_penable & apbPort_pwrite;	// src/main/scala/dtu/InstructionMemory.scala:72:40
+  always @(posedge clock) begin	// src/main/scala/dtu/InstructionMemory.scala:29:7
+    if (reset)	// src/main/scala/dtu/InstructionMemory.scala:29:7
+      ackReg <= 1'h0;	// src/main/scala/dtu/InstructionMemory.scala:29:7, :47:23
+    else	// src/main/scala/dtu/InstructionMemory.scala:29:7
+      ackReg <= ~ackReg & (apbPort_psel | ackReg);	// src/main/scala/dtu/InstructionMemory.scala:47:23, :48:16, :49:12, :50:28, :51:12
+    instrPort_instr_REG <= instrPort_addr[0];	// src/main/scala/dtu/InstructionMemory.scala:67:{12,27}
+  end // always @(posedge)
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/dtu/InstructionMemory.scala:29:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/InstructionMemory.scala:29:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/InstructionMemory.scala:29:7
+    `endif // FIRRTL_BEFORE_INITIAL
+    logic [31:0] _RANDOM[0:0];	// src/main/scala/dtu/InstructionMemory.scala:29:7
+    initial begin	// src/main/scala/dtu/InstructionMemory.scala:29:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/dtu/InstructionMemory.scala:29:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/dtu/InstructionMemory.scala:29:7
+      `endif // INIT_RANDOM_PROLOG_
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/dtu/InstructionMemory.scala:29:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/dtu/InstructionMemory.scala:29:7
+        ackReg = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/dtu/InstructionMemory.scala:29:7, :47:23
+        instrPort_instr_REG = _RANDOM[/*Zero width*/ 1'b0][1];	// src/main/scala/dtu/InstructionMemory.scala:29:7, :47:23, :67:12
+      `endif // RANDOMIZE_REG_INIT
+    end // initial
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/InstructionMemory.scala:29:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/InstructionMemory.scala:29:7
+    `endif // FIRRTL_AFTER_INITIAL
+  `endif // ENABLE_INITIAL_REG_
+  ChipFoundrySram m (	// src/main/scala/mem/ChipFoundrySram.scala:9:19
+    .clock       (clock),
+    .reset       (reset),
+    .io_wordAddr (_GEN | apbPort_psel ? apbPort_paddr[11:2] : instrPort_addr[10:1]),	// src/main/scala/dtu/InstructionMemory.scala:56:28, :58:18, :59:19, :72:{40,59}, src/main/scala/mem/ChipFoundrySram.scala:42:17, :47:17
+    .io_wrData   (apbPort_pwdata),
+    .io_rdData   (_m_io_rdData),
+    .io_we       (_GEN),	// src/main/scala/dtu/InstructionMemory.scala:72:40
+    .io_strb     (apbPort_pstrb)
+  );
+  assign instrPort_instr = instrPort_instr_REG ? _m_io_rdData[31:16] : _m_io_rdData[15:0];	// src/main/scala/dtu/InstructionMemory.scala:29:7, :66:25, :67:12, :68:11, :69:11, src/main/scala/mem/ChipFoundrySram.scala:9:19
+  assign apbPort_pready = ackReg;	// src/main/scala/dtu/InstructionMemory.scala:29:7, :47:23
+  assign apbPort_prdata = _m_io_rdData;	// src/main/scala/dtu/InstructionMemory.scala:29:7, src/main/scala/mem/ChipFoundrySram.scala:9:19
+endmodule
+
+module InstrMem(	// leros/src/main/scala/leros/InstrMem.scala:19:7
+  input         clock,	// leros/src/main/scala/leros/InstrMem.scala:19:7
+                reset,	// leros/src/main/scala/leros/InstrMem.scala:19:7
+  input  [11:0] io_addr,	// leros/src/main/scala/leros/InstrMem.scala:20:14
+  output [15:0] io_instr	// leros/src/main/scala/leros/InstrMem.scala:20:14
+);
+
+  reg [11:0] memReg;	// leros/src/main/scala/leros/InstrMem.scala:24:23
+  reg [15:0] casez_tmp;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+  always_comb begin	// leros/src/main/scala/leros/InstrMem.scala:27:12
+    casez (memReg[5:0])	// leros/src/main/scala/leros/InstrMem.scala:24:23, :27:{12,29}
+      6'b000000:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b000001:
+        casez_tmp = 16'h2980;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b000010:
+        casez_tmp = 16'h2A00;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b000011:
+        casez_tmp = 16'h3001;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b000100:
+        casez_tmp = 16'h5001;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b000101:
+        casez_tmp = 16'h7000;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b000110:
+        casez_tmp = 16'h7001;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b000111:
+        casez_tmp = 16'h6000;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b001000:
+        casez_tmp = 16'h9FFD;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b001001:
+        casez_tmp = 16'h3001;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b001010:
+        casez_tmp = 16'h2001;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b001011:
+        casez_tmp = 16'h3002;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b001100:
+        casez_tmp = 16'h2002;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b001101:
+        casez_tmp = 16'h3003;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b001110:
+        casez_tmp = 16'h2003;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b001111:
+        casez_tmp = 16'h3004;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b010000:
+        casez_tmp = 16'h2004;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b010001:
+        casez_tmp = 16'h3005;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b010010:
+        casez_tmp = 16'h2005;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b010011:
+        casez_tmp = 16'h3006;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b010100:
+        casez_tmp = 16'h2006;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b010101:
+        casez_tmp = 16'h3007;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b010110:
+        casez_tmp = 16'h2007;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b010111:
+        casez_tmp = 16'h7041;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b011000:
+        casez_tmp = 16'h6041;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b011001:
+        casez_tmp = 16'h3001;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b011010:
+        casez_tmp = 16'h7045;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b011011:
+        casez_tmp = 16'h6044;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b011100:
+        casez_tmp = 16'h2301;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b011101:
+        casez_tmp = 16'h9FFE;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b011110:
+        casez_tmp = 16'h6045;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b011111:
+        casez_tmp = 16'h7044;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b100000:
+        casez_tmp = 16'h7001;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b100001:
+        casez_tmp = 16'h2101;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b100010:
+        casez_tmp = 16'h7000;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b100011:
+        casez_tmp = 16'h8000;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b100100:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b100101:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b100110:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b100111:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b101000:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b101001:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b101010:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b101011:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b101100:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b101101:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b101110:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b101111:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b110000:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b110001:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b110010:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b110011:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b110100:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b110101:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b110110:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b110111:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b111000:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b111001:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b111010:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b111011:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b111100:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b111101:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      6'b111110:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+      default:
+        casez_tmp = 16'h2100;	// leros/src/main/scala/leros/InstrMem.scala:27:12
+    endcase	// leros/src/main/scala/leros/InstrMem.scala:24:23, :27:{12,29}
+  end // always_comb
+  always @(posedge clock) begin	// leros/src/main/scala/leros/InstrMem.scala:19:7
+    if (reset)	// leros/src/main/scala/leros/InstrMem.scala:19:7
+      memReg <= 12'h0;	// leros/src/main/scala/leros/InstrMem.scala:24:23
+    else	// leros/src/main/scala/leros/InstrMem.scala:19:7
+      memReg <= io_addr;	// leros/src/main/scala/leros/InstrMem.scala:24:23
+  end // always @(posedge)
+  `ifdef ENABLE_INITIAL_REG_	// leros/src/main/scala/leros/InstrMem.scala:19:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// leros/src/main/scala/leros/InstrMem.scala:19:7
+      `FIRRTL_BEFORE_INITIAL	// leros/src/main/scala/leros/InstrMem.scala:19:7
+    `endif // FIRRTL_BEFORE_INITIAL
+    logic [31:0] _RANDOM[0:0];	// leros/src/main/scala/leros/InstrMem.scala:19:7
+    initial begin	// leros/src/main/scala/leros/InstrMem.scala:19:7
+      `ifdef INIT_RANDOM_PROLOG_	// leros/src/main/scala/leros/InstrMem.scala:19:7
+        `INIT_RANDOM_PROLOG_	// leros/src/main/scala/leros/InstrMem.scala:19:7
+      `endif // INIT_RANDOM_PROLOG_
+      `ifdef RANDOMIZE_REG_INIT	// leros/src/main/scala/leros/InstrMem.scala:19:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// leros/src/main/scala/leros/InstrMem.scala:19:7
+        memReg = _RANDOM[/*Zero width*/ 1'b0][11:0];	// leros/src/main/scala/leros/InstrMem.scala:19:7, :24:23
+      `endif // RANDOMIZE_REG_INIT
+    end // initial
+    `ifdef FIRRTL_AFTER_INITIAL	// leros/src/main/scala/leros/InstrMem.scala:19:7
+      `FIRRTL_AFTER_INITIAL	// leros/src/main/scala/leros/InstrMem.scala:19:7
+    `endif // FIRRTL_AFTER_INITIAL
+  `endif // ENABLE_INITIAL_REG_
+  assign io_instr = casez_tmp;	// leros/src/main/scala/leros/InstrMem.scala:19:7, :27:12
+endmodule
+
+module RegBlock(	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+  input         clock,	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+                reset,	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+  input  [3:0]  apbPort_paddr,	// src/main/scala/dtu/peripherals/RegBlock.scala:27:19
+  input         apbPort_psel,	// src/main/scala/dtu/peripherals/RegBlock.scala:27:19
+                apbPort_penable,	// src/main/scala/dtu/peripherals/RegBlock.scala:27:19
+                apbPort_pwrite,	// src/main/scala/dtu/peripherals/RegBlock.scala:27:19
+  input  [31:0] apbPort_pwdata,	// src/main/scala/dtu/peripherals/RegBlock.scala:27:19
+  output        apbPort_pready,	// src/main/scala/dtu/peripherals/RegBlock.scala:27:19
+  output [31:0] apbPort_prdata,	// src/main/scala/dtu/peripherals/RegBlock.scala:27:19
+  input  [1:0]  dmemPort_rdAddr,	// src/main/scala/dtu/peripherals/RegBlock.scala:28:20
+  output [31:0] dmemPort_rdData,	// src/main/scala/dtu/peripherals/RegBlock.scala:28:20
+  input  [1:0]  dmemPort_wrAddr,	// src/main/scala/dtu/peripherals/RegBlock.scala:28:20
+  input  [31:0] dmemPort_wrData,	// src/main/scala/dtu/peripherals/RegBlock.scala:28:20
+  input         dmemPort_wr	// src/main/scala/dtu/peripherals/RegBlock.scala:28:20
+);
+
+  reg  [31:0] ibexToLerosRegs_0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32
+  reg  [31:0] ibexToLerosRegs_1;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32
+  reg  [31:0] ibexToLerosRegs_2;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32
+  reg  [31:0] ibexToLerosRegs_3;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32
+  reg  [31:0] lerosToIbexRegs_0;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32
+  reg  [31:0] lerosToIbexRegs_1;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32
+  reg  [31:0] lerosToIbexRegs_2;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32
+  reg  [31:0] lerosToIbexRegs_3;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32
+  reg         apbAckReg;	// src/main/scala/dtu/peripherals/RegBlock.scala:38:26
+  reg  [31:0] apbPort_prdata_REG;	// src/main/scala/dtu/peripherals/RegBlock.scala:47:28
+  reg  [31:0] casez_tmp;	// src/main/scala/dtu/peripherals/RegBlock.scala:47:28
+  always_comb begin	// src/main/scala/dtu/peripherals/RegBlock.scala:47:28
+    casez (apbPort_paddr[3:2])	// src/main/scala/dtu/peripherals/RegBlock.scala:46:31, :47:28
+      2'b00:
+        casez_tmp = lerosToIbexRegs_0;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32, :47:28
+      2'b01:
+        casez_tmp = lerosToIbexRegs_1;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32, :47:28
+      2'b10:
+        casez_tmp = lerosToIbexRegs_2;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32, :47:28
+      default:
+        casez_tmp = lerosToIbexRegs_3;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32, :47:28
+    endcase	// src/main/scala/dtu/peripherals/RegBlock.scala:46:31, :47:28
+  end // always_comb
+  reg  [1:0]  dmemPort_rdData_REG;	// src/main/scala/dtu/peripherals/RegBlock.scala:54:45
+  reg  [31:0] casez_tmp_0;	// src/main/scala/dtu/peripherals/RegBlock.scala:54:19
+  always_comb begin	// src/main/scala/dtu/peripherals/RegBlock.scala:54:19
+    casez (dmemPort_rdData_REG)	// src/main/scala/dtu/peripherals/RegBlock.scala:54:{19,45}
+      2'b00:
+        casez_tmp_0 = ibexToLerosRegs_0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32, :54:19
+      2'b01:
+        casez_tmp_0 = ibexToLerosRegs_1;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32, :54:19
+      2'b10:
+        casez_tmp_0 = ibexToLerosRegs_2;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32, :54:19
+      default:
+        casez_tmp_0 = ibexToLerosRegs_3;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32, :54:19
+    endcase	// src/main/scala/dtu/peripherals/RegBlock.scala:54:{19,45}
+  end // always_comb
+  wire        _GEN = apbPort_psel & apbPort_penable & apbPort_pwrite;	// src/main/scala/dtu/peripherals/RegBlock.scala:49:40
+  always @(posedge clock) begin	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+    if (reset) begin	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+      ibexToLerosRegs_0 <= 32'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:{32,40}
+      ibexToLerosRegs_1 <= 32'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:{32,40}
+      ibexToLerosRegs_2 <= 32'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:{32,40}
+      ibexToLerosRegs_3 <= 32'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:{32,40}
+      lerosToIbexRegs_0 <= 32'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:40, :35:32
+      lerosToIbexRegs_1 <= 32'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:40, :35:32
+      lerosToIbexRegs_2 <= 32'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:40, :35:32
+      lerosToIbexRegs_3 <= 32'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:40, :35:32
+      apbAckReg <= 1'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:38:26
+    end
+    else begin	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+      if (_GEN & apbPort_paddr[3:2] == 2'h0)	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32, :46:31, :49:{40,59}, :50:31
+        ibexToLerosRegs_0 <= apbPort_pwdata;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32
+      if (_GEN & apbPort_paddr[3:2] == 2'h1)	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32, :46:31, :49:{40,59}, :50:31
+        ibexToLerosRegs_1 <= apbPort_pwdata;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32
+      if (_GEN & apbPort_paddr[3:2] == 2'h2)	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32, :46:31, :49:{40,59}, :50:31
+        ibexToLerosRegs_2 <= apbPort_pwdata;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32
+      if (_GEN & (&(apbPort_paddr[3:2])))	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32, :46:31, :49:{40,59}, :50:31
+        ibexToLerosRegs_3 <= apbPort_pwdata;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32
+      if (dmemPort_wr & dmemPort_wrAddr == 2'h0)	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32, :50:31, :55:21, :56:38
+        lerosToIbexRegs_0 <= dmemPort_wrData;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32
+      if (dmemPort_wr & dmemPort_wrAddr == 2'h1)	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32, :50:31, :55:21, :56:38
+        lerosToIbexRegs_1 <= dmemPort_wrData;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32
+      if (dmemPort_wr & dmemPort_wrAddr == 2'h2)	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32, :50:31, :55:21, :56:38
+        lerosToIbexRegs_2 <= dmemPort_wrData;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32
+      if (dmemPort_wr & (&dmemPort_wrAddr))	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32, :55:21, :56:38
+        lerosToIbexRegs_3 <= dmemPort_wrData;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32
+      apbAckReg <= ~apbAckReg & (apbPort_psel | apbAckReg);	// src/main/scala/dtu/peripherals/RegBlock.scala:38:26, :39:19, :40:15, :41:28, :42:15
+    end
+    apbPort_prdata_REG <= casez_tmp;	// src/main/scala/dtu/peripherals/RegBlock.scala:47:28
+    dmemPort_rdData_REG <= dmemPort_rdAddr;	// src/main/scala/dtu/peripherals/RegBlock.scala:54:45
+  end // always @(posedge)
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+    `endif // FIRRTL_BEFORE_INITIAL
+    logic [31:0] _RANDOM[0:9];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+    initial begin	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+      `endif // INIT_RANDOM_PROLOG_
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+        for (logic [3:0] i = 4'h0; i < 4'hA; i += 4'h1) begin
+          _RANDOM[i] = `RANDOM;	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+        end	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+        ibexToLerosRegs_0 = _RANDOM[4'h0];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :34:32
+        ibexToLerosRegs_1 = _RANDOM[4'h1];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :34:32
+        ibexToLerosRegs_2 = _RANDOM[4'h2];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :34:32
+        ibexToLerosRegs_3 = _RANDOM[4'h3];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :34:32
+        lerosToIbexRegs_0 = _RANDOM[4'h4];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :35:32
+        lerosToIbexRegs_1 = _RANDOM[4'h5];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :35:32
+        lerosToIbexRegs_2 = _RANDOM[4'h6];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :35:32
+        lerosToIbexRegs_3 = _RANDOM[4'h7];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :35:32
+        apbAckReg = _RANDOM[4'h8][0];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :38:26
+        apbPort_prdata_REG = {_RANDOM[4'h8][31:1], _RANDOM[4'h9][0]};	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :38:26, :47:28
+        dmemPort_rdData_REG = _RANDOM[4'h9][2:1];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :47:28, :54:45
+      `endif // RANDOMIZE_REG_INIT
+    end // initial
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
+    `endif // FIRRTL_AFTER_INITIAL
+  `endif // ENABLE_INITIAL_REG_
+  assign apbPort_pready = apbAckReg;	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :38:26
+  assign apbPort_prdata = apbPort_prdata_REG;	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :47:28
+  assign dmemPort_rdData = casez_tmp_0;	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :54:19
+endmodule
+
+module Gpio(	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+  input         clock,	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+                reset,	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+  input  [1:0]  dmemPort_rdAddr,	// src/main/scala/dtu/peripherals/Gpio.scala:19:20
+  output [31:0] dmemPort_rdData,	// src/main/scala/dtu/peripherals/Gpio.scala:19:20
+  input  [1:0]  dmemPort_wrAddr,	// src/main/scala/dtu/peripherals/Gpio.scala:19:20
+  input  [31:0] dmemPort_wrData,	// src/main/scala/dtu/peripherals/Gpio.scala:19:20
+  input         dmemPort_wr,	// src/main/scala/dtu/peripherals/Gpio.scala:19:20
+  input  [1:0]  gpioPort_in,	// src/main/scala/dtu/peripherals/Gpio.scala:20:20
+  output [1:0]  gpioPort_out,	// src/main/scala/dtu/peripherals/Gpio.scala:20:20
+                gpioPort_oe	// src/main/scala/dtu/peripherals/Gpio.scala:20:20
+);
+
+  reg  [1:0] outputEnables;	// src/main/scala/dtu/peripherals/Gpio.scala:22:30
+  reg  [1:0] outputs;	// src/main/scala/dtu/peripherals/Gpio.scala:23:24
+  reg  [1:0] dmemPort_rdData_REG;	// src/main/scala/dtu/peripherals/Gpio.scala:26:39
+  wire       _GEN = dmemPort_wrAddr == 2'h0;	// src/main/scala/dtu/peripherals/Gpio.scala:22:30, :35:29
+  always @(posedge clock) begin	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+    if (reset) begin	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+      outputEnables <= 2'h0;	// src/main/scala/dtu/peripherals/Gpio.scala:22:30
+      outputs <= 2'h0;	// src/main/scala/dtu/peripherals/Gpio.scala:22:30, :23:24
+    end
+    else begin	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+      if (dmemPort_wr & _GEN)	// src/main/scala/dtu/peripherals/Gpio.scala:22:30, :34:21, :35:29, :37:23
+        outputEnables <= dmemPort_wrData[1:0];	// src/main/scala/dtu/peripherals/Gpio.scala:22:30, :37:23
+      if (~dmemPort_wr | _GEN | dmemPort_wrAddr != 2'h1) begin	// src/main/scala/dtu/peripherals/Gpio.scala:23:24, :26:72, :34:21, :35:29
+      end
+      else	// src/main/scala/dtu/peripherals/Gpio.scala:23:24, :34:21, :35:29
+        outputs <= dmemPort_wrData[1:0];	// src/main/scala/dtu/peripherals/Gpio.scala:23:24, :37:23
+    end
+    dmemPort_rdData_REG <= dmemPort_rdAddr;	// src/main/scala/dtu/peripherals/Gpio.scala:26:39
+  end // always @(posedge)
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+    `endif // FIRRTL_BEFORE_INITIAL
+    logic [31:0] _RANDOM[0:0];	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+    initial begin	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+      `endif // INIT_RANDOM_PROLOG_
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+        outputEnables = _RANDOM[/*Zero width*/ 1'b0][1:0];	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30
+        outputs = _RANDOM[/*Zero width*/ 1'b0][3:2];	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30, :23:24
+        dmemPort_rdData_REG = _RANDOM[/*Zero width*/ 1'b0][5:4];	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30, :26:39
+      `endif // RANDOMIZE_REG_INIT
+    end // initial
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
+    `endif // FIRRTL_AFTER_INITIAL
+  `endif // ENABLE_INITIAL_REG_
+  assign dmemPort_rdData =
+    {30'h0,
+     dmemPort_rdData_REG == 2'h2
+       ? gpioPort_in
+       : dmemPort_rdData_REG == 2'h1 ? outputs : outputEnables};	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30, :23:24, :26:{19,39,72}
+  assign gpioPort_out = outputs;	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :23:24
+  assign gpioPort_oe = outputEnables;	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30
+endmodule
+
+module DataMemory(	// src/main/scala/dtu/DataMemory.scala:16:7
+  input         clock,	// src/main/scala/dtu/DataMemory.scala:16:7
+                reset,	// src/main/scala/dtu/DataMemory.scala:16:7
+  input  [9:0]  dmemPort_rdAddr,	// src/main/scala/dtu/DataMemory.scala:20:20
+  output [31:0] dmemPort_rdData,	// src/main/scala/dtu/DataMemory.scala:20:20
+  input  [9:0]  dmemPort_wrAddr,	// src/main/scala/dtu/DataMemory.scala:20:20
+  input  [31:0] dmemPort_wrData,	// src/main/scala/dtu/DataMemory.scala:20:20
+  input         dmemPort_wr,	// src/main/scala/dtu/DataMemory.scala:20:20
+  input  [3:0]  dmemPort_wrMask	// src/main/scala/dtu/DataMemory.scala:20:20
+);
+
+  ChipFoundrySram m (	// src/main/scala/mem/ChipFoundrySram.scala:9:19
+    .clock       (clock),
+    .reset       (reset),
+    .io_wordAddr (dmemPort_wr ? dmemPort_wrAddr : dmemPort_rdAddr),	// src/main/scala/dtu/DataMemory.scala:26:21, src/main/scala/mem/ChipFoundrySram.scala:42:17, :47:17
+    .io_wrData   (dmemPort_wrData),
+    .io_rdData   (dmemPort_rdData),
+    .io_we       (dmemPort_wr),
+    .io_strb     (dmemPort_wrMask)
+  );
+endmodule
+
+module Buffer(	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+  input        clock,	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+               reset,	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+  output       io_in_ready,	// leros/src/main/scala/leros/uart/UARTRx.scala:70:14
+  input        io_in_valid,	// leros/src/main/scala/leros/uart/UARTRx.scala:70:14
+  input  [7:0] io_in_bits,	// leros/src/main/scala/leros/uart/UARTRx.scala:70:14
+  input        io_out_ready,	// leros/src/main/scala/leros/uart/UARTRx.scala:70:14
+  output       io_out_valid,	// leros/src/main/scala/leros/uart/UARTRx.scala:70:14
+  output [7:0] io_out_bits	// leros/src/main/scala/leros/uart/UARTRx.scala:70:14
+);
+
+  reg       stateReg;	// leros/src/main/scala/leros/uart/UARTRx.scala:80:25
+  reg [7:0] dataReg;	// leros/src/main/scala/leros/uart/UARTRx.scala:81:24
+  always @(posedge clock) begin	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+    if (reset) begin	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+      stateReg <= 1'h0;	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7, :80:25
+      dataReg <= 8'h0;	// leros/src/main/scala/leros/uart/UARTRx.scala:81:24
+    end
+    else begin	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+      if (stateReg)	// leros/src/main/scala/leros/uart/UARTRx.scala:80:25
+        stateReg <= ~io_out_ready & stateReg;	// leros/src/main/scala/leros/uart/UARTRx.scala:80:25, :92:24, :93:16
+      else	// leros/src/main/scala/leros/uart/UARTRx.scala:80:25
+        stateReg <= io_in_valid | stateReg;	// leros/src/main/scala/leros/uart/UARTRx.scala:80:25, :87:23, :89:16
+      if (~stateReg & io_in_valid)	// leros/src/main/scala/leros/uart/UARTRx.scala:80:25, :81:24, :83:27, :86:28, :87:23, :88:15
+        dataReg <= io_in_bits;	// leros/src/main/scala/leros/uart/UARTRx.scala:81:24
+    end
+  end // always @(posedge)
+  `ifdef ENABLE_INITIAL_REG_	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+      `FIRRTL_BEFORE_INITIAL	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+    `endif // FIRRTL_BEFORE_INITIAL
+    logic [31:0] _RANDOM[0:0];	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+    initial begin	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+      `ifdef INIT_RANDOM_PROLOG_	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+        `INIT_RANDOM_PROLOG_	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+      `endif // INIT_RANDOM_PROLOG_
+      `ifdef RANDOMIZE_REG_INIT	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+        stateReg = _RANDOM[/*Zero width*/ 1'b0][0];	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7, :80:25
+        dataReg = _RANDOM[/*Zero width*/ 1'b0][8:1];	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7, :80:25, :81:24
+      `endif // RANDOMIZE_REG_INIT
+    end // initial
+    `ifdef FIRRTL_AFTER_INITIAL	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+      `FIRRTL_AFTER_INITIAL	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
+    `endif // FIRRTL_AFTER_INITIAL
+  `endif // ENABLE_INITIAL_REG_
+  assign io_in_ready = ~stateReg;	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7, :80:25, :83:27
+  assign io_out_valid = stateReg;	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7, :80:25
+  assign io_out_bits = dataReg;	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7, :81:24
+endmodule
+
+module BufferedTx(	// leros/src/main/scala/leros/uart/UARTTx.scala:62:7
+  input        clock,	// leros/src/main/scala/leros/uart/UARTTx.scala:62:7
+               reset,	// leros/src/main/scala/leros/uart/UARTTx.scala:62:7
+  output       io_txd,	// leros/src/main/scala/leros/uart/UARTTx.scala:63:14
+               io_channel_ready,	// leros/src/main/scala/leros/uart/UARTTx.scala:63:14
+  input        io_channel_valid,	// leros/src/main/scala/leros/uart/UARTTx.scala:63:14
+  input  [7:0] io_channel_bits	// leros/src/main/scala/leros/uart/UARTTx.scala:63:14
+);
+
+  wire       _buf_io_out_valid;	// leros/src/main/scala/leros/uart/UARTTx.scala:68:19
+  wire [7:0] _buf_io_out_bits;	// leros/src/main/scala/leros/uart/UARTTx.scala:68:19
+  wire       _tx_io_channel_ready;	// leros/src/main/scala/leros/uart/UARTTx.scala:67:18
+  Tx tx (	// leros/src/main/scala/leros/uart/UARTTx.scala:67:18
+    .clock            (clock),
+    .reset            (reset),
+    .io_txd           (io_txd),
+    .io_channel_ready (_tx_io_channel_ready),
+    .io_channel_valid (_buf_io_out_valid),	// leros/src/main/scala/leros/uart/UARTTx.scala:68:19
+    .io_channel_bits  (_buf_io_out_bits)	// leros/src/main/scala/leros/uart/UARTTx.scala:68:19
+  );
+  Buffer buf_0 (	// leros/src/main/scala/leros/uart/UARTTx.scala:68:19
+    .clock        (clock),
+    .reset        (reset),
+    .io_in_ready  (io_channel_ready),
+    .io_in_valid  (io_channel_valid),
+    .io_in_bits   (io_channel_bits),
+    .io_out_ready (_tx_io_channel_ready),	// leros/src/main/scala/leros/uart/UARTTx.scala:67:18
+    .io_out_valid (_buf_io_out_valid),
+    .io_out_bits  (_buf_io_out_bits)
+  );
+endmodule
+
+module UARTRx(	// leros/src/main/scala/leros/uart/UARTRx.scala:102:7
+  input        clock,	// leros/src/main/scala/leros/uart/UARTRx.scala:102:7
+               reset,	// leros/src/main/scala/leros/uart/UARTRx.scala:102:7
+               io_rxd,	// leros/src/main/scala/leros/uart/UARTRx.scala:103:14
+               io_out_ready,	// leros/src/main/scala/leros/uart/UARTRx.scala:103:14
+  output       io_out_valid,	// leros/src/main/scala/leros/uart/UARTRx.scala:103:14
+  output [7:0] io_out_bits	// leros/src/main/scala/leros/uart/UARTRx.scala:103:14
+);
+
+  wire       _buf_io_in_ready;	// leros/src/main/scala/leros/uart/UARTRx.scala:108:19
+  wire       _rx_io_channel_valid;	// leros/src/main/scala/leros/uart/UARTRx.scala:107:18
+  wire [7:0] _rx_io_channel_bits;	// leros/src/main/scala/leros/uart/UARTRx.scala:107:18
+  Rx rx (	// leros/src/main/scala/leros/uart/UARTRx.scala:107:18
+    .clock            (clock),
+    .reset            (reset),
+    .io_rxd           (io_rxd),
+    .io_channel_ready (_buf_io_in_ready),	// leros/src/main/scala/leros/uart/UARTRx.scala:108:19
+    .io_channel_valid (_rx_io_channel_valid),
+    .io_channel_bits  (_rx_io_channel_bits)
+  );
+  Buffer buf_0 (	// leros/src/main/scala/leros/uart/UARTRx.scala:108:19
+    .clock        (clock),
+    .reset        (reset),
+    .io_in_ready  (_buf_io_in_ready),
+    .io_in_valid  (_rx_io_channel_valid),	// leros/src/main/scala/leros/uart/UARTRx.scala:107:18
+    .io_in_bits   (_rx_io_channel_bits),	// leros/src/main/scala/leros/uart/UARTRx.scala:107:18
+    .io_out_ready (io_out_ready),
+    .io_out_valid (io_out_valid),
+    .io_out_bits  (io_out_bits)
+  );
+endmodule
+
+module Uart(	// src/main/scala/dtu/peripherals/Uart.scala:25:7
+  input         clock,	// src/main/scala/dtu/peripherals/Uart.scala:25:7
+                reset,	// src/main/scala/dtu/peripherals/Uart.scala:25:7
+  output        uartPins_tx,	// src/main/scala/dtu/peripherals/Uart.scala:27:20
+  input         uartPins_rx,	// src/main/scala/dtu/peripherals/Uart.scala:27:20
+                dmemPort_rdAddr,	// src/main/scala/dtu/peripherals/Uart.scala:28:20
+  output [31:0] dmemPort_rdData,	// src/main/scala/dtu/peripherals/Uart.scala:28:20
+  input         dmemPort_wrAddr,	// src/main/scala/dtu/peripherals/Uart.scala:28:20
+  input  [31:0] dmemPort_wrData,	// src/main/scala/dtu/peripherals/Uart.scala:28:20
+  input         dmemPort_wr	// src/main/scala/dtu/peripherals/Uart.scala:28:20
+);
+
+  wire       _rx_io_out_valid;	// src/main/scala/dtu/peripherals/Uart.scala:31:18
+  wire [7:0] _rx_io_out_bits;	// src/main/scala/dtu/peripherals/Uart.scala:31:18
+  wire       _tx_io_channel_ready;	// src/main/scala/dtu/peripherals/Uart.scala:30:18
+  reg        REG;	// src/main/scala/dtu/peripherals/Uart.scala:40:15
+  always @(posedge clock)	// src/main/scala/dtu/peripherals/Uart.scala:25:7
+    REG <= ~dmemPort_rdAddr;	// src/main/scala/dtu/peripherals/Uart.scala:40:{15,32}
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/dtu/peripherals/Uart.scala:25:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/peripherals/Uart.scala:25:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/peripherals/Uart.scala:25:7
+    `endif // FIRRTL_BEFORE_INITIAL
+    logic [31:0] _RANDOM[0:0];	// src/main/scala/dtu/peripherals/Uart.scala:25:7
+    initial begin	// src/main/scala/dtu/peripherals/Uart.scala:25:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/dtu/peripherals/Uart.scala:25:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/dtu/peripherals/Uart.scala:25:7
+      `endif // INIT_RANDOM_PROLOG_
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/dtu/peripherals/Uart.scala:25:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/dtu/peripherals/Uart.scala:25:7
+        REG = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/dtu/peripherals/Uart.scala:25:7, :40:15
+      `endif // RANDOMIZE_REG_INIT
+    end // initial
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/peripherals/Uart.scala:25:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/peripherals/Uart.scala:25:7
+    `endif // FIRRTL_AFTER_INITIAL
+  `endif // ENABLE_INITIAL_REG_
+  BufferedTx tx (	// src/main/scala/dtu/peripherals/Uart.scala:30:18
+    .clock            (clock),
+    .reset            (reset),
+    .io_txd           (uartPins_tx),
+    .io_channel_ready (_tx_io_channel_ready),
+    .io_channel_valid (dmemPort_wr & dmemPort_wrAddr),	// src/main/scala/dtu/peripherals/Uart.scala:33:23, :46:21, :47:29
+    .io_channel_bits  (dmemPort_wrData[7:0])	// src/main/scala/dtu/peripherals/Uart.scala:34:22
+  );
+  UARTRx rx (	// src/main/scala/dtu/peripherals/Uart.scala:31:18
+    .clock        (clock),
+    .reset        (reset),
+    .io_rxd       (uartPins_rx),
+    .io_out_ready (dmemPort_wr & ~dmemPort_wrAddr),	// src/main/scala/dtu/peripherals/Uart.scala:37:19, :46:21, :47:29
+    .io_out_valid (_rx_io_out_valid),
+    .io_out_bits  (_rx_io_out_bits)
+  );
+  assign dmemPort_rdData =
+    REG ? {30'h0, _tx_io_channel_ready, _rx_io_out_valid} : {24'h0, _rx_io_out_bits};	// src/main/scala/dtu/peripherals/Uart.scala:25:7, :30:18, :31:18, :40:{15,42}, :41:21, :43:21
+endmodule
+
+module WishboneToApb(	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+  input         clock,	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+                reset,	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+                io_wb_stb,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
+                io_wb_cyc,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
+                io_wb_we,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
+  input  [3:0]  io_wb_sel,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
+  input  [31:0] io_wb_dat_i,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
+  input  [15:0] io_wb_adr,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
+  output [31:0] io_wb_dat_o,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
+  output        io_wb_ack,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
+  output [15:0] io_apb_paddr,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
+  output        io_apb_psel,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
+                io_apb_penable,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
+                io_apb_pwrite,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
+  output [3:0]  io_apb_pstrb,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
+  output [31:0] io_apb_pwdata,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
+  input         io_apb_pready,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
+  input  [31:0] io_apb_prdata	// src/main/scala/wishbone/WishboneToApb.scala:13:14
+);
+
+  reg  accessPhase;	// src/main/scala/wishbone/WishboneToApb.scala:19:28
+  wire io_apb_psel_0 = io_wb_cyc & io_wb_stb;	// src/main/scala/wishbone/WishboneToApb.scala:21:18
+  always @(posedge clock) begin	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+    if (reset)	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+      accessPhase <= 1'h0;	// src/main/scala/wishbone/WishboneToApb.scala:11:7, :19:28
+    else	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+      accessPhase <= io_apb_psel_0 & ~accessPhase | ~io_apb_pready & accessPhase;	// src/main/scala/wishbone/WishboneToApb.scala:19:28, :21:{18,31,34,48}, :22:17, :23:29, :24:17
+  end // always @(posedge)
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+    `endif // FIRRTL_BEFORE_INITIAL
+    logic [31:0] _RANDOM[0:0];	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+    initial begin	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+      `endif // INIT_RANDOM_PROLOG_
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+        accessPhase = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/wishbone/WishboneToApb.scala:11:7, :19:28
+      `endif // RANDOMIZE_REG_INIT
+    end // initial
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+    `endif // FIRRTL_AFTER_INITIAL
+  `endif // ENABLE_INITIAL_REG_
+  assign io_wb_dat_o = io_apb_prdata;	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+  assign io_wb_ack = io_apb_pready;	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+  assign io_apb_paddr = io_wb_adr;	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+  assign io_apb_psel = io_apb_psel_0;	// src/main/scala/wishbone/WishboneToApb.scala:11:7, :21:18
+  assign io_apb_penable = accessPhase;	// src/main/scala/wishbone/WishboneToApb.scala:11:7, :19:28
+  assign io_apb_pwrite = io_wb_we;	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+  assign io_apb_pstrb = io_wb_sel;	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+  assign io_apb_pwdata = io_wb_dat_i;	// src/main/scala/wishbone/WishboneToApb.scala:11:7
+endmodule
+
+module ApbArbiter(	// src/main/scala/apb/ApbArbiter.scala:28:7
+  input         clock,	// src/main/scala/apb/ApbArbiter.scala:28:7
+                reset,	// src/main/scala/apb/ApbArbiter.scala:28:7
+  input  [15:0] io_masters_0_paddr,	// src/main/scala/apb/ApbArbiter.scala:29:14
+  input         io_masters_0_psel,	// src/main/scala/apb/ApbArbiter.scala:29:14
+                io_masters_0_penable,	// src/main/scala/apb/ApbArbiter.scala:29:14
+                io_masters_0_pwrite,	// src/main/scala/apb/ApbArbiter.scala:29:14
+  input  [31:0] io_masters_0_pwdata,	// src/main/scala/apb/ApbArbiter.scala:29:14
+  output        io_masters_0_pready,	// src/main/scala/apb/ApbArbiter.scala:29:14
+  output [31:0] io_masters_0_prdata,	// src/main/scala/apb/ApbArbiter.scala:29:14
+  input  [15:0] io_masters_1_paddr,	// src/main/scala/apb/ApbArbiter.scala:29:14
+  input         io_masters_1_psel,	// src/main/scala/apb/ApbArbiter.scala:29:14
+                io_masters_1_penable,	// src/main/scala/apb/ApbArbiter.scala:29:14
+                io_masters_1_pwrite,	// src/main/scala/apb/ApbArbiter.scala:29:14
+  input  [3:0]  io_masters_1_pstrb,	// src/main/scala/apb/ApbArbiter.scala:29:14
+  input  [31:0] io_masters_1_pwdata,	// src/main/scala/apb/ApbArbiter.scala:29:14
+  output        io_masters_1_pready,	// src/main/scala/apb/ApbArbiter.scala:29:14
+  output [31:0] io_masters_1_prdata,	// src/main/scala/apb/ApbArbiter.scala:29:14
+  output [15:0] io_merged_paddr,	// src/main/scala/apb/ApbArbiter.scala:29:14
+  output        io_merged_psel,	// src/main/scala/apb/ApbArbiter.scala:29:14
+                io_merged_penable,	// src/main/scala/apb/ApbArbiter.scala:29:14
+                io_merged_pwrite,	// src/main/scala/apb/ApbArbiter.scala:29:14
+  output [3:0]  io_merged_pstrb,	// src/main/scala/apb/ApbArbiter.scala:29:14
+  output [31:0] io_merged_pwdata,	// src/main/scala/apb/ApbArbiter.scala:29:14
+  input         io_merged_pready,	// src/main/scala/apb/ApbArbiter.scala:29:14
+  input  [31:0] io_merged_prdata	// src/main/scala/apb/ApbArbiter.scala:29:14
+);
+
+  reg  [2:0] stateReg;	// src/main/scala/apb/ApbArbiter.scala:45:25
+  reg        lastTurn;	// src/main/scala/apb/ApbArbiter.scala:46:25
+  wire       _GEN = stateReg == 3'h0;	// src/main/scala/apb/ApbArbiter.scala:45:25, :54:20, :74:18
+  wire       _GEN_0 = stateReg == 3'h1;	// src/main/scala/apb/ApbArbiter.scala:45:25, :54:20, :60:18
+  wire       _GEN_1 = stateReg == 3'h2;	// src/main/scala/apb/ApbArbiter.scala:45:25, :54:20, :69:16
+  wire       _GEN_2 = _GEN_0 | _GEN_1;	// src/main/scala/apb/ApbArbiter.scala:49:31, :54:20, :67:17, :72:17
+  wire       _GEN_3 = stateReg == 3'h3;	// src/main/scala/apb/ApbArbiter.scala:45:25, :54:20, :62:18
+  wire       _GEN_4 = stateReg == 3'h4;	// src/main/scala/apb/ApbArbiter.scala:45:25, :54:20, :81:16
+  wire       _GEN_5 = _GEN | ~_GEN_2;	// src/main/scala/apb/ApbArbiter.scala:48:24, :49:31, :54:20, :67:17, :72:17
+  wire       _GEN_6 = _GEN_3 | _GEN_4;	// src/main/scala/apb/ApbArbiter.scala:51:18, :54:20, :79:17, :84:17
+  always @(posedge clock) begin	// src/main/scala/apb/ApbArbiter.scala:28:7
+    if (reset) begin	// src/main/scala/apb/ApbArbiter.scala:28:7
+      stateReg <= 3'h0;	// src/main/scala/apb/ApbArbiter.scala:45:25, :74:18
+      lastTurn <= 1'h1;	// src/main/scala/apb/ApbArbiter.scala:28:7, :46:25
+    end
+    else if (_GEN) begin	// src/main/scala/apb/ApbArbiter.scala:54:20
+      if (io_masters_0_psel & io_masters_1_psel)	// src/main/scala/apb/ApbArbiter.scala:56:31
+        stateReg <= {1'h0, ~lastTurn, 1'h1};	// src/main/scala/apb/ApbArbiter.scala:28:7, :45:25, :46:25, :57:{18,34}
+      else if (io_masters_0_psel)	// src/main/scala/apb/ApbArbiter.scala:29:14
+        stateReg <= 3'h1;	// src/main/scala/apb/ApbArbiter.scala:45:25, :60:18
+      else if (io_masters_1_psel)	// src/main/scala/apb/ApbArbiter.scala:29:14
+        stateReg <= 3'h3;	// src/main/scala/apb/ApbArbiter.scala:45:25, :62:18
+    end
+    else begin	// src/main/scala/apb/ApbArbiter.scala:54:20
+      if (_GEN_0)	// src/main/scala/apb/ApbArbiter.scala:54:20
+        stateReg <= 3'h2;	// src/main/scala/apb/ApbArbiter.scala:45:25, :69:16
+      else if (_GEN_1) begin	// src/main/scala/apb/ApbArbiter.scala:54:20
+        if (io_merged_pready)	// src/main/scala/apb/ApbArbiter.scala:29:14
+          stateReg <= 3'h0;	// src/main/scala/apb/ApbArbiter.scala:45:25, :74:18
+      end
+      else if (_GEN_3)	// src/main/scala/apb/ApbArbiter.scala:54:20
+        stateReg <= 3'h4;	// src/main/scala/apb/ApbArbiter.scala:45:25, :81:16
+      else if (_GEN_4 & io_merged_pready)	// src/main/scala/apb/ApbArbiter.scala:45:25, :54:20, :85:30, :86:18
+        stateReg <= 3'h0;	// src/main/scala/apb/ApbArbiter.scala:45:25, :74:18
+      lastTurn <= ~_GEN_0 & (~_GEN_1 & _GEN_3 | lastTurn);	// src/main/scala/apb/ApbArbiter.scala:46:25, :54:20, :66:16
+    end
+  end // always @(posedge)
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/apb/ApbArbiter.scala:28:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/apb/ApbArbiter.scala:28:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/apb/ApbArbiter.scala:28:7
+    `endif // FIRRTL_BEFORE_INITIAL
+    logic [31:0] _RANDOM[0:0];	// src/main/scala/apb/ApbArbiter.scala:28:7
+    initial begin	// src/main/scala/apb/ApbArbiter.scala:28:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/apb/ApbArbiter.scala:28:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/apb/ApbArbiter.scala:28:7
+      `endif // INIT_RANDOM_PROLOG_
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/apb/ApbArbiter.scala:28:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/apb/ApbArbiter.scala:28:7
+        stateReg = _RANDOM[/*Zero width*/ 1'b0][2:0];	// src/main/scala/apb/ApbArbiter.scala:28:7, :45:25
+        lastTurn = _RANDOM[/*Zero width*/ 1'b0][3];	// src/main/scala/apb/ApbArbiter.scala:28:7, :45:25, :46:25
+      `endif // RANDOMIZE_REG_INIT
+    end // initial
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/apb/ApbArbiter.scala:28:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/apb/ApbArbiter.scala:28:7
+    `endif // FIRRTL_AFTER_INITIAL
+  `endif // ENABLE_INITIAL_REG_
+  assign io_masters_0_pready = ~_GEN & _GEN_2 & io_merged_pready;	// src/main/scala/apb/ApbArbiter.scala:28:7, :49:31, :54:20, :67:17, :72:17
+  assign io_masters_0_prdata = io_merged_prdata;	// src/main/scala/apb/ApbArbiter.scala:28:7
+  assign io_masters_1_pready = ~(_GEN | _GEN_2) & _GEN_6 & io_merged_pready;	// src/main/scala/apb/ApbArbiter.scala:28:7, :49:31, :51:18, :54:20, :67:17, :72:17, :79:17, :84:17
+  assign io_masters_1_prdata = io_merged_prdata;	// src/main/scala/apb/ApbArbiter.scala:28:7
+  assign io_merged_paddr = _GEN_5 ? io_masters_1_paddr : io_masters_0_paddr;	// src/main/scala/apb/ApbArbiter.scala:28:7, :48:24, :54:20
+  assign io_merged_psel =
+    ~_GEN & (_GEN_2 ? io_masters_0_psel : _GEN_6 & io_masters_1_psel);	// src/main/scala/apb/ApbArbiter.scala:28:7, :49:31, :51:18, :54:20, :67:17, :72:17, :79:17, :84:17
+  assign io_merged_penable =
+    ~(_GEN | _GEN_0)
+    & (_GEN_1 ? io_masters_0_penable : ~_GEN_3 & _GEN_4 & io_masters_1_penable);	// src/main/scala/apb/ApbArbiter.scala:28:7, :52:21, :54:20, :68:25, :72:17, :80:25
+  assign io_merged_pwrite = _GEN_5 ? io_masters_1_pwrite : io_masters_0_pwrite;	// src/main/scala/apb/ApbArbiter.scala:28:7, :48:24, :54:20
+  assign io_merged_pstrb = _GEN_5 ? io_masters_1_pstrb : 4'hF;	// src/main/scala/apb/ApbArbiter.scala:28:7, :29:14, :48:24, :54:20
+  assign io_merged_pwdata = _GEN_5 ? io_masters_1_pwdata : io_masters_0_pwdata;	// src/main/scala/apb/ApbArbiter.scala:28:7, :48:24, :54:20
+endmodule
+
+module ApbErrorTarget(	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+  input  clock,	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+         reset,	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+         apbPort_psel,	// src/main/scala/apb/ApbErrorTarget.scala:7:19
+  output apbPort_pready	// src/main/scala/apb/ApbErrorTarget.scala:7:19
+);
+
+  reg active;	// src/main/scala/apb/ApbErrorTarget.scala:9:23
+  always @(posedge clock) begin	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+    if (reset)	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+      active <= 1'h0;	// src/main/scala/apb/ApbErrorTarget.scala:5:7, :9:23
+    else	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+      active <= ~active & (apbPort_psel | active);	// src/main/scala/apb/ApbErrorTarget.scala:9:23, :10:16, :11:12, :12:28, :13:12
+  end // always @(posedge)
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+    `endif // FIRRTL_BEFORE_INITIAL
+    logic [31:0] _RANDOM[0:0];	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+    initial begin	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+      `endif // INIT_RANDOM_PROLOG_
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+        active = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/apb/ApbErrorTarget.scala:5:7, :9:23
+      `endif // RANDOMIZE_REG_INIT
+    end // initial
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/apb/ApbErrorTarget.scala:5:7
+    `endif // FIRRTL_AFTER_INITIAL
+  `endif // ENABLE_INITIAL_REG_
+  assign apbPort_pready = active;	// src/main/scala/apb/ApbErrorTarget.scala:5:7, :9:23
+endmodule
+
+module ApbMux(	// src/main/scala/apb/ApbMux.scala:15:7
+  input         clock,	// src/main/scala/apb/ApbMux.scala:15:7
+                reset,	// src/main/scala/apb/ApbMux.scala:15:7
+  input  [15:0] io_master_paddr,	// src/main/scala/apb/ApbMux.scala:21:14
+  input         io_master_psel,	// src/main/scala/apb/ApbMux.scala:21:14
+                io_master_penable,	// src/main/scala/apb/ApbMux.scala:21:14
+                io_master_pwrite,	// src/main/scala/apb/ApbMux.scala:21:14
+  input  [3:0]  io_master_pstrb,	// src/main/scala/apb/ApbMux.scala:21:14
+  input  [31:0] io_master_pwdata,	// src/main/scala/apb/ApbMux.scala:21:14
+  output        io_master_pready,	// src/main/scala/apb/ApbMux.scala:21:14
+  output [31:0] io_master_prdata,	// src/main/scala/apb/ApbMux.scala:21:14
+  output [15:0] io_targets_0_paddr,	// src/main/scala/apb/ApbMux.scala:21:14
+  output        io_targets_0_psel,	// src/main/scala/apb/ApbMux.scala:21:14
+                io_targets_0_penable,	// src/main/scala/apb/ApbMux.scala:21:14
+                io_targets_0_pwrite,	// src/main/scala/apb/ApbMux.scala:21:14
+  output [3:0]  io_targets_0_pstrb,	// src/main/scala/apb/ApbMux.scala:21:14
+  output [31:0] io_targets_0_pwdata,	// src/main/scala/apb/ApbMux.scala:21:14
+  input         io_targets_0_pready,	// src/main/scala/apb/ApbMux.scala:21:14
+  input  [31:0] io_targets_0_prdata,	// src/main/scala/apb/ApbMux.scala:21:14
+  output [15:0] io_targets_1_paddr,	// src/main/scala/apb/ApbMux.scala:21:14
+  output        io_targets_1_psel,	// src/main/scala/apb/ApbMux.scala:21:14
+                io_targets_1_penable,	// src/main/scala/apb/ApbMux.scala:21:14
+                io_targets_1_pwrite,	// src/main/scala/apb/ApbMux.scala:21:14
+  output [31:0] io_targets_1_pwdata,	// src/main/scala/apb/ApbMux.scala:21:14
+  input         io_targets_1_pready,	// src/main/scala/apb/ApbMux.scala:21:14
+  input  [31:0] io_targets_1_prdata,	// src/main/scala/apb/ApbMux.scala:21:14
+  output        io_targets_2_psel,	// src/main/scala/apb/ApbMux.scala:21:14
+                io_targets_2_penable,	// src/main/scala/apb/ApbMux.scala:21:14
+                io_targets_2_pwrite,	// src/main/scala/apb/ApbMux.scala:21:14
+  output [31:0] io_targets_2_pwdata,	// src/main/scala/apb/ApbMux.scala:21:14
+  input         io_targets_2_pready,	// src/main/scala/apb/ApbMux.scala:21:14
+  input  [31:0] io_targets_2_prdata	// src/main/scala/apb/ApbMux.scala:21:14
+);
+
+  wire _errorTarget_apbPort_pready;	// src/main/scala/apb/ApbMux.scala:34:27
+  wire selected = io_master_psel & io_master_paddr[15:12] == 4'h0;	// src/main/scala/apb/ApbMux.scala:82:{35,53}, :85:7
+  reg  wasSelected;	// src/main/scala/apb/ApbMux.scala:93:30
+  wire selected_1 = io_master_psel & io_master_paddr[15:4] == 12'h100;	// src/main/scala/apb/ApbMux.scala:82:{35,53}, :85:7
+  reg  wasSelected_1;	// src/main/scala/apb/ApbMux.scala:93:30
+  wire selected_2 = io_master_psel & io_master_paddr[15:2] == 14'h800;	// src/main/scala/apb/ApbMux.scala:82:{35,53}, :85:7
+  reg  wasSelected_2;	// src/main/scala/apb/ApbMux.scala:93:30
+  always @(posedge clock) begin	// src/main/scala/apb/ApbMux.scala:15:7
+    if (reset) begin	// src/main/scala/apb/ApbMux.scala:15:7
+      wasSelected <= 1'h0;	// src/main/scala/apb/ApbMux.scala:15:7, :93:30
+      wasSelected_1 <= 1'h0;	// src/main/scala/apb/ApbMux.scala:15:7, :93:30
+      wasSelected_2 <= 1'h0;	// src/main/scala/apb/ApbMux.scala:15:7, :93:30
+    end
+    else begin	// src/main/scala/apb/ApbMux.scala:15:7
+      wasSelected <= selected & ~io_targets_0_pready;	// src/main/scala/apb/ApbMux.scala:82:35, :93:{30,40,43}
+      wasSelected_1 <= selected_1 & ~io_targets_1_pready;	// src/main/scala/apb/ApbMux.scala:82:35, :93:{30,40,43}
+      wasSelected_2 <= selected_2 & ~io_targets_2_pready;	// src/main/scala/apb/ApbMux.scala:82:35, :93:{30,40,43}
+    end
+  end // always @(posedge)
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/apb/ApbMux.scala:15:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/apb/ApbMux.scala:15:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/apb/ApbMux.scala:15:7
+    `endif // FIRRTL_BEFORE_INITIAL
+    logic [31:0] _RANDOM[0:0];	// src/main/scala/apb/ApbMux.scala:15:7
+    initial begin	// src/main/scala/apb/ApbMux.scala:15:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/apb/ApbMux.scala:15:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/apb/ApbMux.scala:15:7
+      `endif // INIT_RANDOM_PROLOG_
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/apb/ApbMux.scala:15:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/apb/ApbMux.scala:15:7
+        wasSelected = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/apb/ApbMux.scala:15:7, :93:30
+        wasSelected_1 = _RANDOM[/*Zero width*/ 1'b0][1];	// src/main/scala/apb/ApbMux.scala:15:7, :93:30
+        wasSelected_2 = _RANDOM[/*Zero width*/ 1'b0][2];	// src/main/scala/apb/ApbMux.scala:15:7, :93:30
+      `endif // RANDOMIZE_REG_INIT
+    end // initial
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/apb/ApbMux.scala:15:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/apb/ApbMux.scala:15:7
+    `endif // FIRRTL_AFTER_INITIAL
+  `endif // ENABLE_INITIAL_REG_
+  ApbErrorTarget errorTarget (	// src/main/scala/apb/ApbMux.scala:34:27
+    .clock          (clock),
+    .reset          (reset),
+    .apbPort_psel   (~(selected_2 | selected_1 | selected) & io_master_psel),	// src/main/scala/apb/ApbMux.scala:35:23, :82:35, :87:20, :88:32
+    .apbPort_pready (_errorTarget_apbPort_pready)
+  );
+  assign io_master_pready =
+    wasSelected_2
+      ? io_targets_2_pready
+      : wasSelected_1
+          ? io_targets_1_pready
+          : wasSelected ? io_targets_0_pready : _errorTarget_apbPort_pready;	// src/main/scala/apb/ApbMux.scala:15:7, :34:27, :35:23, :93:30, :94:23, :95:24
+  assign io_master_prdata =
+    wasSelected_2
+      ? io_targets_2_prdata
+      : wasSelected_1 ? io_targets_1_prdata : wasSelected ? io_targets_0_prdata : 32'h0;	// src/main/scala/apb/ApbMux.scala:15:7, :34:27, :35:23, :93:30, :94:23, :96:24
+  assign io_targets_0_paddr = io_master_paddr;	// src/main/scala/apb/ApbMux.scala:15:7
+  assign io_targets_0_psel = selected;	// src/main/scala/apb/ApbMux.scala:15:7, :82:35
+  assign io_targets_0_penable = io_master_penable;	// src/main/scala/apb/ApbMux.scala:15:7
+  assign io_targets_0_pwrite = io_master_pwrite;	// src/main/scala/apb/ApbMux.scala:15:7
+  assign io_targets_0_pstrb = io_master_pstrb;	// src/main/scala/apb/ApbMux.scala:15:7
+  assign io_targets_0_pwdata = io_master_pwdata;	// src/main/scala/apb/ApbMux.scala:15:7
+  assign io_targets_1_paddr = io_master_paddr;	// src/main/scala/apb/ApbMux.scala:15:7
+  assign io_targets_1_psel = selected_1;	// src/main/scala/apb/ApbMux.scala:15:7, :82:35
+  assign io_targets_1_penable = io_master_penable;	// src/main/scala/apb/ApbMux.scala:15:7
+  assign io_targets_1_pwrite = io_master_pwrite;	// src/main/scala/apb/ApbMux.scala:15:7
+  assign io_targets_1_pwdata = io_master_pwdata;	// src/main/scala/apb/ApbMux.scala:15:7
+  assign io_targets_2_psel = selected_2;	// src/main/scala/apb/ApbMux.scala:15:7, :82:35
+  assign io_targets_2_penable = io_master_penable;	// src/main/scala/apb/ApbMux.scala:15:7
+  assign io_targets_2_pwrite = io_master_pwrite;	// src/main/scala/apb/ApbMux.scala:15:7
+  assign io_targets_2_pwdata = io_master_pwdata;	// src/main/scala/apb/ApbMux.scala:15:7
+endmodule
+
+module DataMemMux(	// src/main/scala/dtu/DataMemMux.scala:21:7
+  input         clock,	// src/main/scala/dtu/DataMemMux.scala:21:7
+                reset,	// src/main/scala/dtu/DataMemMux.scala:21:7
+  input  [15:0] io_master_rdAddr,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output [31:0] io_master_rdData,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  input  [15:0] io_master_wrAddr,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  input  [31:0] io_master_wrData,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  input         io_master_wr,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  input  [3:0]  io_master_wrMask,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output [15:0] io_targets_0_rdAddr,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  input  [31:0] io_targets_0_rdData,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output [15:0] io_targets_0_wrAddr,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output [31:0] io_targets_0_wrData,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output        io_targets_0_wr,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output [3:0]  io_targets_0_wrMask,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output [15:0] io_targets_1_rdAddr,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  input  [31:0] io_targets_1_rdData,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output [15:0] io_targets_1_wrAddr,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output [31:0] io_targets_1_wrData,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output        io_targets_1_wr,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output [15:0] io_targets_2_rdAddr,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  input  [31:0] io_targets_2_rdData,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output [15:0] io_targets_2_wrAddr,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output [31:0] io_targets_2_wrData,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output        io_targets_2_wr,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output [15:0] io_targets_3_rdAddr,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  input  [31:0] io_targets_3_rdData,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output [15:0] io_targets_3_wrAddr,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output [31:0] io_targets_3_wrData,	// src/main/scala/dtu/DataMemMux.scala:26:14
+  output        io_targets_3_wr	// src/main/scala/dtu/DataMemMux.scala:26:14
+);
+
+  reg REG;	// src/main/scala/dtu/DataMemMux.scala:62:17
+  reg REG_1;	// src/main/scala/dtu/DataMemMux.scala:62:17
+  reg REG_2;	// src/main/scala/dtu/DataMemMux.scala:62:17
+  reg REG_3;	// src/main/scala/dtu/DataMemMux.scala:62:17
+  always @(posedge clock) begin	// src/main/scala/dtu/DataMemMux.scala:21:7
+    if (reset) begin	// src/main/scala/dtu/DataMemMux.scala:21:7
+      REG <= 1'h0;	// src/main/scala/dtu/DataMemMux.scala:21:7, :62:17
+      REG_1 <= 1'h0;	// src/main/scala/dtu/DataMemMux.scala:21:7, :62:17
+      REG_2 <= 1'h0;	// src/main/scala/dtu/DataMemMux.scala:21:7, :62:17
+      REG_3 <= 1'h0;	// src/main/scala/dtu/DataMemMux.scala:21:7, :62:17
+    end
+    else begin	// src/main/scala/dtu/DataMemMux.scala:21:7
+      REG <= io_master_rdAddr[15:10] == 6'h0;	// src/main/scala/dtu/DataMemMux.scala:56:38, :59:7, :62:17
+      REG_1 <= io_master_rdAddr[15:2] == 14'h800;	// src/main/scala/dtu/DataMemMux.scala:56:38, :59:7, :62:17
+      REG_2 <= io_master_rdAddr[15:2] == 14'h810;	// src/main/scala/dtu/DataMemMux.scala:56:38, :59:7, :62:17
+      REG_3 <= io_master_rdAddr[15:1] == 15'h1022;	// src/main/scala/dtu/DataMemMux.scala:56:38, :59:7, :62:17
+    end
+  end // always @(posedge)
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/dtu/DataMemMux.scala:21:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/DataMemMux.scala:21:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/DataMemMux.scala:21:7
+    `endif // FIRRTL_BEFORE_INITIAL
+    logic [31:0] _RANDOM[0:0];	// src/main/scala/dtu/DataMemMux.scala:21:7
+    initial begin	// src/main/scala/dtu/DataMemMux.scala:21:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/dtu/DataMemMux.scala:21:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/dtu/DataMemMux.scala:21:7
+      `endif // INIT_RANDOM_PROLOG_
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/dtu/DataMemMux.scala:21:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/dtu/DataMemMux.scala:21:7
+        REG = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/dtu/DataMemMux.scala:21:7, :62:17
+        REG_1 = _RANDOM[/*Zero width*/ 1'b0][1];	// src/main/scala/dtu/DataMemMux.scala:21:7, :62:17
+        REG_2 = _RANDOM[/*Zero width*/ 1'b0][2];	// src/main/scala/dtu/DataMemMux.scala:21:7, :62:17
+        REG_3 = _RANDOM[/*Zero width*/ 1'b0][3];	// src/main/scala/dtu/DataMemMux.scala:21:7, :62:17
+      `endif // RANDOMIZE_REG_INIT
+    end // initial
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/DataMemMux.scala:21:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/DataMemMux.scala:21:7
+    `endif // FIRRTL_AFTER_INITIAL
+  `endif // ENABLE_INITIAL_REG_
+  assign io_master_rdData =
+    REG_3
+      ? io_targets_3_rdData
+      : REG_2
+          ? io_targets_2_rdData
+          : REG_1 ? io_targets_1_rdData : REG ? io_targets_0_rdData : io_targets_3_rdData;	// src/main/scala/dtu/DataMemMux.scala:21:7, :49:7, :62:{17,36}, :63:24
+  assign io_targets_0_rdAddr = io_master_rdAddr;	// src/main/scala/dtu/DataMemMux.scala:21:7
+  assign io_targets_0_wrAddr = io_master_wrAddr;	// src/main/scala/dtu/DataMemMux.scala:21:7
+  assign io_targets_0_wrData = io_master_wrData;	// src/main/scala/dtu/DataMemMux.scala:21:7
+  assign io_targets_0_wr = io_master_wr & io_master_wrAddr[15:10] == 6'h0;	// src/main/scala/dtu/DataMemMux.scala:21:7, :59:7, :67:38, :70:7, :71:29
+  assign io_targets_0_wrMask = io_master_wrMask;	// src/main/scala/dtu/DataMemMux.scala:21:7
+  assign io_targets_1_rdAddr = io_master_rdAddr;	// src/main/scala/dtu/DataMemMux.scala:21:7
+  assign io_targets_1_wrAddr = io_master_wrAddr;	// src/main/scala/dtu/DataMemMux.scala:21:7
+  assign io_targets_1_wrData = io_master_wrData;	// src/main/scala/dtu/DataMemMux.scala:21:7
+  assign io_targets_1_wr = io_master_wr & io_master_wrAddr[15:2] == 14'h800;	// src/main/scala/dtu/DataMemMux.scala:21:7, :59:7, :67:38, :70:7, :71:29
+  assign io_targets_2_rdAddr = io_master_rdAddr;	// src/main/scala/dtu/DataMemMux.scala:21:7
+  assign io_targets_2_wrAddr = io_master_wrAddr;	// src/main/scala/dtu/DataMemMux.scala:21:7
+  assign io_targets_2_wrData = io_master_wrData;	// src/main/scala/dtu/DataMemMux.scala:21:7
+  assign io_targets_2_wr = io_master_wr & io_master_wrAddr[15:2] == 14'h810;	// src/main/scala/dtu/DataMemMux.scala:21:7, :59:7, :67:38, :70:7, :71:29
+  assign io_targets_3_rdAddr = io_master_rdAddr;	// src/main/scala/dtu/DataMemMux.scala:21:7
+  assign io_targets_3_wrAddr = io_master_wrAddr;	// src/main/scala/dtu/DataMemMux.scala:21:7
+  assign io_targets_3_wrData = io_master_wrData;	// src/main/scala/dtu/DataMemMux.scala:21:7
+  assign io_targets_3_wr = io_master_wr & io_master_wrAddr[15:1] == 15'h1022;	// src/main/scala/dtu/DataMemMux.scala:21:7, :59:7, :67:38, :70:7, :71:29
+endmodule
+
+module LerosCaravel_ChipFoundrySram(	// src/main/scala/caravel/LerosCaravel.scala:52:7
+  input         clock,	// src/main/scala/caravel/LerosCaravel.scala:52:7
+                reset,	// src/main/scala/caravel/LerosCaravel.scala:52:7
+                io_wb_stb,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+                io_wb_cyc,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+                io_wb_we,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  input  [3:0]  io_wb_sel,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  input  [31:0] io_wb_dat_i,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  input  [15:0] io_wb_adr,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  output [31:0] io_wb_dat_o,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  output        io_wb_ack,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  input  [5:0]  io_gpio_in,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  output [5:0]  io_gpio_out,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+                io_gpio_oe	// src/main/scala/caravel/LerosCaravel.scala:56:14
+);
+
+  wire [31:0] _dmemMux_io_master_rdData;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire [15:0] _dmemMux_io_targets_0_rdAddr;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire [15:0] _dmemMux_io_targets_0_wrAddr;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire [31:0] _dmemMux_io_targets_0_wrData;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire        _dmemMux_io_targets_0_wr;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire [3:0]  _dmemMux_io_targets_0_wrMask;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire [15:0] _dmemMux_io_targets_1_rdAddr;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire [15:0] _dmemMux_io_targets_1_wrAddr;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire [31:0] _dmemMux_io_targets_1_wrData;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire        _dmemMux_io_targets_1_wr;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire [15:0] _dmemMux_io_targets_2_rdAddr;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire [15:0] _dmemMux_io_targets_2_wrAddr;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire [31:0] _dmemMux_io_targets_2_wrData;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire        _dmemMux_io_targets_2_wr;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire [15:0] _dmemMux_io_targets_3_rdAddr;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire [15:0] _dmemMux_io_targets_3_wrAddr;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire [31:0] _dmemMux_io_targets_3_wrData;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire        _dmemMux_io_targets_3_wr;	// src/main/scala/dtu/DataMemMux.scala:116:25
+  wire        _apbMux_io_master_pready;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire [31:0] _apbMux_io_master_prdata;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire [15:0] _apbMux_io_targets_0_paddr;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire        _apbMux_io_targets_0_psel;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire        _apbMux_io_targets_0_penable;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire        _apbMux_io_targets_0_pwrite;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire [3:0]  _apbMux_io_targets_0_pstrb;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire [31:0] _apbMux_io_targets_0_pwdata;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire [15:0] _apbMux_io_targets_1_paddr;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire        _apbMux_io_targets_1_psel;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire        _apbMux_io_targets_1_penable;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire        _apbMux_io_targets_1_pwrite;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire [31:0] _apbMux_io_targets_1_pwdata;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire        _apbMux_io_targets_2_psel;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire        _apbMux_io_targets_2_penable;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire        _apbMux_io_targets_2_pwrite;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire [31:0] _apbMux_io_targets_2_pwdata;	// src/main/scala/apb/ApbMux.scala:126:24
+  wire        _arb_io_masters_0_pready;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [31:0] _arb_io_masters_0_prdata;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire        _arb_io_masters_1_pready;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [31:0] _arb_io_masters_1_prdata;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [15:0] _arb_io_merged_paddr;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire        _arb_io_merged_psel;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire        _arb_io_merged_penable;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire        _arb_io_merged_pwrite;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [3:0]  _arb_io_merged_pstrb;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [31:0] _arb_io_merged_pwdata;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [15:0] _bridge_io_apb_paddr;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
+  wire        _bridge_io_apb_psel;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
+  wire        _bridge_io_apb_penable;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
+  wire        _bridge_io_apb_pwrite;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
+  wire [3:0]  _bridge_io_apb_pstrb;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
+  wire [31:0] _bridge_io_apb_pwdata;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
+  wire        _uart_uartPins_tx;	// src/main/scala/caravel/LerosCaravel.scala:87:20
+  wire [31:0] _uart_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:87:20
+  wire [31:0] _dmem_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:86:20
+  wire [31:0] _gpio_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:85:20
+  wire [1:0]  _gpio_gpioPort_out;	// src/main/scala/caravel/LerosCaravel.scala:85:20
+  wire [1:0]  _gpio_gpioPort_oe;	// src/main/scala/caravel/LerosCaravel.scala:85:20
+  wire        _regBlock_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:84:24
+  wire [31:0] _regBlock_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:84:24
+  wire [31:0] _regBlock_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:84:24
+  wire [15:0] _rom_io_instr;	// src/main/scala/caravel/LerosCaravel.scala:81:19
+  wire [15:0] _instrMem_instrPort_instr;	// src/main/scala/caravel/LerosCaravel.scala:80:24
+  wire        _instrMem_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:80:24
+  wire [31:0] _instrMem_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:80:24
+  wire [11:0] _leros_imemIO_addr;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire [15:0] _leros_dmemIO_rdAddr;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire [15:0] _leros_dmemIO_wrAddr;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire [31:0] _leros_dmemIO_wrData;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire        _leros_dmemIO_wr;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire [3:0]  _leros_dmemIO_wrMask;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire        _ponte_io_uart_tx;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire [15:0] _ponte_io_apb_paddr;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire        _ponte_io_apb_psel;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire        _ponte_io_apb_penable;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire        _ponte_io_apb_pwrite;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire [31:0] _ponte_io_apb_pwdata;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire        _sysCtrl_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  wire [31:0] _sysCtrl_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  wire        _sysCtrl_ctrlPort_lerosReset;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  wire        _sysCtrl_ctrlPort_lerosBootFromRam;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  wire        _sysCtrl_ctrlPort_lerosUartLoopBack;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  reg         leros_reset_REG;	// src/main/scala/caravel/LerosCaravel.scala:78:25
+  always @(posedge clock)	// src/main/scala/caravel/LerosCaravel.scala:52:7
+    leros_reset_REG <= _sysCtrl_ctrlPort_lerosReset | reset;	// src/main/scala/caravel/LerosCaravel.scala:73:23, :78:{25,54}
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/caravel/LerosCaravel.scala:52:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:52:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:52:7
+    `endif // FIRRTL_BEFORE_INITIAL
+    logic [31:0] _RANDOM[0:0];	// src/main/scala/caravel/LerosCaravel.scala:52:7
+    initial begin	// src/main/scala/caravel/LerosCaravel.scala:52:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/caravel/LerosCaravel.scala:52:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/caravel/LerosCaravel.scala:52:7
+      `endif // INIT_RANDOM_PROLOG_
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/caravel/LerosCaravel.scala:52:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/caravel/LerosCaravel.scala:52:7
+        leros_reset_REG = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/caravel/LerosCaravel.scala:52:7, :78:25
+      `endif // RANDOMIZE_REG_INIT
+    end // initial
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:52:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:52:7
+    `endif // FIRRTL_AFTER_INITIAL
+  `endif // ENABLE_INITIAL_REG_
+  SystemControl sysCtrl (	// src/main/scala/caravel/LerosCaravel.scala:73:23
+    .clock                      (clock),
+    .reset                      (reset),
+    .apbPort_psel               (_apbMux_io_targets_2_psel),	// src/main/scala/apb/ApbMux.scala:126:24
+    .apbPort_penable            (_apbMux_io_targets_2_penable),	// src/main/scala/apb/ApbMux.scala:126:24
+    .apbPort_pwrite             (_apbMux_io_targets_2_pwrite),	// src/main/scala/apb/ApbMux.scala:126:24
+    .apbPort_pwdata             (_apbMux_io_targets_2_pwdata),	// src/main/scala/apb/ApbMux.scala:126:24
+    .apbPort_pready             (_sysCtrl_apbPort_pready),
+    .apbPort_prdata             (_sysCtrl_apbPort_prdata),
+    .ctrlPort_lerosReset        (_sysCtrl_ctrlPort_lerosReset),
+    .ctrlPort_lerosBootFromRam  (_sysCtrl_ctrlPort_lerosBootFromRam),
+    .ctrlPort_lerosUartLoopBack (_sysCtrl_ctrlPort_lerosUartLoopBack)
+  );
+  Ponte ponte (	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .clock          (clock),
+    .reset          (reset),
+    .io_uart_tx     (_ponte_io_uart_tx),
+    .io_uart_rx     (io_gpio_in[1]),	// src/main/scala/caravel/LerosCaravel.scala:71:27
+    .io_apb_paddr   (_ponte_io_apb_paddr),
+    .io_apb_psel    (_ponte_io_apb_psel),
+    .io_apb_penable (_ponte_io_apb_penable),
+    .io_apb_pwrite  (_ponte_io_apb_pwrite),
+    .io_apb_pwdata  (_ponte_io_apb_pwdata),
+    .io_apb_pready  (_arb_io_masters_0_pready),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_apb_prdata  (_arb_io_masters_0_prdata)	// src/main/scala/apb/ApbArbiter.scala:14:21
+  );
+  Leros leros (	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .clock         (clock),
+    .reset         (leros_reset_REG),	// src/main/scala/caravel/LerosCaravel.scala:78:25
+    .imemIO_addr   (_leros_imemIO_addr),
+    .imemIO_instr
+      (_sysCtrl_ctrlPort_lerosBootFromRam ? _instrMem_instrPort_instr : _rom_io_instr),	// src/main/scala/caravel/LerosCaravel.scala:73:23, :80:24, :81:19, :92:28
+    .dmemIO_rdAddr (_leros_dmemIO_rdAddr),
+    .dmemIO_rdData (_dmemMux_io_master_rdData),	// src/main/scala/dtu/DataMemMux.scala:116:25
+    .dmemIO_wrAddr (_leros_dmemIO_wrAddr),
+    .dmemIO_wrData (_leros_dmemIO_wrData),
+    .dmemIO_wr     (_leros_dmemIO_wr),
+    .dmemIO_wrMask (_leros_dmemIO_wrMask)
+  );
+  InstructionMemory instrMem (	// src/main/scala/caravel/LerosCaravel.scala:80:24
+    .clock           (clock),
+    .reset           (reset),
+    .instrPort_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .instrPort_instr (_instrMem_instrPort_instr),
+    .apbPort_paddr   (_apbMux_io_targets_0_paddr[11:0]),	// src/main/scala/apb/ApbMux.scala:126:24, :132:16
+    .apbPort_psel    (_apbMux_io_targets_0_psel),	// src/main/scala/apb/ApbMux.scala:126:24
+    .apbPort_penable (_apbMux_io_targets_0_penable),	// src/main/scala/apb/ApbMux.scala:126:24
+    .apbPort_pwrite  (_apbMux_io_targets_0_pwrite),	// src/main/scala/apb/ApbMux.scala:126:24
+    .apbPort_pstrb   (_apbMux_io_targets_0_pstrb),	// src/main/scala/apb/ApbMux.scala:126:24
+    .apbPort_pwdata  (_apbMux_io_targets_0_pwdata),	// src/main/scala/apb/ApbMux.scala:126:24
+    .apbPort_pready  (_instrMem_apbPort_pready),
+    .apbPort_prdata  (_instrMem_apbPort_prdata)
+  );
+  InstrMem rom (	// src/main/scala/caravel/LerosCaravel.scala:81:19
+    .clock    (clock),
+    .reset    (reset),
+    .io_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .io_instr (_rom_io_instr)
+  );
+  RegBlock regBlock (	// src/main/scala/caravel/LerosCaravel.scala:84:24
+    .clock           (clock),
+    .reset           (reset),
+    .apbPort_paddr   (_apbMux_io_targets_1_paddr[3:0]),	// src/main/scala/apb/ApbMux.scala:126:24, :132:16
+    .apbPort_psel    (_apbMux_io_targets_1_psel),	// src/main/scala/apb/ApbMux.scala:126:24
+    .apbPort_penable (_apbMux_io_targets_1_penable),	// src/main/scala/apb/ApbMux.scala:126:24
+    .apbPort_pwrite  (_apbMux_io_targets_1_pwrite),	// src/main/scala/apb/ApbMux.scala:126:24
+    .apbPort_pwdata  (_apbMux_io_targets_1_pwdata),	// src/main/scala/apb/ApbMux.scala:126:24
+    .apbPort_pready  (_regBlock_apbPort_pready),
+    .apbPort_prdata  (_regBlock_apbPort_prdata),
+    .dmemPort_rdAddr (_dmemMux_io_targets_1_rdAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
+    .dmemPort_rdData (_regBlock_dmemPort_rdData),
+    .dmemPort_wrAddr (_dmemMux_io_targets_1_wrAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
+    .dmemPort_wrData (_dmemMux_io_targets_1_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
+    .dmemPort_wr     (_dmemMux_io_targets_1_wr)	// src/main/scala/dtu/DataMemMux.scala:116:25
+  );
+  Gpio gpio (	// src/main/scala/caravel/LerosCaravel.scala:85:20
+    .clock           (clock),
+    .reset           (reset),
+    .dmemPort_rdAddr (_dmemMux_io_targets_2_rdAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
+    .dmemPort_rdData (_gpio_dmemPort_rdData),
+    .dmemPort_wrAddr (_dmemMux_io_targets_2_wrAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
+    .dmemPort_wrData (_dmemMux_io_targets_2_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
+    .dmemPort_wr     (_dmemMux_io_targets_2_wr),	// src/main/scala/dtu/DataMemMux.scala:116:25
+    .gpioPort_in     (io_gpio_in[5:4]),	// src/main/scala/caravel/LerosCaravel.scala:120:33
+    .gpioPort_out    (_gpio_gpioPort_out),
+    .gpioPort_oe     (_gpio_gpioPort_oe)
+  );
+  DataMemory dmem (	// src/main/scala/caravel/LerosCaravel.scala:86:20
+    .clock           (clock),
+    .reset           (reset),
+    .dmemPort_rdAddr (_dmemMux_io_targets_0_rdAddr[9:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
+    .dmemPort_rdData (_dmem_dmemPort_rdData),
+    .dmemPort_wrAddr (_dmemMux_io_targets_0_wrAddr[9:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
+    .dmemPort_wrData (_dmemMux_io_targets_0_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
+    .dmemPort_wr     (_dmemMux_io_targets_0_wr),	// src/main/scala/dtu/DataMemMux.scala:116:25
+    .dmemPort_wrMask (_dmemMux_io_targets_0_wrMask)	// src/main/scala/dtu/DataMemMux.scala:116:25
+  );
+  Uart uart (	// src/main/scala/caravel/LerosCaravel.scala:87:20
+    .clock           (clock),
+    .reset           (reset),
+    .uartPins_tx     (_uart_uartPins_tx),
+    .uartPins_rx
+      (_sysCtrl_ctrlPort_lerosUartLoopBack ? _uart_uartPins_tx : io_gpio_in[3]),	// src/main/scala/caravel/LerosCaravel.scala:70:27, :73:23, :87:20, :88:26
+    .dmemPort_rdAddr (_dmemMux_io_targets_3_rdAddr[0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
+    .dmemPort_rdData (_uart_dmemPort_rdData),
+    .dmemPort_wrAddr (_dmemMux_io_targets_3_wrAddr[0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
+    .dmemPort_wrData (_dmemMux_io_targets_3_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
+    .dmemPort_wr     (_dmemMux_io_targets_3_wr)	// src/main/scala/dtu/DataMemMux.scala:116:25
+  );
+  WishboneToApb bridge (	// src/main/scala/wishbone/WishboneToApb.scala:48:24
+    .clock          (clock),
+    .reset          (reset),
+    .io_wb_stb      (io_wb_stb),
+    .io_wb_cyc      (io_wb_cyc),
+    .io_wb_we       (io_wb_we),
+    .io_wb_sel      (io_wb_sel),
+    .io_wb_dat_i    (io_wb_dat_i),
+    .io_wb_adr      (io_wb_adr),
+    .io_wb_dat_o    (io_wb_dat_o),
+    .io_wb_ack      (io_wb_ack),
+    .io_apb_paddr   (_bridge_io_apb_paddr),
+    .io_apb_psel    (_bridge_io_apb_psel),
+    .io_apb_penable (_bridge_io_apb_penable),
+    .io_apb_pwrite  (_bridge_io_apb_pwrite),
+    .io_apb_pstrb   (_bridge_io_apb_pstrb),
+    .io_apb_pwdata  (_bridge_io_apb_pwdata),
+    .io_apb_pready  (_arb_io_masters_1_pready),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_apb_prdata  (_arb_io_masters_1_prdata)	// src/main/scala/apb/ApbArbiter.scala:14:21
+  );
+  ApbArbiter arb (	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .clock                (clock),
+    .reset                (reset),
+    .io_masters_0_paddr   (_ponte_io_apb_paddr),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_psel    (_ponte_io_apb_psel),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_penable (_ponte_io_apb_penable),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_pwrite  (_ponte_io_apb_pwrite),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_pwdata  (_ponte_io_apb_pwdata),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_pready  (_arb_io_masters_0_pready),
+    .io_masters_0_prdata  (_arb_io_masters_0_prdata),
+    .io_masters_1_paddr   (_bridge_io_apb_paddr),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
+    .io_masters_1_psel    (_bridge_io_apb_psel),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
+    .io_masters_1_penable (_bridge_io_apb_penable),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
+    .io_masters_1_pwrite  (_bridge_io_apb_pwrite),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
+    .io_masters_1_pstrb   (_bridge_io_apb_pstrb),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
+    .io_masters_1_pwdata  (_bridge_io_apb_pwdata),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
+    .io_masters_1_pready  (_arb_io_masters_1_pready),
+    .io_masters_1_prdata  (_arb_io_masters_1_prdata),
+    .io_merged_paddr      (_arb_io_merged_paddr),
+    .io_merged_psel       (_arb_io_merged_psel),
+    .io_merged_penable    (_arb_io_merged_penable),
+    .io_merged_pwrite     (_arb_io_merged_pwrite),
+    .io_merged_pstrb      (_arb_io_merged_pstrb),
+    .io_merged_pwdata     (_arb_io_merged_pwdata),
+    .io_merged_pready     (_apbMux_io_master_pready),	// src/main/scala/apb/ApbMux.scala:126:24
+    .io_merged_prdata     (_apbMux_io_master_prdata)	// src/main/scala/apb/ApbMux.scala:126:24
+  );
+  ApbMux apbMux (	// src/main/scala/apb/ApbMux.scala:126:24
+    .clock                (clock),
+    .reset                (reset),
+    .io_master_paddr      (_arb_io_merged_paddr),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_psel       (_arb_io_merged_psel),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_penable    (_arb_io_merged_penable),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_pwrite     (_arb_io_merged_pwrite),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_pstrb      (_arb_io_merged_pstrb),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_pwdata     (_arb_io_merged_pwdata),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_pready     (_apbMux_io_master_pready),
+    .io_master_prdata     (_apbMux_io_master_prdata),
+    .io_targets_0_paddr   (_apbMux_io_targets_0_paddr),
+    .io_targets_0_psel    (_apbMux_io_targets_0_psel),
+    .io_targets_0_penable (_apbMux_io_targets_0_penable),
+    .io_targets_0_pwrite  (_apbMux_io_targets_0_pwrite),
+    .io_targets_0_pstrb   (_apbMux_io_targets_0_pstrb),
+    .io_targets_0_pwdata  (_apbMux_io_targets_0_pwdata),
+    .io_targets_0_pready  (_instrMem_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:80:24
+    .io_targets_0_prdata  (_instrMem_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:80:24
+    .io_targets_1_paddr   (_apbMux_io_targets_1_paddr),
+    .io_targets_1_psel    (_apbMux_io_targets_1_psel),
+    .io_targets_1_penable (_apbMux_io_targets_1_penable),
+    .io_targets_1_pwrite  (_apbMux_io_targets_1_pwrite),
+    .io_targets_1_pwdata  (_apbMux_io_targets_1_pwdata),
+    .io_targets_1_pready  (_regBlock_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:84:24
+    .io_targets_1_prdata  (_regBlock_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:84:24
+    .io_targets_2_psel    (_apbMux_io_targets_2_psel),
+    .io_targets_2_penable (_apbMux_io_targets_2_penable),
+    .io_targets_2_pwrite  (_apbMux_io_targets_2_pwrite),
+    .io_targets_2_pwdata  (_apbMux_io_targets_2_pwdata),
+    .io_targets_2_pready  (_sysCtrl_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:73:23
+    .io_targets_2_prdata  (_sysCtrl_apbPort_prdata)	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  );
+  DataMemMux dmemMux (	// src/main/scala/dtu/DataMemMux.scala:116:25
+    .clock               (clock),
+    .reset               (reset),
+    .io_master_rdAddr    (_leros_dmemIO_rdAddr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .io_master_rdData    (_dmemMux_io_master_rdData),
+    .io_master_wrAddr    (_leros_dmemIO_wrAddr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .io_master_wrData    (_leros_dmemIO_wrData),	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .io_master_wr        (_leros_dmemIO_wr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .io_master_wrMask    (_leros_dmemIO_wrMask),	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .io_targets_0_rdAddr (_dmemMux_io_targets_0_rdAddr),
+    .io_targets_0_rdData (_dmem_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:86:20
+    .io_targets_0_wrAddr (_dmemMux_io_targets_0_wrAddr),
+    .io_targets_0_wrData (_dmemMux_io_targets_0_wrData),
+    .io_targets_0_wr     (_dmemMux_io_targets_0_wr),
+    .io_targets_0_wrMask (_dmemMux_io_targets_0_wrMask),
+    .io_targets_1_rdAddr (_dmemMux_io_targets_1_rdAddr),
+    .io_targets_1_rdData (_regBlock_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:84:24
+    .io_targets_1_wrAddr (_dmemMux_io_targets_1_wrAddr),
+    .io_targets_1_wrData (_dmemMux_io_targets_1_wrData),
+    .io_targets_1_wr     (_dmemMux_io_targets_1_wr),
+    .io_targets_2_rdAddr (_dmemMux_io_targets_2_rdAddr),
+    .io_targets_2_rdData (_gpio_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:85:20
+    .io_targets_2_wrAddr (_dmemMux_io_targets_2_wrAddr),
+    .io_targets_2_wrData (_dmemMux_io_targets_2_wrData),
+    .io_targets_2_wr     (_dmemMux_io_targets_2_wr),
+    .io_targets_3_rdAddr (_dmemMux_io_targets_3_rdAddr),
+    .io_targets_3_rdData (_uart_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:87:20
+    .io_targets_3_wrAddr (_dmemMux_io_targets_3_wrAddr),
+    .io_targets_3_wrData (_dmemMux_io_targets_3_wrData),
+    .io_targets_3_wr     (_dmemMux_io_targets_3_wr)
+  );
+  assign io_gpio_out =
+    {_gpio_gpioPort_out, 1'h0, _uart_uartPins_tx, 1'h0, _ponte_io_uart_tx};	// src/main/scala/caravel/LerosCaravel.scala:52:7, :74:21, :85:20, :87:20, :113:36
+  assign io_gpio_oe = {_gpio_gpioPort_oe, 4'hA};	// src/main/scala/caravel/LerosCaravel.scala:52:7, :85:20, :119:34
+endmodule
+
+module Leros_1(	// leros/src/main/scala/leros/Leros.scala:13:7
+  input         clock,	// leros/src/main/scala/leros/Leros.scala:13:7
+                reset,	// leros/src/main/scala/leros/Leros.scala:13:7
   output [9:0]  imemIO_addr,	// leros/src/main/scala/leros/Leros.scala:15:18
   input  [15:0] imemIO_instr,	// leros/src/main/scala/leros/Leros.scala:15:18
   output [15:0] dmemIO_rdAddr,	// leros/src/main/scala/leros/Leros.scala:16:18
@@ -1001,30 +2572,33 @@ module Leros(	// leros/src/main/scala/leros/Leros.scala:13:7
       : _GEN_4 ? 4'h1 << effAddrOffReg : _GEN_6 ? _dmemIO_wrMask_T_1[3:0] : 4'hF;	// leros/src/main/scala/leros/Leros.scala:13:7, :59:30, :65:17, :83:14, :88:20, :115:{21,34}, :122:{21,34}
 endmodule
 
-// external module CF_SRAM_1024x32_wrapper
+// external module sky130_sram_1kbyte_1rw1r_32x256_8
 
-module ChipFoundrySram(	// src/main/scala/mem/ChipFoundrySram.scala:18:7
-  input         clock,	// src/main/scala/mem/ChipFoundrySram.scala:18:7
-                reset,	// src/main/scala/mem/ChipFoundrySram.scala:18:7
-  input  [7:0]  io_wordAddr,	// src/main/scala/mem/ChipFoundrySram.scala:20:14
-  input  [31:0] io_wrData,	// src/main/scala/mem/ChipFoundrySram.scala:20:14
-  output [31:0] io_rdData,	// src/main/scala/mem/ChipFoundrySram.scala:20:14
-  input         io_we,	// src/main/scala/mem/ChipFoundrySram.scala:20:14
-  input  [3:0]  io_strb	// src/main/scala/mem/ChipFoundrySram.scala:20:14
+module Sky130Sram256(	// src/main/scala/mem/Sky130SramMacros.scala:21:7
+  input         clock,	// src/main/scala/mem/Sky130SramMacros.scala:21:7
+  input  [7:0]  io_wordAddr,	// src/main/scala/mem/Sky130SramMacros.scala:27:14
+  input         io_write,	// src/main/scala/mem/Sky130SramMacros.scala:27:14
+  input  [31:0] io_wrData,	// src/main/scala/mem/Sky130SramMacros.scala:27:14
+  output [31:0] io_rdData,	// src/main/scala/mem/Sky130SramMacros.scala:27:14
+  input  [3:0]  io_mask	// src/main/scala/mem/Sky130SramMacros.scala:27:14
 );
 
-  CF_SRAM_1024x32_wrapper mem (	// src/main/scala/mem/ChipFoundrySram.scala:28:19
-    .clk_i     (clock),
-    .rst_i     (reset),
-    .addr_i    (io_wordAddr),
-    .we_i      (io_we),
-    .sel_i     (io_strb),
-    .wr_data_i (io_wrData),
-    .rd_data_o (io_rdData)
+  sky130_sram_1kbyte_1rw1r_32x256_8 mem (	// src/main/scala/mem/Sky130SramMacros.scala:35:39
+    .clk0   (clock),
+    .csb0   (1'h0),	// src/main/scala/mem/Sky130SramMacros.scala:42:15
+    .web0   (~io_write),	// src/main/scala/mem/Sky130SramMacros.scala:43:18
+    .wmask0 (io_mask),
+    .addr0  (io_wordAddr),
+    .din0   (io_wrData),
+    .dout0  (io_rdData),
+    .clk1   (1'h0),	// src/main/scala/mem/Sky130SramMacros.scala:42:15
+    .csb1   (1'h1),	// src/main/scala/mem/Sky130SramMacros.scala:50:15
+    .addr1  (8'h0),	// src/main/scala/mem/Sky130SramMacros.scala:51:16
+    .dout1  (/* unused */)
   );
 endmodule
 
-module InstructionMemory(	// src/main/scala/dtu/InstructionMemory.scala:29:7
+module InstructionMemory_1(	// src/main/scala/dtu/InstructionMemory.scala:29:7
   input         clock,	// src/main/scala/dtu/InstructionMemory.scala:29:7
                 reset,	// src/main/scala/dtu/InstructionMemory.scala:29:7
   input  [9:0]  instrPort_addr,	// src/main/scala/dtu/InstructionMemory.scala:35:21
@@ -1039,7 +2613,7 @@ module InstructionMemory(	// src/main/scala/dtu/InstructionMemory.scala:29:7
   output [31:0] apbPort_prdata	// src/main/scala/dtu/InstructionMemory.scala:36:19
 );
 
-  wire [31:0] _m_io_rdData;	// src/main/scala/mem/ChipFoundrySram.scala:9:19
+  wire [31:0] _m_io_rdData;	// src/main/scala/mem/Sky130SramMacros.scala:11:19
   reg         ackReg;	// src/main/scala/dtu/InstructionMemory.scala:47:23
   reg         instrPort_instr_REG;	// src/main/scala/dtu/InstructionMemory.scala:67:12
   wire        _GEN = apbPort_psel & apbPort_penable & apbPort_pwrite;	// src/main/scala/dtu/InstructionMemory.scala:72:40
@@ -1069,21 +2643,20 @@ module InstructionMemory(	// src/main/scala/dtu/InstructionMemory.scala:29:7
       `FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/InstructionMemory.scala:29:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  ChipFoundrySram m (	// src/main/scala/mem/ChipFoundrySram.scala:9:19
+  Sky130Sram256 m (	// src/main/scala/mem/Sky130SramMacros.scala:11:19
     .clock       (clock),
-    .reset       (reset),
-    .io_wordAddr (_GEN | apbPort_psel ? apbPort_paddr[9:2] : instrPort_addr[8:1]),	// src/main/scala/dtu/InstructionMemory.scala:56:28, :58:18, :59:19, :72:{40,59}, src/main/scala/mem/ChipFoundrySram.scala:42:17, :47:17
+    .io_wordAddr (_GEN | apbPort_psel ? apbPort_paddr[9:2] : instrPort_addr[8:1]),	// src/main/scala/dtu/InstructionMemory.scala:56:28, :58:18, :59:19, :72:{40,59}, src/main/scala/mem/Sky130SramMacros.scala:54:17, :59:17
+    .io_write    (_GEN),	// src/main/scala/dtu/InstructionMemory.scala:72:40
     .io_wrData   (apbPort_pwdata),
     .io_rdData   (_m_io_rdData),
-    .io_we       (_GEN),	// src/main/scala/dtu/InstructionMemory.scala:72:40
-    .io_strb     (apbPort_pstrb)
+    .io_mask     (apbPort_pstrb)
   );
-  assign instrPort_instr = instrPort_instr_REG ? _m_io_rdData[31:16] : _m_io_rdData[15:0];	// src/main/scala/dtu/InstructionMemory.scala:29:7, :66:25, :67:12, :68:11, :69:11, src/main/scala/mem/ChipFoundrySram.scala:9:19
+  assign instrPort_instr = instrPort_instr_REG ? _m_io_rdData[31:16] : _m_io_rdData[15:0];	// src/main/scala/dtu/InstructionMemory.scala:29:7, :66:25, :67:12, :68:11, :69:11, src/main/scala/mem/Sky130SramMacros.scala:11:19
   assign apbPort_pready = ackReg;	// src/main/scala/dtu/InstructionMemory.scala:29:7, :47:23
-  assign apbPort_prdata = _m_io_rdData;	// src/main/scala/dtu/InstructionMemory.scala:29:7, src/main/scala/mem/ChipFoundrySram.scala:9:19
+  assign apbPort_prdata = _m_io_rdData;	// src/main/scala/dtu/InstructionMemory.scala:29:7, src/main/scala/mem/Sky130SramMacros.scala:11:19
 endmodule
 
-module InstrMem(	// leros/src/main/scala/leros/InstrMem.scala:19:7
+module InstrMem_1(	// leros/src/main/scala/leros/InstrMem.scala:19:7
   input         clock,	// leros/src/main/scala/leros/InstrMem.scala:19:7
                 reset,	// leros/src/main/scala/leros/InstrMem.scala:19:7
   input  [9:0]  io_addr,	// leros/src/main/scala/leros/InstrMem.scala:20:14
@@ -1251,194 +2824,8 @@ module InstrMem(	// leros/src/main/scala/leros/InstrMem.scala:19:7
   assign io_instr = casez_tmp;	// leros/src/main/scala/leros/InstrMem.scala:19:7, :27:12
 endmodule
 
-module RegBlock(	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-  input         clock,	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-                reset,	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-  input  [3:0]  apbPort_paddr,	// src/main/scala/dtu/peripherals/RegBlock.scala:27:19
-  input         apbPort_psel,	// src/main/scala/dtu/peripherals/RegBlock.scala:27:19
-                apbPort_penable,	// src/main/scala/dtu/peripherals/RegBlock.scala:27:19
-                apbPort_pwrite,	// src/main/scala/dtu/peripherals/RegBlock.scala:27:19
-  input  [31:0] apbPort_pwdata,	// src/main/scala/dtu/peripherals/RegBlock.scala:27:19
-  output        apbPort_pready,	// src/main/scala/dtu/peripherals/RegBlock.scala:27:19
-  output [31:0] apbPort_prdata,	// src/main/scala/dtu/peripherals/RegBlock.scala:27:19
-  input  [1:0]  dmemPort_rdAddr,	// src/main/scala/dtu/peripherals/RegBlock.scala:28:20
-  output [31:0] dmemPort_rdData,	// src/main/scala/dtu/peripherals/RegBlock.scala:28:20
-  input  [1:0]  dmemPort_wrAddr,	// src/main/scala/dtu/peripherals/RegBlock.scala:28:20
-  input  [31:0] dmemPort_wrData,	// src/main/scala/dtu/peripherals/RegBlock.scala:28:20
-  input         dmemPort_wr	// src/main/scala/dtu/peripherals/RegBlock.scala:28:20
-);
-
-  reg  [31:0] ibexToLerosRegs_0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32
-  reg  [31:0] ibexToLerosRegs_1;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32
-  reg  [31:0] ibexToLerosRegs_2;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32
-  reg  [31:0] ibexToLerosRegs_3;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32
-  reg  [31:0] lerosToIbexRegs_0;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32
-  reg  [31:0] lerosToIbexRegs_1;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32
-  reg  [31:0] lerosToIbexRegs_2;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32
-  reg  [31:0] lerosToIbexRegs_3;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32
-  reg         apbAckReg;	// src/main/scala/dtu/peripherals/RegBlock.scala:38:26
-  reg  [31:0] apbPort_prdata_REG;	// src/main/scala/dtu/peripherals/RegBlock.scala:47:28
-  reg  [31:0] casez_tmp;	// src/main/scala/dtu/peripherals/RegBlock.scala:47:28
-  always_comb begin	// src/main/scala/dtu/peripherals/RegBlock.scala:47:28
-    casez (apbPort_paddr[3:2])	// src/main/scala/dtu/peripherals/RegBlock.scala:46:31, :47:28
-      2'b00:
-        casez_tmp = lerosToIbexRegs_0;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32, :47:28
-      2'b01:
-        casez_tmp = lerosToIbexRegs_1;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32, :47:28
-      2'b10:
-        casez_tmp = lerosToIbexRegs_2;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32, :47:28
-      default:
-        casez_tmp = lerosToIbexRegs_3;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32, :47:28
-    endcase	// src/main/scala/dtu/peripherals/RegBlock.scala:46:31, :47:28
-  end // always_comb
-  reg  [1:0]  dmemPort_rdData_REG;	// src/main/scala/dtu/peripherals/RegBlock.scala:54:45
-  reg  [31:0] casez_tmp_0;	// src/main/scala/dtu/peripherals/RegBlock.scala:54:19
-  always_comb begin	// src/main/scala/dtu/peripherals/RegBlock.scala:54:19
-    casez (dmemPort_rdData_REG)	// src/main/scala/dtu/peripherals/RegBlock.scala:54:{19,45}
-      2'b00:
-        casez_tmp_0 = ibexToLerosRegs_0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32, :54:19
-      2'b01:
-        casez_tmp_0 = ibexToLerosRegs_1;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32, :54:19
-      2'b10:
-        casez_tmp_0 = ibexToLerosRegs_2;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32, :54:19
-      default:
-        casez_tmp_0 = ibexToLerosRegs_3;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32, :54:19
-    endcase	// src/main/scala/dtu/peripherals/RegBlock.scala:54:{19,45}
-  end // always_comb
-  wire        _GEN = apbPort_psel & apbPort_penable & apbPort_pwrite;	// src/main/scala/dtu/peripherals/RegBlock.scala:49:40
-  always @(posedge clock) begin	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-    if (reset) begin	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-      ibexToLerosRegs_0 <= 32'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:{32,40}
-      ibexToLerosRegs_1 <= 32'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:{32,40}
-      ibexToLerosRegs_2 <= 32'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:{32,40}
-      ibexToLerosRegs_3 <= 32'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:{32,40}
-      lerosToIbexRegs_0 <= 32'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:40, :35:32
-      lerosToIbexRegs_1 <= 32'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:40, :35:32
-      lerosToIbexRegs_2 <= 32'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:40, :35:32
-      lerosToIbexRegs_3 <= 32'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:40, :35:32
-      apbAckReg <= 1'h0;	// src/main/scala/dtu/peripherals/RegBlock.scala:38:26
-    end
-    else begin	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-      if (_GEN & apbPort_paddr[3:2] == 2'h0)	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32, :46:31, :49:{40,59}, :50:31
-        ibexToLerosRegs_0 <= apbPort_pwdata;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32
-      if (_GEN & apbPort_paddr[3:2] == 2'h1)	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32, :46:31, :49:{40,59}, :50:31
-        ibexToLerosRegs_1 <= apbPort_pwdata;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32
-      if (_GEN & apbPort_paddr[3:2] == 2'h2)	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32, :46:31, :49:{40,59}, :50:31
-        ibexToLerosRegs_2 <= apbPort_pwdata;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32
-      if (_GEN & (&(apbPort_paddr[3:2])))	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32, :46:31, :49:{40,59}, :50:31
-        ibexToLerosRegs_3 <= apbPort_pwdata;	// src/main/scala/dtu/peripherals/RegBlock.scala:34:32
-      if (dmemPort_wr & dmemPort_wrAddr == 2'h0)	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32, :50:31, :55:21, :56:38
-        lerosToIbexRegs_0 <= dmemPort_wrData;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32
-      if (dmemPort_wr & dmemPort_wrAddr == 2'h1)	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32, :50:31, :55:21, :56:38
-        lerosToIbexRegs_1 <= dmemPort_wrData;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32
-      if (dmemPort_wr & dmemPort_wrAddr == 2'h2)	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32, :50:31, :55:21, :56:38
-        lerosToIbexRegs_2 <= dmemPort_wrData;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32
-      if (dmemPort_wr & (&dmemPort_wrAddr))	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32, :55:21, :56:38
-        lerosToIbexRegs_3 <= dmemPort_wrData;	// src/main/scala/dtu/peripherals/RegBlock.scala:35:32
-      apbAckReg <= ~apbAckReg & (apbPort_psel | apbAckReg);	// src/main/scala/dtu/peripherals/RegBlock.scala:38:26, :39:19, :40:15, :41:28, :42:15
-    end
-    apbPort_prdata_REG <= casez_tmp;	// src/main/scala/dtu/peripherals/RegBlock.scala:47:28
-    dmemPort_rdData_REG <= dmemPort_rdAddr;	// src/main/scala/dtu/peripherals/RegBlock.scala:54:45
-  end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-    `endif // FIRRTL_BEFORE_INITIAL
-    logic [31:0] _RANDOM[0:9];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-    initial begin	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-      `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-        for (logic [3:0] i = 4'h0; i < 4'hA; i += 4'h1) begin
-          _RANDOM[i] = `RANDOM;	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-        end	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-        ibexToLerosRegs_0 = _RANDOM[4'h0];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :34:32
-        ibexToLerosRegs_1 = _RANDOM[4'h1];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :34:32
-        ibexToLerosRegs_2 = _RANDOM[4'h2];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :34:32
-        ibexToLerosRegs_3 = _RANDOM[4'h3];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :34:32
-        lerosToIbexRegs_0 = _RANDOM[4'h4];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :35:32
-        lerosToIbexRegs_1 = _RANDOM[4'h5];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :35:32
-        lerosToIbexRegs_2 = _RANDOM[4'h6];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :35:32
-        lerosToIbexRegs_3 = _RANDOM[4'h7];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :35:32
-        apbAckReg = _RANDOM[4'h8][0];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :38:26
-        apbPort_prdata_REG = {_RANDOM[4'h8][31:1], _RANDOM[4'h9][0]};	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :38:26, :47:28
-        dmemPort_rdData_REG = _RANDOM[4'h9][2:1];	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :47:28, :54:45
-      `endif // RANDOMIZE_REG_INIT
-    end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7
-    `endif // FIRRTL_AFTER_INITIAL
-  `endif // ENABLE_INITIAL_REG_
-  assign apbPort_pready = apbAckReg;	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :38:26
-  assign apbPort_prdata = apbPort_prdata_REG;	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :47:28
-  assign dmemPort_rdData = casez_tmp_0;	// src/main/scala/dtu/peripherals/RegBlock.scala:22:7, :54:19
-endmodule
-
-module Gpio(	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-  input         clock,	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-                reset,	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-  input  [1:0]  dmemPort_rdAddr,	// src/main/scala/dtu/peripherals/Gpio.scala:19:20
-  output [31:0] dmemPort_rdData,	// src/main/scala/dtu/peripherals/Gpio.scala:19:20
-  input  [1:0]  dmemPort_wrAddr,	// src/main/scala/dtu/peripherals/Gpio.scala:19:20
-  input  [31:0] dmemPort_wrData,	// src/main/scala/dtu/peripherals/Gpio.scala:19:20
-  input         dmemPort_wr,	// src/main/scala/dtu/peripherals/Gpio.scala:19:20
-  input  [1:0]  gpioPort_in,	// src/main/scala/dtu/peripherals/Gpio.scala:20:20
-  output [1:0]  gpioPort_out,	// src/main/scala/dtu/peripherals/Gpio.scala:20:20
-                gpioPort_oe	// src/main/scala/dtu/peripherals/Gpio.scala:20:20
-);
-
-  reg  [1:0] outputEnables;	// src/main/scala/dtu/peripherals/Gpio.scala:22:30
-  reg  [1:0] outputs;	// src/main/scala/dtu/peripherals/Gpio.scala:23:24
-  reg  [1:0] dmemPort_rdData_REG;	// src/main/scala/dtu/peripherals/Gpio.scala:26:39
-  wire       _GEN = dmemPort_wrAddr == 2'h0;	// src/main/scala/dtu/peripherals/Gpio.scala:22:30, :35:29
-  always @(posedge clock) begin	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-    if (reset) begin	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-      outputEnables <= 2'h0;	// src/main/scala/dtu/peripherals/Gpio.scala:22:30
-      outputs <= 2'h0;	// src/main/scala/dtu/peripherals/Gpio.scala:22:30, :23:24
-    end
-    else begin	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-      if (dmemPort_wr & _GEN)	// src/main/scala/dtu/peripherals/Gpio.scala:22:30, :34:21, :35:29, :37:23
-        outputEnables <= dmemPort_wrData[1:0];	// src/main/scala/dtu/peripherals/Gpio.scala:22:30, :37:23
-      if (~dmemPort_wr | _GEN | dmemPort_wrAddr != 2'h1) begin	// src/main/scala/dtu/peripherals/Gpio.scala:23:24, :26:72, :34:21, :35:29
-      end
-      else	// src/main/scala/dtu/peripherals/Gpio.scala:23:24, :34:21, :35:29
-        outputs <= dmemPort_wrData[1:0];	// src/main/scala/dtu/peripherals/Gpio.scala:23:24, :37:23
-    end
-    dmemPort_rdData_REG <= dmemPort_rdAddr;	// src/main/scala/dtu/peripherals/Gpio.scala:26:39
-  end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-    `endif // FIRRTL_BEFORE_INITIAL
-    logic [31:0] _RANDOM[0:0];	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-    initial begin	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-      `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-        outputEnables = _RANDOM[/*Zero width*/ 1'b0][1:0];	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30
-        outputs = _RANDOM[/*Zero width*/ 1'b0][3:2];	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30, :23:24
-        dmemPort_rdData_REG = _RANDOM[/*Zero width*/ 1'b0][5:4];	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30, :26:39
-      `endif // RANDOMIZE_REG_INIT
-    end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/peripherals/Gpio.scala:17:7
-    `endif // FIRRTL_AFTER_INITIAL
-  `endif // ENABLE_INITIAL_REG_
-  assign dmemPort_rdData =
-    {30'h0,
-     dmemPort_rdData_REG == 2'h2
-       ? gpioPort_in
-       : dmemPort_rdData_REG == 2'h1 ? outputs : outputEnables};	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30, :23:24, :26:{19,39,72}
-  assign gpioPort_out = outputs;	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :23:24
-  assign gpioPort_oe = outputEnables;	// src/main/scala/dtu/peripherals/Gpio.scala:17:7, :22:30
-endmodule
-
-module DataMemory(	// src/main/scala/dtu/DataMemory.scala:16:7
+module DataMemory_1(	// src/main/scala/dtu/DataMemory.scala:16:7
   input         clock,	// src/main/scala/dtu/DataMemory.scala:16:7
-                reset,	// src/main/scala/dtu/DataMemory.scala:16:7
   input  [7:0]  dmemPort_rdAddr,	// src/main/scala/dtu/DataMemory.scala:20:20
   output [31:0] dmemPort_rdData,	// src/main/scala/dtu/DataMemory.scala:20:20
   input  [7:0]  dmemPort_wrAddr,	// src/main/scala/dtu/DataMemory.scala:20:20
@@ -1447,463 +2834,17 @@ module DataMemory(	// src/main/scala/dtu/DataMemory.scala:16:7
   input  [3:0]  dmemPort_wrMask	// src/main/scala/dtu/DataMemory.scala:20:20
 );
 
-  ChipFoundrySram m (	// src/main/scala/mem/ChipFoundrySram.scala:9:19
+  Sky130Sram256 m (	// src/main/scala/mem/Sky130SramMacros.scala:11:19
     .clock       (clock),
-    .reset       (reset),
-    .io_wordAddr (dmemPort_wr ? dmemPort_wrAddr : dmemPort_rdAddr),	// src/main/scala/dtu/DataMemory.scala:26:21, src/main/scala/mem/ChipFoundrySram.scala:42:17, :47:17
+    .io_wordAddr (dmemPort_wr ? dmemPort_wrAddr : dmemPort_rdAddr),	// src/main/scala/dtu/DataMemory.scala:26:21, src/main/scala/mem/Sky130SramMacros.scala:54:17, :59:17
+    .io_write    (dmemPort_wr),
     .io_wrData   (dmemPort_wrData),
     .io_rdData   (dmemPort_rdData),
-    .io_we       (dmemPort_wr),
-    .io_strb     (dmemPort_wrMask)
+    .io_mask     (dmemPort_wrMask)
   );
 endmodule
 
-module Buffer(	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-  input        clock,	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-               reset,	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-  output       io_in_ready,	// leros/src/main/scala/leros/uart/UARTRx.scala:70:14
-  input        io_in_valid,	// leros/src/main/scala/leros/uart/UARTRx.scala:70:14
-  input  [7:0] io_in_bits,	// leros/src/main/scala/leros/uart/UARTRx.scala:70:14
-  input        io_out_ready,	// leros/src/main/scala/leros/uart/UARTRx.scala:70:14
-  output       io_out_valid,	// leros/src/main/scala/leros/uart/UARTRx.scala:70:14
-  output [7:0] io_out_bits	// leros/src/main/scala/leros/uart/UARTRx.scala:70:14
-);
-
-  reg       stateReg;	// leros/src/main/scala/leros/uart/UARTRx.scala:80:25
-  reg [7:0] dataReg;	// leros/src/main/scala/leros/uart/UARTRx.scala:81:24
-  always @(posedge clock) begin	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-    if (reset) begin	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-      stateReg <= 1'h0;	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7, :80:25
-      dataReg <= 8'h0;	// leros/src/main/scala/leros/uart/UARTRx.scala:81:24
-    end
-    else begin	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-      if (stateReg)	// leros/src/main/scala/leros/uart/UARTRx.scala:80:25
-        stateReg <= ~io_out_ready & stateReg;	// leros/src/main/scala/leros/uart/UARTRx.scala:80:25, :92:24, :93:16
-      else	// leros/src/main/scala/leros/uart/UARTRx.scala:80:25
-        stateReg <= io_in_valid | stateReg;	// leros/src/main/scala/leros/uart/UARTRx.scala:80:25, :87:23, :89:16
-      if (~stateReg & io_in_valid)	// leros/src/main/scala/leros/uart/UARTRx.scala:80:25, :81:24, :83:27, :86:28, :87:23, :88:15
-        dataReg <= io_in_bits;	// leros/src/main/scala/leros/uart/UARTRx.scala:81:24
-    end
-  end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-      `FIRRTL_BEFORE_INITIAL	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-    `endif // FIRRTL_BEFORE_INITIAL
-    logic [31:0] _RANDOM[0:0];	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-    initial begin	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-      `ifdef INIT_RANDOM_PROLOG_	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-        `INIT_RANDOM_PROLOG_	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-      `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-        stateReg = _RANDOM[/*Zero width*/ 1'b0][0];	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7, :80:25
-        dataReg = _RANDOM[/*Zero width*/ 1'b0][8:1];	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7, :80:25, :81:24
-      `endif // RANDOMIZE_REG_INIT
-    end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-      `FIRRTL_AFTER_INITIAL	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7
-    `endif // FIRRTL_AFTER_INITIAL
-  `endif // ENABLE_INITIAL_REG_
-  assign io_in_ready = ~stateReg;	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7, :80:25, :83:27
-  assign io_out_valid = stateReg;	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7, :80:25
-  assign io_out_bits = dataReg;	// leros/src/main/scala/leros/uart/UARTRx.scala:69:7, :81:24
-endmodule
-
-module BufferedTx(	// leros/src/main/scala/leros/uart/UARTTx.scala:62:7
-  input        clock,	// leros/src/main/scala/leros/uart/UARTTx.scala:62:7
-               reset,	// leros/src/main/scala/leros/uart/UARTTx.scala:62:7
-  output       io_txd,	// leros/src/main/scala/leros/uart/UARTTx.scala:63:14
-               io_channel_ready,	// leros/src/main/scala/leros/uart/UARTTx.scala:63:14
-  input        io_channel_valid,	// leros/src/main/scala/leros/uart/UARTTx.scala:63:14
-  input  [7:0] io_channel_bits	// leros/src/main/scala/leros/uart/UARTTx.scala:63:14
-);
-
-  wire       _buf_io_out_valid;	// leros/src/main/scala/leros/uart/UARTTx.scala:68:19
-  wire [7:0] _buf_io_out_bits;	// leros/src/main/scala/leros/uart/UARTTx.scala:68:19
-  wire       _tx_io_channel_ready;	// leros/src/main/scala/leros/uart/UARTTx.scala:67:18
-  Tx tx (	// leros/src/main/scala/leros/uart/UARTTx.scala:67:18
-    .clock            (clock),
-    .reset            (reset),
-    .io_txd           (io_txd),
-    .io_channel_ready (_tx_io_channel_ready),
-    .io_channel_valid (_buf_io_out_valid),	// leros/src/main/scala/leros/uart/UARTTx.scala:68:19
-    .io_channel_bits  (_buf_io_out_bits)	// leros/src/main/scala/leros/uart/UARTTx.scala:68:19
-  );
-  Buffer buf_0 (	// leros/src/main/scala/leros/uart/UARTTx.scala:68:19
-    .clock        (clock),
-    .reset        (reset),
-    .io_in_ready  (io_channel_ready),
-    .io_in_valid  (io_channel_valid),
-    .io_in_bits   (io_channel_bits),
-    .io_out_ready (_tx_io_channel_ready),	// leros/src/main/scala/leros/uart/UARTTx.scala:67:18
-    .io_out_valid (_buf_io_out_valid),
-    .io_out_bits  (_buf_io_out_bits)
-  );
-endmodule
-
-module UARTRx(	// leros/src/main/scala/leros/uart/UARTRx.scala:102:7
-  input        clock,	// leros/src/main/scala/leros/uart/UARTRx.scala:102:7
-               reset,	// leros/src/main/scala/leros/uart/UARTRx.scala:102:7
-               io_rxd,	// leros/src/main/scala/leros/uart/UARTRx.scala:103:14
-               io_out_ready,	// leros/src/main/scala/leros/uart/UARTRx.scala:103:14
-  output       io_out_valid,	// leros/src/main/scala/leros/uart/UARTRx.scala:103:14
-  output [7:0] io_out_bits	// leros/src/main/scala/leros/uart/UARTRx.scala:103:14
-);
-
-  wire       _buf_io_in_ready;	// leros/src/main/scala/leros/uart/UARTRx.scala:108:19
-  wire       _rx_io_channel_valid;	// leros/src/main/scala/leros/uart/UARTRx.scala:107:18
-  wire [7:0] _rx_io_channel_bits;	// leros/src/main/scala/leros/uart/UARTRx.scala:107:18
-  Rx rx (	// leros/src/main/scala/leros/uart/UARTRx.scala:107:18
-    .clock            (clock),
-    .reset            (reset),
-    .io_rxd           (io_rxd),
-    .io_channel_ready (_buf_io_in_ready),	// leros/src/main/scala/leros/uart/UARTRx.scala:108:19
-    .io_channel_valid (_rx_io_channel_valid),
-    .io_channel_bits  (_rx_io_channel_bits)
-  );
-  Buffer buf_0 (	// leros/src/main/scala/leros/uart/UARTRx.scala:108:19
-    .clock        (clock),
-    .reset        (reset),
-    .io_in_ready  (_buf_io_in_ready),
-    .io_in_valid  (_rx_io_channel_valid),	// leros/src/main/scala/leros/uart/UARTRx.scala:107:18
-    .io_in_bits   (_rx_io_channel_bits),	// leros/src/main/scala/leros/uart/UARTRx.scala:107:18
-    .io_out_ready (io_out_ready),
-    .io_out_valid (io_out_valid),
-    .io_out_bits  (io_out_bits)
-  );
-endmodule
-
-module Uart(	// src/main/scala/dtu/peripherals/Uart.scala:25:7
-  input         clock,	// src/main/scala/dtu/peripherals/Uart.scala:25:7
-                reset,	// src/main/scala/dtu/peripherals/Uart.scala:25:7
-  output        uartPins_tx,	// src/main/scala/dtu/peripherals/Uart.scala:27:20
-  input         uartPins_rx,	// src/main/scala/dtu/peripherals/Uart.scala:27:20
-                dmemPort_rdAddr,	// src/main/scala/dtu/peripherals/Uart.scala:28:20
-  output [31:0] dmemPort_rdData,	// src/main/scala/dtu/peripherals/Uart.scala:28:20
-  input         dmemPort_wrAddr,	// src/main/scala/dtu/peripherals/Uart.scala:28:20
-  input  [31:0] dmemPort_wrData,	// src/main/scala/dtu/peripherals/Uart.scala:28:20
-  input         dmemPort_wr	// src/main/scala/dtu/peripherals/Uart.scala:28:20
-);
-
-  wire       _rx_io_out_valid;	// src/main/scala/dtu/peripherals/Uart.scala:31:18
-  wire [7:0] _rx_io_out_bits;	// src/main/scala/dtu/peripherals/Uart.scala:31:18
-  wire       _tx_io_channel_ready;	// src/main/scala/dtu/peripherals/Uart.scala:30:18
-  reg        REG;	// src/main/scala/dtu/peripherals/Uart.scala:40:15
-  always @(posedge clock)	// src/main/scala/dtu/peripherals/Uart.scala:25:7
-    REG <= ~dmemPort_rdAddr;	// src/main/scala/dtu/peripherals/Uart.scala:40:{15,32}
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/dtu/peripherals/Uart.scala:25:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/peripherals/Uart.scala:25:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/peripherals/Uart.scala:25:7
-    `endif // FIRRTL_BEFORE_INITIAL
-    logic [31:0] _RANDOM[0:0];	// src/main/scala/dtu/peripherals/Uart.scala:25:7
-    initial begin	// src/main/scala/dtu/peripherals/Uart.scala:25:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/dtu/peripherals/Uart.scala:25:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/dtu/peripherals/Uart.scala:25:7
-      `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/dtu/peripherals/Uart.scala:25:7
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/dtu/peripherals/Uart.scala:25:7
-        REG = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/dtu/peripherals/Uart.scala:25:7, :40:15
-      `endif // RANDOMIZE_REG_INIT
-    end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/peripherals/Uart.scala:25:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/peripherals/Uart.scala:25:7
-    `endif // FIRRTL_AFTER_INITIAL
-  `endif // ENABLE_INITIAL_REG_
-  BufferedTx tx (	// src/main/scala/dtu/peripherals/Uart.scala:30:18
-    .clock            (clock),
-    .reset            (reset),
-    .io_txd           (uartPins_tx),
-    .io_channel_ready (_tx_io_channel_ready),
-    .io_channel_valid (dmemPort_wr & dmemPort_wrAddr),	// src/main/scala/dtu/peripherals/Uart.scala:33:23, :46:21, :47:29
-    .io_channel_bits  (dmemPort_wrData[7:0])	// src/main/scala/dtu/peripherals/Uart.scala:34:22
-  );
-  UARTRx rx (	// src/main/scala/dtu/peripherals/Uart.scala:31:18
-    .clock        (clock),
-    .reset        (reset),
-    .io_rxd       (uartPins_rx),
-    .io_out_ready (dmemPort_wr & ~dmemPort_wrAddr),	// src/main/scala/dtu/peripherals/Uart.scala:37:19, :46:21, :47:29
-    .io_out_valid (_rx_io_out_valid),
-    .io_out_bits  (_rx_io_out_bits)
-  );
-  assign dmemPort_rdData =
-    REG ? {30'h0, _tx_io_channel_ready, _rx_io_out_valid} : {24'h0, _rx_io_out_bits};	// src/main/scala/dtu/peripherals/Uart.scala:25:7, :30:18, :31:18, :40:{15,42}, :41:21, :43:21
-endmodule
-
-module WishbonePipelineStage(	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-  input         clock,	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-                reset,	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-                io_in_cyc,	// src/main/scala/wishbone/WishbonePipelineStage.scala:8:14
-                io_in_we,	// src/main/scala/wishbone/WishbonePipelineStage.scala:8:14
-  input  [3:0]  io_in_sel,	// src/main/scala/wishbone/WishbonePipelineStage.scala:8:14
-  input  [31:0] io_in_dat_i,	// src/main/scala/wishbone/WishbonePipelineStage.scala:8:14
-  input  [11:0] io_in_adr,	// src/main/scala/wishbone/WishbonePipelineStage.scala:8:14
-  output [31:0] io_in_dat_o,	// src/main/scala/wishbone/WishbonePipelineStage.scala:8:14
-  output        io_in_ack,	// src/main/scala/wishbone/WishbonePipelineStage.scala:8:14
-                io_out_stb,	// src/main/scala/wishbone/WishbonePipelineStage.scala:8:14
-                io_out_cyc,	// src/main/scala/wishbone/WishbonePipelineStage.scala:8:14
-                io_out_we,	// src/main/scala/wishbone/WishbonePipelineStage.scala:8:14
-  output [3:0]  io_out_sel,	// src/main/scala/wishbone/WishbonePipelineStage.scala:8:14
-  output [31:0] io_out_dat_i,	// src/main/scala/wishbone/WishbonePipelineStage.scala:8:14
-  output [11:0] io_out_adr,	// src/main/scala/wishbone/WishbonePipelineStage.scala:8:14
-  input  [31:0] io_out_dat_o,	// src/main/scala/wishbone/WishbonePipelineStage.scala:8:14
-  input         io_out_ack	// src/main/scala/wishbone/WishbonePipelineStage.scala:8:14
-);
-
-  reg        accessReg;	// src/main/scala/wishbone/WishbonePipelineStage.scala:19:24
-  reg        io_out_we_REG;	// src/main/scala/wishbone/WishbonePipelineStage.scala:30:23
-  reg [3:0]  io_out_sel_REG;	// src/main/scala/wishbone/WishbonePipelineStage.scala:31:24
-  reg [11:0] io_out_adr_REG;	// src/main/scala/wishbone/WishbonePipelineStage.scala:32:24
-  reg [31:0] io_out_dat_i_REG;	// src/main/scala/wishbone/WishbonePipelineStage.scala:33:26
-  reg [31:0] io_in_dat_o_REG;	// src/main/scala/wishbone/WishbonePipelineStage.scala:35:25
-  reg        io_in_ack_REG;	// src/main/scala/wishbone/WishbonePipelineStage.scala:36:23
-  always @(posedge clock) begin	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-    if (reset) begin	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-      accessReg <= 1'h0;	// src/main/scala/wishbone/WishbonePipelineStage.scala:19:24
-      io_out_we_REG <= 1'h0;	// src/main/scala/wishbone/WishbonePipelineStage.scala:19:24, :30:23
-      io_out_sel_REG <= 4'h0;	// src/main/scala/wishbone/WishbonePipelineStage.scala:31:24
-      io_out_adr_REG <= 12'h0;	// src/main/scala/wishbone/WishbonePipelineStage.scala:32:24
-      io_out_dat_i_REG <= 32'h0;	// src/main/scala/wishbone/WishbonePipelineStage.scala:33:26
-      io_in_dat_o_REG <= 32'h0;	// src/main/scala/wishbone/WishbonePipelineStage.scala:33:26, :35:25
-      io_in_ack_REG <= 1'h0;	// src/main/scala/wishbone/WishbonePipelineStage.scala:19:24, :36:23
-    end
-    else begin	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-      accessReg <= io_in_cyc & ~accessReg & ~io_in_ack_REG | ~io_out_ack & accessReg;	// src/main/scala/wishbone/WishbonePipelineStage.scala:19:24, :21:{21,32,35,47}, :22:15, :23:26, :24:15, :36:23
-      io_out_we_REG <= io_in_we;	// src/main/scala/wishbone/WishbonePipelineStage.scala:30:23
-      io_out_sel_REG <= io_in_sel;	// src/main/scala/wishbone/WishbonePipelineStage.scala:31:24
-      io_out_adr_REG <= io_in_adr;	// src/main/scala/wishbone/WishbonePipelineStage.scala:32:24
-      io_out_dat_i_REG <= io_in_dat_i;	// src/main/scala/wishbone/WishbonePipelineStage.scala:33:26
-      io_in_dat_o_REG <= io_out_dat_o;	// src/main/scala/wishbone/WishbonePipelineStage.scala:35:25
-      io_in_ack_REG <= io_out_ack;	// src/main/scala/wishbone/WishbonePipelineStage.scala:36:23
-    end
-  end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-    `endif // FIRRTL_BEFORE_INITIAL
-    logic [31:0] _RANDOM[0:2];	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-    initial begin	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-      `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-        for (logic [1:0] i = 2'h0; i < 2'h3; i += 2'h1) begin
-          _RANDOM[i] = `RANDOM;	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-        end	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-        accessReg = _RANDOM[2'h0][0];	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7, :19:24
-        io_out_we_REG = _RANDOM[2'h0][1];	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7, :19:24, :30:23
-        io_out_sel_REG = _RANDOM[2'h0][5:2];	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7, :19:24, :31:24
-        io_out_adr_REG = _RANDOM[2'h0][17:6];	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7, :19:24, :32:24
-        io_out_dat_i_REG = {_RANDOM[2'h0][31:18], _RANDOM[2'h1][17:0]};	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7, :19:24, :33:26
-        io_in_dat_o_REG = {_RANDOM[2'h1][31:18], _RANDOM[2'h2][17:0]};	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7, :33:26, :35:25
-        io_in_ack_REG = _RANDOM[2'h2][18];	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7, :35:25, :36:23
-      `endif // RANDOMIZE_REG_INIT
-    end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7
-    `endif // FIRRTL_AFTER_INITIAL
-  `endif // ENABLE_INITIAL_REG_
-  assign io_in_dat_o = io_in_dat_o_REG;	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7, :35:25
-  assign io_in_ack = io_in_ack_REG;	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7, :36:23
-  assign io_out_stb = accessReg;	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7, :19:24
-  assign io_out_cyc = accessReg;	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7, :19:24
-  assign io_out_we = io_out_we_REG;	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7, :30:23
-  assign io_out_sel = io_out_sel_REG;	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7, :31:24
-  assign io_out_dat_i = io_out_dat_i_REG;	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7, :33:26
-  assign io_out_adr = io_out_adr_REG;	// src/main/scala/wishbone/WishbonePipelineStage.scala:6:7, :32:24
-endmodule
-
-module WishboneToApb(	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-  input         clock,	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-                reset,	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-                io_wb_stb,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
-                io_wb_cyc,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
-                io_wb_we,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
-  input  [3:0]  io_wb_sel,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
-  input  [31:0] io_wb_dat_i,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
-  input  [11:0] io_wb_adr,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
-  output [31:0] io_wb_dat_o,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
-  output        io_wb_ack,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
-  output [11:0] io_apb_paddr,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
-  output        io_apb_psel,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
-                io_apb_penable,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
-                io_apb_pwrite,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
-  output [3:0]  io_apb_pstrb,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
-  output [31:0] io_apb_pwdata,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
-  input         io_apb_pready,	// src/main/scala/wishbone/WishboneToApb.scala:13:14
-  input  [31:0] io_apb_prdata	// src/main/scala/wishbone/WishboneToApb.scala:13:14
-);
-
-  reg  accessPhase;	// src/main/scala/wishbone/WishboneToApb.scala:19:28
-  wire io_apb_psel_0 = io_wb_cyc & io_wb_stb;	// src/main/scala/wishbone/WishboneToApb.scala:21:18
-  always @(posedge clock) begin	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-    if (reset)	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-      accessPhase <= 1'h0;	// src/main/scala/wishbone/WishboneToApb.scala:11:7, :19:28
-    else	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-      accessPhase <= io_apb_psel_0 & ~accessPhase | ~io_apb_pready & accessPhase;	// src/main/scala/wishbone/WishboneToApb.scala:19:28, :21:{18,31,34,48}, :22:17, :23:29, :24:17
-  end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-    `endif // FIRRTL_BEFORE_INITIAL
-    logic [31:0] _RANDOM[0:0];	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-    initial begin	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-      `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-        accessPhase = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/wishbone/WishboneToApb.scala:11:7, :19:28
-      `endif // RANDOMIZE_REG_INIT
-    end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-    `endif // FIRRTL_AFTER_INITIAL
-  `endif // ENABLE_INITIAL_REG_
-  assign io_wb_dat_o = io_apb_prdata;	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-  assign io_wb_ack = io_apb_pready;	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-  assign io_apb_paddr = io_wb_adr;	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-  assign io_apb_psel = io_apb_psel_0;	// src/main/scala/wishbone/WishboneToApb.scala:11:7, :21:18
-  assign io_apb_penable = accessPhase;	// src/main/scala/wishbone/WishboneToApb.scala:11:7, :19:28
-  assign io_apb_pwrite = io_wb_we;	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-  assign io_apb_pstrb = io_wb_sel;	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-  assign io_apb_pwdata = io_wb_dat_i;	// src/main/scala/wishbone/WishboneToApb.scala:11:7
-endmodule
-
-module ApbArbiter(	// src/main/scala/apb/ApbArbiter.scala:27:7
-  input         clock,	// src/main/scala/apb/ApbArbiter.scala:27:7
-                reset,	// src/main/scala/apb/ApbArbiter.scala:27:7
-  input  [15:0] io_masters_0_paddr,	// src/main/scala/apb/ApbArbiter.scala:28:14
-  input         io_masters_0_psel,	// src/main/scala/apb/ApbArbiter.scala:28:14
-                io_masters_0_penable,	// src/main/scala/apb/ApbArbiter.scala:28:14
-                io_masters_0_pwrite,	// src/main/scala/apb/ApbArbiter.scala:28:14
-  input  [31:0] io_masters_0_pwdata,	// src/main/scala/apb/ApbArbiter.scala:28:14
-  output        io_masters_0_pready,	// src/main/scala/apb/ApbArbiter.scala:28:14
-  output [31:0] io_masters_0_prdata,	// src/main/scala/apb/ApbArbiter.scala:28:14
-  input  [15:0] io_masters_1_paddr,	// src/main/scala/apb/ApbArbiter.scala:28:14
-  input         io_masters_1_psel,	// src/main/scala/apb/ApbArbiter.scala:28:14
-                io_masters_1_penable,	// src/main/scala/apb/ApbArbiter.scala:28:14
-                io_masters_1_pwrite,	// src/main/scala/apb/ApbArbiter.scala:28:14
-  input  [3:0]  io_masters_1_pstrb,	// src/main/scala/apb/ApbArbiter.scala:28:14
-  input  [31:0] io_masters_1_pwdata,	// src/main/scala/apb/ApbArbiter.scala:28:14
-  output        io_masters_1_pready,	// src/main/scala/apb/ApbArbiter.scala:28:14
-  output [31:0] io_masters_1_prdata,	// src/main/scala/apb/ApbArbiter.scala:28:14
-  output [15:0] io_merged_paddr,	// src/main/scala/apb/ApbArbiter.scala:28:14
-  output        io_merged_psel,	// src/main/scala/apb/ApbArbiter.scala:28:14
-                io_merged_penable,	// src/main/scala/apb/ApbArbiter.scala:28:14
-                io_merged_pwrite,	// src/main/scala/apb/ApbArbiter.scala:28:14
-  output [3:0]  io_merged_pstrb,	// src/main/scala/apb/ApbArbiter.scala:28:14
-  output [31:0] io_merged_pwdata,	// src/main/scala/apb/ApbArbiter.scala:28:14
-  input         io_merged_pready,	// src/main/scala/apb/ApbArbiter.scala:28:14
-  input  [31:0] io_merged_prdata	// src/main/scala/apb/ApbArbiter.scala:28:14
-);
-
-  reg  [2:0] stateReg;	// src/main/scala/apb/ApbArbiter.scala:44:25
-  reg        lastTurn;	// src/main/scala/apb/ApbArbiter.scala:45:25
-  wire       _GEN = stateReg == 3'h0;	// src/main/scala/apb/ApbArbiter.scala:44:25, :53:20, :73:18
-  wire       _GEN_0 = stateReg == 3'h1;	// src/main/scala/apb/ApbArbiter.scala:44:25, :53:20, :59:18
-  wire       _GEN_1 = stateReg == 3'h2;	// src/main/scala/apb/ApbArbiter.scala:44:25, :53:20, :68:16
-  wire       _GEN_2 = _GEN_0 | _GEN_1;	// src/main/scala/apb/ApbArbiter.scala:48:31, :53:20, :66:17, :71:17
-  wire       _GEN_3 = stateReg == 3'h3;	// src/main/scala/apb/ApbArbiter.scala:44:25, :53:20, :61:18
-  wire       _GEN_4 = stateReg == 3'h4;	// src/main/scala/apb/ApbArbiter.scala:44:25, :53:20, :80:16
-  wire       _GEN_5 = _GEN | ~_GEN_2;	// src/main/scala/apb/ApbArbiter.scala:47:24, :48:31, :53:20, :66:17, :71:17
-  wire       _GEN_6 = _GEN_3 | _GEN_4;	// src/main/scala/apb/ApbArbiter.scala:50:18, :53:20, :78:17, :83:17
-  always @(posedge clock) begin	// src/main/scala/apb/ApbArbiter.scala:27:7
-    if (reset) begin	// src/main/scala/apb/ApbArbiter.scala:27:7
-      stateReg <= 3'h0;	// src/main/scala/apb/ApbArbiter.scala:44:25, :73:18
-      lastTurn <= 1'h1;	// src/main/scala/apb/ApbArbiter.scala:27:7, :45:25
-    end
-    else if (_GEN) begin	// src/main/scala/apb/ApbArbiter.scala:53:20
-      if (io_masters_0_psel & io_masters_1_psel)	// src/main/scala/apb/ApbArbiter.scala:55:31
-        stateReg <= {1'h0, ~lastTurn, 1'h1};	// src/main/scala/apb/ApbArbiter.scala:27:7, :44:25, :45:25, :56:{18,34}
-      else if (io_masters_0_psel)	// src/main/scala/apb/ApbArbiter.scala:28:14
-        stateReg <= 3'h1;	// src/main/scala/apb/ApbArbiter.scala:44:25, :59:18
-      else if (io_masters_1_psel)	// src/main/scala/apb/ApbArbiter.scala:28:14
-        stateReg <= 3'h3;	// src/main/scala/apb/ApbArbiter.scala:44:25, :61:18
-    end
-    else begin	// src/main/scala/apb/ApbArbiter.scala:53:20
-      if (_GEN_0)	// src/main/scala/apb/ApbArbiter.scala:53:20
-        stateReg <= 3'h2;	// src/main/scala/apb/ApbArbiter.scala:44:25, :68:16
-      else if (_GEN_1) begin	// src/main/scala/apb/ApbArbiter.scala:53:20
-        if (io_merged_pready)	// src/main/scala/apb/ApbArbiter.scala:28:14
-          stateReg <= 3'h0;	// src/main/scala/apb/ApbArbiter.scala:44:25, :73:18
-      end
-      else if (_GEN_3)	// src/main/scala/apb/ApbArbiter.scala:53:20
-        stateReg <= 3'h4;	// src/main/scala/apb/ApbArbiter.scala:44:25, :80:16
-      else if (_GEN_4 & io_merged_pready)	// src/main/scala/apb/ApbArbiter.scala:44:25, :53:20, :84:30, :85:18
-        stateReg <= 3'h0;	// src/main/scala/apb/ApbArbiter.scala:44:25, :73:18
-      lastTurn <= ~_GEN_0 & (~_GEN_1 & _GEN_3 | lastTurn);	// src/main/scala/apb/ApbArbiter.scala:45:25, :53:20, :65:16
-    end
-  end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/apb/ApbArbiter.scala:27:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/apb/ApbArbiter.scala:27:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/apb/ApbArbiter.scala:27:7
-    `endif // FIRRTL_BEFORE_INITIAL
-    logic [31:0] _RANDOM[0:0];	// src/main/scala/apb/ApbArbiter.scala:27:7
-    initial begin	// src/main/scala/apb/ApbArbiter.scala:27:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/apb/ApbArbiter.scala:27:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/apb/ApbArbiter.scala:27:7
-      `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/apb/ApbArbiter.scala:27:7
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/apb/ApbArbiter.scala:27:7
-        stateReg = _RANDOM[/*Zero width*/ 1'b0][2:0];	// src/main/scala/apb/ApbArbiter.scala:27:7, :44:25
-        lastTurn = _RANDOM[/*Zero width*/ 1'b0][3];	// src/main/scala/apb/ApbArbiter.scala:27:7, :44:25, :45:25
-      `endif // RANDOMIZE_REG_INIT
-    end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/apb/ApbArbiter.scala:27:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/apb/ApbArbiter.scala:27:7
-    `endif // FIRRTL_AFTER_INITIAL
-  `endif // ENABLE_INITIAL_REG_
-  assign io_masters_0_pready = ~_GEN & _GEN_2 & io_merged_pready;	// src/main/scala/apb/ApbArbiter.scala:27:7, :48:31, :53:20, :66:17, :71:17
-  assign io_masters_0_prdata = io_merged_prdata;	// src/main/scala/apb/ApbArbiter.scala:27:7
-  assign io_masters_1_pready = ~(_GEN | _GEN_2) & _GEN_6 & io_merged_pready;	// src/main/scala/apb/ApbArbiter.scala:27:7, :48:31, :50:18, :53:20, :66:17, :71:17, :78:17, :83:17
-  assign io_masters_1_prdata = io_merged_prdata;	// src/main/scala/apb/ApbArbiter.scala:27:7
-  assign io_merged_paddr = _GEN_5 ? io_masters_1_paddr : io_masters_0_paddr;	// src/main/scala/apb/ApbArbiter.scala:27:7, :47:24, :53:20
-  assign io_merged_psel =
-    ~_GEN & (_GEN_2 ? io_masters_0_psel : _GEN_6 & io_masters_1_psel);	// src/main/scala/apb/ApbArbiter.scala:27:7, :48:31, :50:18, :53:20, :66:17, :71:17, :78:17, :83:17
-  assign io_merged_penable =
-    ~(_GEN | _GEN_0)
-    & (_GEN_1 ? io_masters_0_penable : ~_GEN_3 & _GEN_4 & io_masters_1_penable);	// src/main/scala/apb/ApbArbiter.scala:27:7, :51:21, :53:20, :67:25, :71:17, :79:25
-  assign io_merged_pwrite = _GEN_5 ? io_masters_1_pwrite : io_masters_0_pwrite;	// src/main/scala/apb/ApbArbiter.scala:27:7, :47:24, :53:20
-  assign io_merged_pstrb = _GEN_5 ? io_masters_1_pstrb : 4'hF;	// src/main/scala/apb/ApbArbiter.scala:27:7, :28:14, :47:24, :53:20
-  assign io_merged_pwdata = _GEN_5 ? io_masters_1_pwdata : io_masters_0_pwdata;	// src/main/scala/apb/ApbArbiter.scala:27:7, :47:24, :53:20
-endmodule
-
-module ApbErrorTarget(	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-  input  clock,	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-         reset,	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-         apbPort_psel,	// src/main/scala/apb/ApbErrorTarget.scala:7:19
-  output apbPort_pready	// src/main/scala/apb/ApbErrorTarget.scala:7:19
-);
-
-  reg active;	// src/main/scala/apb/ApbErrorTarget.scala:9:23
-  always @(posedge clock) begin	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-    if (reset)	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-      active <= 1'h0;	// src/main/scala/apb/ApbErrorTarget.scala:5:7, :9:23
-    else	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-      active <= ~active & (apbPort_psel | active);	// src/main/scala/apb/ApbErrorTarget.scala:9:23, :10:16, :11:12, :12:28, :13:12
-  end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-    `endif // FIRRTL_BEFORE_INITIAL
-    logic [31:0] _RANDOM[0:0];	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-    initial begin	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-      `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-        active = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/apb/ApbErrorTarget.scala:5:7, :9:23
-      `endif // RANDOMIZE_REG_INIT
-    end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/apb/ApbErrorTarget.scala:5:7
-    `endif // FIRRTL_AFTER_INITIAL
-  `endif // ENABLE_INITIAL_REG_
-  assign apbPort_pready = active;	// src/main/scala/apb/ApbErrorTarget.scala:5:7, :9:23
-endmodule
-
-module ApbMux(	// src/main/scala/apb/ApbMux.scala:15:7
+module ApbMux_1(	// src/main/scala/apb/ApbMux.scala:15:7
   input         clock,	// src/main/scala/apb/ApbMux.scala:15:7
                 reset,	// src/main/scala/apb/ApbMux.scala:15:7
   input  [15:0] io_master_paddr,	// src/main/scala/apb/ApbMux.scala:21:14
@@ -1940,9 +2881,9 @@ module ApbMux(	// src/main/scala/apb/ApbMux.scala:15:7
   wire _errorTarget_apbPort_pready;	// src/main/scala/apb/ApbMux.scala:34:27
   wire selected = io_master_psel & io_master_paddr[15:10] == 6'h0;	// src/main/scala/apb/ApbMux.scala:82:{35,53}, :85:7
   reg  wasSelected;	// src/main/scala/apb/ApbMux.scala:93:30
-  wire selected_1 = io_master_psel & io_master_paddr[15:4] == 12'h80;	// src/main/scala/apb/ApbMux.scala:82:{35,53}, :85:7
+  wire selected_1 = io_master_psel & io_master_paddr[15:4] == 12'h100;	// src/main/scala/apb/ApbMux.scala:82:{35,53}, :85:7
   reg  wasSelected_1;	// src/main/scala/apb/ApbMux.scala:93:30
-  wire selected_2 = io_master_psel & io_master_paddr[15:2] == 14'h300;	// src/main/scala/apb/ApbMux.scala:82:{35,53}, :85:7
+  wire selected_2 = io_master_psel & io_master_paddr[15:2] == 14'h800;	// src/main/scala/apb/ApbMux.scala:82:{35,53}, :85:7
   reg  wasSelected_2;	// src/main/scala/apb/ApbMux.scala:93:30
   always @(posedge clock) begin	// src/main/scala/apb/ApbMux.scala:15:7
     if (reset) begin	// src/main/scala/apb/ApbMux.scala:15:7
@@ -2009,7 +2950,7 @@ module ApbMux(	// src/main/scala/apb/ApbMux.scala:15:7
   assign io_targets_2_pwdata = io_master_pwdata;	// src/main/scala/apb/ApbMux.scala:15:7
 endmodule
 
-module DataMemMux(	// src/main/scala/dtu/DataMemMux.scala:21:7
+module DataMemMux_1(	// src/main/scala/dtu/DataMemMux.scala:21:7
   input         clock,	// src/main/scala/dtu/DataMemMux.scala:21:7
                 reset,	// src/main/scala/dtu/DataMemMux.scala:21:7
   input  [15:0] io_master_rdAddr,	// src/main/scala/dtu/DataMemMux.scala:26:14
@@ -2105,19 +3046,20 @@ module DataMemMux(	// src/main/scala/dtu/DataMemMux.scala:21:7
   assign io_targets_3_wr = io_master_wr & io_master_wrAddr[15:1] == 15'h1022;	// src/main/scala/dtu/DataMemMux.scala:21:7, :59:7, :67:38, :70:7, :71:29
 endmodule
 
-module LerosCaravel_ChipFoundrySram(	// src/main/scala/caravel/LerosCaravel.scala:51:7
-  input         clock,	// src/main/scala/caravel/LerosCaravel.scala:51:7
-                reset,	// src/main/scala/caravel/LerosCaravel.scala:51:7
-                io_wb_cyc,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-                io_wb_we,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  input  [3:0]  io_wb_sel,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  input  [31:0] io_wb_dat_i,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  input  [11:0] io_wb_adr,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  output [31:0] io_wb_dat_o,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  output        io_wb_ack,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  input  [5:0]  io_gpio_in,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  output [5:0]  io_gpio_out,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-                io_gpio_oe	// src/main/scala/caravel/LerosCaravel.scala:55:14
+module LerosCaravel_OpenRamSky130(	// src/main/scala/caravel/LerosCaravel.scala:52:7
+  input         clock,	// src/main/scala/caravel/LerosCaravel.scala:52:7
+                reset,	// src/main/scala/caravel/LerosCaravel.scala:52:7
+                io_wb_stb,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+                io_wb_cyc,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+                io_wb_we,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  input  [3:0]  io_wb_sel,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  input  [31:0] io_wb_dat_i,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  input  [15:0] io_wb_adr,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  output [31:0] io_wb_dat_o,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  output        io_wb_ack,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  input  [5:0]  io_gpio_in,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  output [5:0]  io_gpio_out,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+                io_gpio_oe	// src/main/scala/caravel/LerosCaravel.scala:56:14
 );
 
   wire [31:0] _dmemMux_io_master_rdData;	// src/main/scala/dtu/DataMemMux.scala:116:25
@@ -2155,82 +3097,74 @@ module LerosCaravel_ChipFoundrySram(	// src/main/scala/caravel/LerosCaravel.scal
   wire        _apbMux_io_targets_2_penable;	// src/main/scala/apb/ApbMux.scala:126:24
   wire        _apbMux_io_targets_2_pwrite;	// src/main/scala/apb/ApbMux.scala:126:24
   wire [31:0] _apbMux_io_targets_2_pwdata;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire        _arb_io_masters_0_pready;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [31:0] _arb_io_masters_0_prdata;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire        _arb_io_masters_1_pready;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [31:0] _arb_io_masters_1_prdata;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [15:0] _arb_io_merged_paddr;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire        _arb_io_merged_psel;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire        _arb_io_merged_penable;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire        _arb_io_merged_pwrite;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [3:0]  _arb_io_merged_pstrb;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [31:0] _arb_io_merged_pwdata;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [31:0] _bridge_io_wb_dat_o;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire        _bridge_io_wb_ack;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire [11:0] _bridge_io_apb_paddr;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
+  wire        _arb_io_masters_0_pready;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [31:0] _arb_io_masters_0_prdata;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire        _arb_io_masters_1_pready;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [31:0] _arb_io_masters_1_prdata;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [15:0] _arb_io_merged_paddr;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire        _arb_io_merged_psel;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire        _arb_io_merged_penable;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire        _arb_io_merged_pwrite;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [3:0]  _arb_io_merged_pstrb;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [31:0] _arb_io_merged_pwdata;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [15:0] _bridge_io_apb_paddr;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire        _bridge_io_apb_psel;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire        _bridge_io_apb_penable;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire        _bridge_io_apb_pwrite;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire [3:0]  _bridge_io_apb_pstrb;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire [31:0] _bridge_io_apb_pwdata;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire        _stage_io_out_stb;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire        _stage_io_out_cyc;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire        _stage_io_out_we;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire [3:0]  _stage_io_out_sel;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire [31:0] _stage_io_out_dat_i;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire [11:0] _stage_io_out_adr;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire        _uart_uartPins_tx;	// src/main/scala/caravel/LerosCaravel.scala:86:20
-  wire [31:0] _uart_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:86:20
-  wire [31:0] _dmem_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:85:20
-  wire [31:0] _gpio_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:84:20
-  wire [1:0]  _gpio_gpioPort_out;	// src/main/scala/caravel/LerosCaravel.scala:84:20
-  wire [1:0]  _gpio_gpioPort_oe;	// src/main/scala/caravel/LerosCaravel.scala:84:20
-  wire        _regBlock_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:83:24
-  wire [31:0] _regBlock_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:83:24
-  wire [31:0] _regBlock_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:83:24
-  wire [15:0] _rom_io_instr;	// src/main/scala/caravel/LerosCaravel.scala:80:19
-  wire [15:0] _instrMem_instrPort_instr;	// src/main/scala/caravel/LerosCaravel.scala:79:24
-  wire        _instrMem_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:79:24
-  wire [31:0] _instrMem_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:79:24
-  wire [9:0]  _leros_imemIO_addr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [15:0] _leros_dmemIO_rdAddr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [15:0] _leros_dmemIO_wrAddr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [31:0] _leros_dmemIO_wrData;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire        _leros_dmemIO_wr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [3:0]  _leros_dmemIO_wrMask;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire        _ponte_io_uart_tx;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire [15:0] _ponte_io_apb_paddr;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire        _ponte_io_apb_psel;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire        _ponte_io_apb_penable;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire        _ponte_io_apb_pwrite;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire [31:0] _ponte_io_apb_pwdata;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire        _sysCtrl_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  wire [31:0] _sysCtrl_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  wire        _sysCtrl_ctrlPort_lerosReset;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  wire        _sysCtrl_ctrlPort_lerosBootFromRam;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  wire        _sysCtrl_ctrlPort_lerosUartLoopBack;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  reg         leros_reset_REG;	// src/main/scala/caravel/LerosCaravel.scala:77:25
-  always @(posedge clock)	// src/main/scala/caravel/LerosCaravel.scala:51:7
-    leros_reset_REG <= _sysCtrl_ctrlPort_lerosReset | reset;	// src/main/scala/caravel/LerosCaravel.scala:72:23, :77:{25,54}
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/caravel/LerosCaravel.scala:51:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:51:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:51:7
+  wire        _uart_uartPins_tx;	// src/main/scala/caravel/LerosCaravel.scala:87:20
+  wire [31:0] _uart_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:87:20
+  wire [31:0] _dmem_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:86:20
+  wire [31:0] _gpio_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:85:20
+  wire [1:0]  _gpio_gpioPort_out;	// src/main/scala/caravel/LerosCaravel.scala:85:20
+  wire [1:0]  _gpio_gpioPort_oe;	// src/main/scala/caravel/LerosCaravel.scala:85:20
+  wire        _regBlock_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:84:24
+  wire [31:0] _regBlock_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:84:24
+  wire [31:0] _regBlock_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:84:24
+  wire [15:0] _rom_io_instr;	// src/main/scala/caravel/LerosCaravel.scala:81:19
+  wire [15:0] _instrMem_instrPort_instr;	// src/main/scala/caravel/LerosCaravel.scala:80:24
+  wire        _instrMem_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:80:24
+  wire [31:0] _instrMem_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:80:24
+  wire [9:0]  _leros_imemIO_addr;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire [15:0] _leros_dmemIO_rdAddr;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire [15:0] _leros_dmemIO_wrAddr;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire [31:0] _leros_dmemIO_wrData;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire        _leros_dmemIO_wr;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire [3:0]  _leros_dmemIO_wrMask;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire        _ponte_io_uart_tx;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire [15:0] _ponte_io_apb_paddr;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire        _ponte_io_apb_psel;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire        _ponte_io_apb_penable;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire        _ponte_io_apb_pwrite;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire [31:0] _ponte_io_apb_pwdata;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire        _sysCtrl_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  wire [31:0] _sysCtrl_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  wire        _sysCtrl_ctrlPort_lerosReset;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  wire        _sysCtrl_ctrlPort_lerosBootFromRam;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  wire        _sysCtrl_ctrlPort_lerosUartLoopBack;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  reg         leros_reset_REG;	// src/main/scala/caravel/LerosCaravel.scala:78:25
+  always @(posedge clock)	// src/main/scala/caravel/LerosCaravel.scala:52:7
+    leros_reset_REG <= _sysCtrl_ctrlPort_lerosReset | reset;	// src/main/scala/caravel/LerosCaravel.scala:73:23, :78:{25,54}
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/caravel/LerosCaravel.scala:52:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:52:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:52:7
     `endif // FIRRTL_BEFORE_INITIAL
-    logic [31:0] _RANDOM[0:0];	// src/main/scala/caravel/LerosCaravel.scala:51:7
-    initial begin	// src/main/scala/caravel/LerosCaravel.scala:51:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/caravel/LerosCaravel.scala:51:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/caravel/LerosCaravel.scala:51:7
+    logic [31:0] _RANDOM[0:0];	// src/main/scala/caravel/LerosCaravel.scala:52:7
+    initial begin	// src/main/scala/caravel/LerosCaravel.scala:52:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/caravel/LerosCaravel.scala:52:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/caravel/LerosCaravel.scala:52:7
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/caravel/LerosCaravel.scala:51:7
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/caravel/LerosCaravel.scala:51:7
-        leros_reset_REG = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/caravel/LerosCaravel.scala:51:7, :77:25
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/caravel/LerosCaravel.scala:52:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/caravel/LerosCaravel.scala:52:7
+        leros_reset_REG = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/caravel/LerosCaravel.scala:52:7, :78:25
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:51:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:51:7
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:52:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:52:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  SystemControl sysCtrl (	// src/main/scala/caravel/LerosCaravel.scala:72:23
+  SystemControl sysCtrl (	// src/main/scala/caravel/LerosCaravel.scala:73:23
     .clock                      (clock),
     .reset                      (reset),
     .apbPort_psel               (_apbMux_io_targets_2_psel),	// src/main/scala/apb/ApbMux.scala:126:24
@@ -2243,25 +3177,25 @@ module LerosCaravel_ChipFoundrySram(	// src/main/scala/caravel/LerosCaravel.scal
     .ctrlPort_lerosBootFromRam  (_sysCtrl_ctrlPort_lerosBootFromRam),
     .ctrlPort_lerosUartLoopBack (_sysCtrl_ctrlPort_lerosUartLoopBack)
   );
-  Ponte ponte (	// src/main/scala/caravel/LerosCaravel.scala:73:21
+  Ponte ponte (	// src/main/scala/caravel/LerosCaravel.scala:74:21
     .clock          (clock),
     .reset          (reset),
     .io_uart_tx     (_ponte_io_uart_tx),
-    .io_uart_rx     (io_gpio_in[1]),	// src/main/scala/caravel/LerosCaravel.scala:70:27
+    .io_uart_rx     (io_gpio_in[1]),	// src/main/scala/caravel/LerosCaravel.scala:71:27
     .io_apb_paddr   (_ponte_io_apb_paddr),
     .io_apb_psel    (_ponte_io_apb_psel),
     .io_apb_penable (_ponte_io_apb_penable),
     .io_apb_pwrite  (_ponte_io_apb_pwrite),
     .io_apb_pwdata  (_ponte_io_apb_pwdata),
-    .io_apb_pready  (_arb_io_masters_0_pready),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_apb_prdata  (_arb_io_masters_0_prdata)	// src/main/scala/apb/ApbArbiter.scala:13:21
+    .io_apb_pready  (_arb_io_masters_0_pready),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_apb_prdata  (_arb_io_masters_0_prdata)	// src/main/scala/apb/ApbArbiter.scala:14:21
   );
-  Leros leros (	// src/main/scala/caravel/LerosCaravel.scala:76:21
+  Leros_1 leros (	// src/main/scala/caravel/LerosCaravel.scala:77:21
     .clock         (clock),
-    .reset         (leros_reset_REG),	// src/main/scala/caravel/LerosCaravel.scala:77:25
+    .reset         (leros_reset_REG),	// src/main/scala/caravel/LerosCaravel.scala:78:25
     .imemIO_addr   (_leros_imemIO_addr),
     .imemIO_instr
-      (_sysCtrl_ctrlPort_lerosBootFromRam ? _instrMem_instrPort_instr : _rom_io_instr),	// src/main/scala/caravel/LerosCaravel.scala:72:23, :79:24, :80:19, :91:28
+      (_sysCtrl_ctrlPort_lerosBootFromRam ? _instrMem_instrPort_instr : _rom_io_instr),	// src/main/scala/caravel/LerosCaravel.scala:73:23, :80:24, :81:19, :92:28
     .dmemIO_rdAddr (_leros_dmemIO_rdAddr),
     .dmemIO_rdData (_dmemMux_io_master_rdData),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemIO_wrAddr (_leros_dmemIO_wrAddr),
@@ -2269,10 +3203,10 @@ module LerosCaravel_ChipFoundrySram(	// src/main/scala/caravel/LerosCaravel.scal
     .dmemIO_wr     (_leros_dmemIO_wr),
     .dmemIO_wrMask (_leros_dmemIO_wrMask)
   );
-  InstructionMemory instrMem (	// src/main/scala/caravel/LerosCaravel.scala:79:24
+  InstructionMemory_1 instrMem (	// src/main/scala/caravel/LerosCaravel.scala:80:24
     .clock           (clock),
     .reset           (reset),
-    .instrPort_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
+    .instrPort_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
     .instrPort_instr (_instrMem_instrPort_instr),
     .apbPort_paddr   (_apbMux_io_targets_0_paddr[9:0]),	// src/main/scala/apb/ApbMux.scala:126:24, :132:16
     .apbPort_psel    (_apbMux_io_targets_0_psel),	// src/main/scala/apb/ApbMux.scala:126:24
@@ -2283,13 +3217,13 @@ module LerosCaravel_ChipFoundrySram(	// src/main/scala/caravel/LerosCaravel.scal
     .apbPort_pready  (_instrMem_apbPort_pready),
     .apbPort_prdata  (_instrMem_apbPort_prdata)
   );
-  InstrMem rom (	// src/main/scala/caravel/LerosCaravel.scala:80:19
+  InstrMem_1 rom (	// src/main/scala/caravel/LerosCaravel.scala:81:19
     .clock    (clock),
     .reset    (reset),
-    .io_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
+    .io_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
     .io_instr (_rom_io_instr)
   );
-  RegBlock regBlock (	// src/main/scala/caravel/LerosCaravel.scala:83:24
+  RegBlock regBlock (	// src/main/scala/caravel/LerosCaravel.scala:84:24
     .clock           (clock),
     .reset           (reset),
     .apbPort_paddr   (_apbMux_io_targets_1_paddr[3:0]),	// src/main/scala/apb/ApbMux.scala:126:24, :132:16
@@ -2305,7 +3239,7 @@ module LerosCaravel_ChipFoundrySram(	// src/main/scala/caravel/LerosCaravel.scal
     .dmemPort_wrData (_dmemMux_io_targets_1_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemPort_wr     (_dmemMux_io_targets_1_wr)	// src/main/scala/dtu/DataMemMux.scala:116:25
   );
-  Gpio gpio (	// src/main/scala/caravel/LerosCaravel.scala:84:20
+  Gpio gpio (	// src/main/scala/caravel/LerosCaravel.scala:85:20
     .clock           (clock),
     .reset           (reset),
     .dmemPort_rdAddr (_dmemMux_io_targets_2_rdAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
@@ -2313,13 +3247,12 @@ module LerosCaravel_ChipFoundrySram(	// src/main/scala/caravel/LerosCaravel.scal
     .dmemPort_wrAddr (_dmemMux_io_targets_2_wrAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
     .dmemPort_wrData (_dmemMux_io_targets_2_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemPort_wr     (_dmemMux_io_targets_2_wr),	// src/main/scala/dtu/DataMemMux.scala:116:25
-    .gpioPort_in     (io_gpio_in[5:4]),	// src/main/scala/caravel/LerosCaravel.scala:119:33
+    .gpioPort_in     (io_gpio_in[5:4]),	// src/main/scala/caravel/LerosCaravel.scala:120:33
     .gpioPort_out    (_gpio_gpioPort_out),
     .gpioPort_oe     (_gpio_gpioPort_oe)
   );
-  DataMemory dmem (	// src/main/scala/caravel/LerosCaravel.scala:85:20
+  DataMemory_1 dmem (	// src/main/scala/caravel/LerosCaravel.scala:86:20
     .clock           (clock),
-    .reset           (reset),
     .dmemPort_rdAddr (_dmemMux_io_targets_0_rdAddr[7:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
     .dmemPort_rdData (_dmem_dmemPort_rdData),
     .dmemPort_wrAddr (_dmemMux_io_targets_0_wrAddr[7:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
@@ -2327,68 +3260,49 @@ module LerosCaravel_ChipFoundrySram(	// src/main/scala/caravel/LerosCaravel.scal
     .dmemPort_wr     (_dmemMux_io_targets_0_wr),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemPort_wrMask (_dmemMux_io_targets_0_wrMask)	// src/main/scala/dtu/DataMemMux.scala:116:25
   );
-  Uart uart (	// src/main/scala/caravel/LerosCaravel.scala:86:20
+  Uart uart (	// src/main/scala/caravel/LerosCaravel.scala:87:20
     .clock           (clock),
     .reset           (reset),
     .uartPins_tx     (_uart_uartPins_tx),
     .uartPins_rx
-      (_sysCtrl_ctrlPort_lerosUartLoopBack ? _uart_uartPins_tx : io_gpio_in[3]),	// src/main/scala/caravel/LerosCaravel.scala:69:27, :72:23, :86:20, :87:26
+      (_sysCtrl_ctrlPort_lerosUartLoopBack ? _uart_uartPins_tx : io_gpio_in[3]),	// src/main/scala/caravel/LerosCaravel.scala:70:27, :73:23, :87:20, :88:26
     .dmemPort_rdAddr (_dmemMux_io_targets_3_rdAddr[0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
     .dmemPort_rdData (_uart_dmemPort_rdData),
     .dmemPort_wrAddr (_dmemMux_io_targets_3_wrAddr[0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
     .dmemPort_wrData (_dmemMux_io_targets_3_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemPort_wr     (_dmemMux_io_targets_3_wr)	// src/main/scala/dtu/DataMemMux.scala:116:25
   );
-  WishbonePipelineStage stage (	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .clock        (clock),
-    .reset        (reset),
-    .io_in_cyc    (io_wb_cyc),
-    .io_in_we     (io_wb_we),
-    .io_in_sel    (io_wb_sel),
-    .io_in_dat_i  (io_wb_dat_i),
-    .io_in_adr    (io_wb_adr),
-    .io_in_dat_o  (io_wb_dat_o),
-    .io_in_ack    (io_wb_ack),
-    .io_out_stb   (_stage_io_out_stb),
-    .io_out_cyc   (_stage_io_out_cyc),
-    .io_out_we    (_stage_io_out_we),
-    .io_out_sel   (_stage_io_out_sel),
-    .io_out_dat_i (_stage_io_out_dat_i),
-    .io_out_adr   (_stage_io_out_adr),
-    .io_out_dat_o (_bridge_io_wb_dat_o),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-    .io_out_ack   (_bridge_io_wb_ack)	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  );
   WishboneToApb bridge (	// src/main/scala/wishbone/WishboneToApb.scala:48:24
     .clock          (clock),
     .reset          (reset),
-    .io_wb_stb      (_stage_io_out_stb),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_cyc      (_stage_io_out_cyc),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_we       (_stage_io_out_we),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_sel      (_stage_io_out_sel),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_dat_i    (_stage_io_out_dat_i),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_adr      (_stage_io_out_adr),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_dat_o    (_bridge_io_wb_dat_o),
-    .io_wb_ack      (_bridge_io_wb_ack),
+    .io_wb_stb      (io_wb_stb),
+    .io_wb_cyc      (io_wb_cyc),
+    .io_wb_we       (io_wb_we),
+    .io_wb_sel      (io_wb_sel),
+    .io_wb_dat_i    (io_wb_dat_i),
+    .io_wb_adr      (io_wb_adr),
+    .io_wb_dat_o    (io_wb_dat_o),
+    .io_wb_ack      (io_wb_ack),
     .io_apb_paddr   (_bridge_io_apb_paddr),
     .io_apb_psel    (_bridge_io_apb_psel),
     .io_apb_penable (_bridge_io_apb_penable),
     .io_apb_pwrite  (_bridge_io_apb_pwrite),
     .io_apb_pstrb   (_bridge_io_apb_pstrb),
     .io_apb_pwdata  (_bridge_io_apb_pwdata),
-    .io_apb_pready  (_arb_io_masters_1_pready),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_apb_prdata  (_arb_io_masters_1_prdata)	// src/main/scala/apb/ApbArbiter.scala:13:21
+    .io_apb_pready  (_arb_io_masters_1_pready),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_apb_prdata  (_arb_io_masters_1_prdata)	// src/main/scala/apb/ApbArbiter.scala:14:21
   );
-  ApbArbiter arb (	// src/main/scala/apb/ApbArbiter.scala:13:21
+  ApbArbiter arb (	// src/main/scala/apb/ApbArbiter.scala:14:21
     .clock                (clock),
     .reset                (reset),
-    .io_masters_0_paddr   (_ponte_io_apb_paddr),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_psel    (_ponte_io_apb_psel),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_penable (_ponte_io_apb_penable),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_pwrite  (_ponte_io_apb_pwrite),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_pwdata  (_ponte_io_apb_pwdata),	// src/main/scala/caravel/LerosCaravel.scala:73:21
+    .io_masters_0_paddr   (_ponte_io_apb_paddr),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_psel    (_ponte_io_apb_psel),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_penable (_ponte_io_apb_penable),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_pwrite  (_ponte_io_apb_pwrite),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_pwdata  (_ponte_io_apb_pwdata),	// src/main/scala/caravel/LerosCaravel.scala:74:21
     .io_masters_0_pready  (_arb_io_masters_0_pready),
     .io_masters_0_prdata  (_arb_io_masters_0_prdata),
-    .io_masters_1_paddr   ({4'h0, _bridge_io_apb_paddr}),	// src/main/scala/apb/ApbArbiter.scala:19:23, src/main/scala/wishbone/WishboneToApb.scala:48:24
+    .io_masters_1_paddr   (_bridge_io_apb_paddr),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
     .io_masters_1_psel    (_bridge_io_apb_psel),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
     .io_masters_1_penable (_bridge_io_apb_penable),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
     .io_masters_1_pwrite  (_bridge_io_apb_pwrite),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
@@ -2405,15 +3319,15 @@ module LerosCaravel_ChipFoundrySram(	// src/main/scala/caravel/LerosCaravel.scal
     .io_merged_pready     (_apbMux_io_master_pready),	// src/main/scala/apb/ApbMux.scala:126:24
     .io_merged_prdata     (_apbMux_io_master_prdata)	// src/main/scala/apb/ApbMux.scala:126:24
   );
-  ApbMux apbMux (	// src/main/scala/apb/ApbMux.scala:126:24
+  ApbMux_1 apbMux (	// src/main/scala/apb/ApbMux.scala:126:24
     .clock                (clock),
     .reset                (reset),
-    .io_master_paddr      (_arb_io_merged_paddr),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_psel       (_arb_io_merged_psel),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_penable    (_arb_io_merged_penable),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_pwrite     (_arb_io_merged_pwrite),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_pstrb      (_arb_io_merged_pstrb),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_pwdata     (_arb_io_merged_pwdata),	// src/main/scala/apb/ApbArbiter.scala:13:21
+    .io_master_paddr      (_arb_io_merged_paddr),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_psel       (_arb_io_merged_psel),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_penable    (_arb_io_merged_penable),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_pwrite     (_arb_io_merged_pwrite),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_pstrb      (_arb_io_merged_pstrb),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_pwdata     (_arb_io_merged_pwdata),	// src/main/scala/apb/ApbArbiter.scala:14:21
     .io_master_pready     (_apbMux_io_master_pready),
     .io_master_prdata     (_apbMux_io_master_prdata),
     .io_targets_0_paddr   (_apbMux_io_targets_0_paddr),
@@ -2422,528 +3336,56 @@ module LerosCaravel_ChipFoundrySram(	// src/main/scala/caravel/LerosCaravel.scal
     .io_targets_0_pwrite  (_apbMux_io_targets_0_pwrite),
     .io_targets_0_pstrb   (_apbMux_io_targets_0_pstrb),
     .io_targets_0_pwdata  (_apbMux_io_targets_0_pwdata),
-    .io_targets_0_pready  (_instrMem_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:79:24
-    .io_targets_0_prdata  (_instrMem_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:79:24
+    .io_targets_0_pready  (_instrMem_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:80:24
+    .io_targets_0_prdata  (_instrMem_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:80:24
     .io_targets_1_paddr   (_apbMux_io_targets_1_paddr),
     .io_targets_1_psel    (_apbMux_io_targets_1_psel),
     .io_targets_1_penable (_apbMux_io_targets_1_penable),
     .io_targets_1_pwrite  (_apbMux_io_targets_1_pwrite),
     .io_targets_1_pwdata  (_apbMux_io_targets_1_pwdata),
-    .io_targets_1_pready  (_regBlock_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:83:24
-    .io_targets_1_prdata  (_regBlock_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:83:24
+    .io_targets_1_pready  (_regBlock_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:84:24
+    .io_targets_1_prdata  (_regBlock_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:84:24
     .io_targets_2_psel    (_apbMux_io_targets_2_psel),
     .io_targets_2_penable (_apbMux_io_targets_2_penable),
     .io_targets_2_pwrite  (_apbMux_io_targets_2_pwrite),
     .io_targets_2_pwdata  (_apbMux_io_targets_2_pwdata),
-    .io_targets_2_pready  (_sysCtrl_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:72:23
-    .io_targets_2_prdata  (_sysCtrl_apbPort_prdata)	// src/main/scala/caravel/LerosCaravel.scala:72:23
+    .io_targets_2_pready  (_sysCtrl_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:73:23
+    .io_targets_2_prdata  (_sysCtrl_apbPort_prdata)	// src/main/scala/caravel/LerosCaravel.scala:73:23
   );
-  DataMemMux dmemMux (	// src/main/scala/dtu/DataMemMux.scala:116:25
+  DataMemMux_1 dmemMux (	// src/main/scala/dtu/DataMemMux.scala:116:25
     .clock               (clock),
     .reset               (reset),
-    .io_master_rdAddr    (_leros_dmemIO_rdAddr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
+    .io_master_rdAddr    (_leros_dmemIO_rdAddr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
     .io_master_rdData    (_dmemMux_io_master_rdData),
-    .io_master_wrAddr    (_leros_dmemIO_wrAddr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_master_wrData    (_leros_dmemIO_wrData),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_master_wr        (_leros_dmemIO_wr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_master_wrMask    (_leros_dmemIO_wrMask),	// src/main/scala/caravel/LerosCaravel.scala:76:21
+    .io_master_wrAddr    (_leros_dmemIO_wrAddr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .io_master_wrData    (_leros_dmemIO_wrData),	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .io_master_wr        (_leros_dmemIO_wr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .io_master_wrMask    (_leros_dmemIO_wrMask),	// src/main/scala/caravel/LerosCaravel.scala:77:21
     .io_targets_0_rdAddr (_dmemMux_io_targets_0_rdAddr),
-    .io_targets_0_rdData (_dmem_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:85:20
+    .io_targets_0_rdData (_dmem_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:86:20
     .io_targets_0_wrAddr (_dmemMux_io_targets_0_wrAddr),
     .io_targets_0_wrData (_dmemMux_io_targets_0_wrData),
     .io_targets_0_wr     (_dmemMux_io_targets_0_wr),
     .io_targets_0_wrMask (_dmemMux_io_targets_0_wrMask),
     .io_targets_1_rdAddr (_dmemMux_io_targets_1_rdAddr),
-    .io_targets_1_rdData (_regBlock_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:83:24
+    .io_targets_1_rdData (_regBlock_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:84:24
     .io_targets_1_wrAddr (_dmemMux_io_targets_1_wrAddr),
     .io_targets_1_wrData (_dmemMux_io_targets_1_wrData),
     .io_targets_1_wr     (_dmemMux_io_targets_1_wr),
     .io_targets_2_rdAddr (_dmemMux_io_targets_2_rdAddr),
-    .io_targets_2_rdData (_gpio_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:84:20
+    .io_targets_2_rdData (_gpio_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:85:20
     .io_targets_2_wrAddr (_dmemMux_io_targets_2_wrAddr),
     .io_targets_2_wrData (_dmemMux_io_targets_2_wrData),
     .io_targets_2_wr     (_dmemMux_io_targets_2_wr),
     .io_targets_3_rdAddr (_dmemMux_io_targets_3_rdAddr),
-    .io_targets_3_rdData (_uart_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:86:20
+    .io_targets_3_rdData (_uart_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:87:20
     .io_targets_3_wrAddr (_dmemMux_io_targets_3_wrAddr),
     .io_targets_3_wrData (_dmemMux_io_targets_3_wrData),
     .io_targets_3_wr     (_dmemMux_io_targets_3_wr)
   );
   assign io_gpio_out =
-    {_gpio_gpioPort_out, 1'h0, _uart_uartPins_tx, 1'h0, _ponte_io_uart_tx};	// src/main/scala/caravel/LerosCaravel.scala:51:7, :73:21, :84:20, :86:20, :112:36
-  assign io_gpio_oe = {_gpio_gpioPort_oe, 4'hA};	// src/main/scala/caravel/LerosCaravel.scala:51:7, :84:20, :118:34
-endmodule
-
-// external module sky130_sram_1kbyte_1rw1r_32x256_8
-
-module Sky130Sram256(	// src/main/scala/mem/Sky130SramMacros.scala:21:7
-  input         clock,	// src/main/scala/mem/Sky130SramMacros.scala:21:7
-  input  [7:0]  io_wordAddr,	// src/main/scala/mem/Sky130SramMacros.scala:27:14
-  input         io_write,	// src/main/scala/mem/Sky130SramMacros.scala:27:14
-  input  [31:0] io_wrData,	// src/main/scala/mem/Sky130SramMacros.scala:27:14
-  output [31:0] io_rdData,	// src/main/scala/mem/Sky130SramMacros.scala:27:14
-  input  [3:0]  io_mask	// src/main/scala/mem/Sky130SramMacros.scala:27:14
-);
-
-  sky130_sram_1kbyte_1rw1r_32x256_8 mem (	// src/main/scala/mem/Sky130SramMacros.scala:35:39
-    .clk0   (clock),
-    .csb0   (1'h0),	// src/main/scala/mem/Sky130SramMacros.scala:42:15
-    .web0   (~io_write),	// src/main/scala/mem/Sky130SramMacros.scala:43:18
-    .wmask0 (io_mask),
-    .addr0  (io_wordAddr),
-    .din0   (io_wrData),
-    .dout0  (io_rdData),
-    .clk1   (1'h0),	// src/main/scala/mem/Sky130SramMacros.scala:42:15
-    .csb1   (1'h1),	// src/main/scala/mem/Sky130SramMacros.scala:50:15
-    .addr1  (8'h0),	// src/main/scala/mem/Sky130SramMacros.scala:51:16
-    .dout1  (/* unused */)
-  );
-endmodule
-
-module InstructionMemory_1(	// src/main/scala/dtu/InstructionMemory.scala:29:7
-  input         clock,	// src/main/scala/dtu/InstructionMemory.scala:29:7
-                reset,	// src/main/scala/dtu/InstructionMemory.scala:29:7
-  input  [9:0]  instrPort_addr,	// src/main/scala/dtu/InstructionMemory.scala:35:21
-  output [15:0] instrPort_instr,	// src/main/scala/dtu/InstructionMemory.scala:35:21
-  input  [9:0]  apbPort_paddr,	// src/main/scala/dtu/InstructionMemory.scala:36:19
-  input         apbPort_psel,	// src/main/scala/dtu/InstructionMemory.scala:36:19
-                apbPort_penable,	// src/main/scala/dtu/InstructionMemory.scala:36:19
-                apbPort_pwrite,	// src/main/scala/dtu/InstructionMemory.scala:36:19
-  input  [3:0]  apbPort_pstrb,	// src/main/scala/dtu/InstructionMemory.scala:36:19
-  input  [31:0] apbPort_pwdata,	// src/main/scala/dtu/InstructionMemory.scala:36:19
-  output        apbPort_pready,	// src/main/scala/dtu/InstructionMemory.scala:36:19
-  output [31:0] apbPort_prdata	// src/main/scala/dtu/InstructionMemory.scala:36:19
-);
-
-  wire [31:0] _m_io_rdData;	// src/main/scala/mem/Sky130SramMacros.scala:11:19
-  reg         ackReg;	// src/main/scala/dtu/InstructionMemory.scala:47:23
-  reg         instrPort_instr_REG;	// src/main/scala/dtu/InstructionMemory.scala:67:12
-  wire        _GEN = apbPort_psel & apbPort_penable & apbPort_pwrite;	// src/main/scala/dtu/InstructionMemory.scala:72:40
-  always @(posedge clock) begin	// src/main/scala/dtu/InstructionMemory.scala:29:7
-    if (reset)	// src/main/scala/dtu/InstructionMemory.scala:29:7
-      ackReg <= 1'h0;	// src/main/scala/dtu/InstructionMemory.scala:29:7, :47:23
-    else	// src/main/scala/dtu/InstructionMemory.scala:29:7
-      ackReg <= ~ackReg & (apbPort_psel | ackReg);	// src/main/scala/dtu/InstructionMemory.scala:47:23, :48:16, :49:12, :50:28, :51:12
-    instrPort_instr_REG <= instrPort_addr[0];	// src/main/scala/dtu/InstructionMemory.scala:67:{12,27}
-  end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/dtu/InstructionMemory.scala:29:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/InstructionMemory.scala:29:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/dtu/InstructionMemory.scala:29:7
-    `endif // FIRRTL_BEFORE_INITIAL
-    logic [31:0] _RANDOM[0:0];	// src/main/scala/dtu/InstructionMemory.scala:29:7
-    initial begin	// src/main/scala/dtu/InstructionMemory.scala:29:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/dtu/InstructionMemory.scala:29:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/dtu/InstructionMemory.scala:29:7
-      `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/dtu/InstructionMemory.scala:29:7
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/dtu/InstructionMemory.scala:29:7
-        ackReg = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/dtu/InstructionMemory.scala:29:7, :47:23
-        instrPort_instr_REG = _RANDOM[/*Zero width*/ 1'b0][1];	// src/main/scala/dtu/InstructionMemory.scala:29:7, :47:23, :67:12
-      `endif // RANDOMIZE_REG_INIT
-    end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/InstructionMemory.scala:29:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/dtu/InstructionMemory.scala:29:7
-    `endif // FIRRTL_AFTER_INITIAL
-  `endif // ENABLE_INITIAL_REG_
-  Sky130Sram256 m (	// src/main/scala/mem/Sky130SramMacros.scala:11:19
-    .clock       (clock),
-    .io_wordAddr (_GEN | apbPort_psel ? apbPort_paddr[9:2] : instrPort_addr[8:1]),	// src/main/scala/dtu/InstructionMemory.scala:56:28, :58:18, :59:19, :72:{40,59}, src/main/scala/mem/Sky130SramMacros.scala:54:17, :59:17
-    .io_write    (_GEN),	// src/main/scala/dtu/InstructionMemory.scala:72:40
-    .io_wrData   (apbPort_pwdata),
-    .io_rdData   (_m_io_rdData),
-    .io_mask     (apbPort_pstrb)
-  );
-  assign instrPort_instr = instrPort_instr_REG ? _m_io_rdData[31:16] : _m_io_rdData[15:0];	// src/main/scala/dtu/InstructionMemory.scala:29:7, :66:25, :67:12, :68:11, :69:11, src/main/scala/mem/Sky130SramMacros.scala:11:19
-  assign apbPort_pready = ackReg;	// src/main/scala/dtu/InstructionMemory.scala:29:7, :47:23
-  assign apbPort_prdata = _m_io_rdData;	// src/main/scala/dtu/InstructionMemory.scala:29:7, src/main/scala/mem/Sky130SramMacros.scala:11:19
-endmodule
-
-module DataMemory_1(	// src/main/scala/dtu/DataMemory.scala:16:7
-  input         clock,	// src/main/scala/dtu/DataMemory.scala:16:7
-  input  [7:0]  dmemPort_rdAddr,	// src/main/scala/dtu/DataMemory.scala:20:20
-  output [31:0] dmemPort_rdData,	// src/main/scala/dtu/DataMemory.scala:20:20
-  input  [7:0]  dmemPort_wrAddr,	// src/main/scala/dtu/DataMemory.scala:20:20
-  input  [31:0] dmemPort_wrData,	// src/main/scala/dtu/DataMemory.scala:20:20
-  input         dmemPort_wr,	// src/main/scala/dtu/DataMemory.scala:20:20
-  input  [3:0]  dmemPort_wrMask	// src/main/scala/dtu/DataMemory.scala:20:20
-);
-
-  Sky130Sram256 m (	// src/main/scala/mem/Sky130SramMacros.scala:11:19
-    .clock       (clock),
-    .io_wordAddr (dmemPort_wr ? dmemPort_wrAddr : dmemPort_rdAddr),	// src/main/scala/dtu/DataMemory.scala:26:21, src/main/scala/mem/Sky130SramMacros.scala:54:17, :59:17
-    .io_write    (dmemPort_wr),
-    .io_wrData   (dmemPort_wrData),
-    .io_rdData   (dmemPort_rdData),
-    .io_mask     (dmemPort_wrMask)
-  );
-endmodule
-
-module LerosCaravel_OpenRamSky130(	// src/main/scala/caravel/LerosCaravel.scala:51:7
-  input         clock,	// src/main/scala/caravel/LerosCaravel.scala:51:7
-                reset,	// src/main/scala/caravel/LerosCaravel.scala:51:7
-                io_wb_cyc,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-                io_wb_we,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  input  [3:0]  io_wb_sel,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  input  [31:0] io_wb_dat_i,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  input  [11:0] io_wb_adr,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  output [31:0] io_wb_dat_o,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  output        io_wb_ack,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  input  [5:0]  io_gpio_in,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  output [5:0]  io_gpio_out,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-                io_gpio_oe	// src/main/scala/caravel/LerosCaravel.scala:55:14
-);
-
-  wire [31:0] _dmemMux_io_master_rdData;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire [15:0] _dmemMux_io_targets_0_rdAddr;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire [15:0] _dmemMux_io_targets_0_wrAddr;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire [31:0] _dmemMux_io_targets_0_wrData;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire        _dmemMux_io_targets_0_wr;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire [3:0]  _dmemMux_io_targets_0_wrMask;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire [15:0] _dmemMux_io_targets_1_rdAddr;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire [15:0] _dmemMux_io_targets_1_wrAddr;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire [31:0] _dmemMux_io_targets_1_wrData;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire        _dmemMux_io_targets_1_wr;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire [15:0] _dmemMux_io_targets_2_rdAddr;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire [15:0] _dmemMux_io_targets_2_wrAddr;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire [31:0] _dmemMux_io_targets_2_wrData;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire        _dmemMux_io_targets_2_wr;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire [15:0] _dmemMux_io_targets_3_rdAddr;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire [15:0] _dmemMux_io_targets_3_wrAddr;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire [31:0] _dmemMux_io_targets_3_wrData;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire        _dmemMux_io_targets_3_wr;	// src/main/scala/dtu/DataMemMux.scala:116:25
-  wire        _apbMux_io_master_pready;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire [31:0] _apbMux_io_master_prdata;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire [15:0] _apbMux_io_targets_0_paddr;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire        _apbMux_io_targets_0_psel;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire        _apbMux_io_targets_0_penable;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire        _apbMux_io_targets_0_pwrite;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire [3:0]  _apbMux_io_targets_0_pstrb;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire [31:0] _apbMux_io_targets_0_pwdata;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire [15:0] _apbMux_io_targets_1_paddr;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire        _apbMux_io_targets_1_psel;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire        _apbMux_io_targets_1_penable;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire        _apbMux_io_targets_1_pwrite;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire [31:0] _apbMux_io_targets_1_pwdata;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire        _apbMux_io_targets_2_psel;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire        _apbMux_io_targets_2_penable;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire        _apbMux_io_targets_2_pwrite;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire [31:0] _apbMux_io_targets_2_pwdata;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire        _arb_io_masters_0_pready;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [31:0] _arb_io_masters_0_prdata;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire        _arb_io_masters_1_pready;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [31:0] _arb_io_masters_1_prdata;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [15:0] _arb_io_merged_paddr;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire        _arb_io_merged_psel;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire        _arb_io_merged_penable;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire        _arb_io_merged_pwrite;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [3:0]  _arb_io_merged_pstrb;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [31:0] _arb_io_merged_pwdata;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [31:0] _bridge_io_wb_dat_o;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire        _bridge_io_wb_ack;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire [11:0] _bridge_io_apb_paddr;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire        _bridge_io_apb_psel;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire        _bridge_io_apb_penable;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire        _bridge_io_apb_pwrite;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire [3:0]  _bridge_io_apb_pstrb;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire [31:0] _bridge_io_apb_pwdata;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire        _stage_io_out_stb;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire        _stage_io_out_cyc;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire        _stage_io_out_we;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire [3:0]  _stage_io_out_sel;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire [31:0] _stage_io_out_dat_i;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire [11:0] _stage_io_out_adr;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire        _uart_uartPins_tx;	// src/main/scala/caravel/LerosCaravel.scala:86:20
-  wire [31:0] _uart_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:86:20
-  wire [31:0] _dmem_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:85:20
-  wire [31:0] _gpio_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:84:20
-  wire [1:0]  _gpio_gpioPort_out;	// src/main/scala/caravel/LerosCaravel.scala:84:20
-  wire [1:0]  _gpio_gpioPort_oe;	// src/main/scala/caravel/LerosCaravel.scala:84:20
-  wire        _regBlock_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:83:24
-  wire [31:0] _regBlock_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:83:24
-  wire [31:0] _regBlock_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:83:24
-  wire [15:0] _rom_io_instr;	// src/main/scala/caravel/LerosCaravel.scala:80:19
-  wire [15:0] _instrMem_instrPort_instr;	// src/main/scala/caravel/LerosCaravel.scala:79:24
-  wire        _instrMem_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:79:24
-  wire [31:0] _instrMem_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:79:24
-  wire [9:0]  _leros_imemIO_addr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [15:0] _leros_dmemIO_rdAddr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [15:0] _leros_dmemIO_wrAddr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [31:0] _leros_dmemIO_wrData;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire        _leros_dmemIO_wr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [3:0]  _leros_dmemIO_wrMask;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire        _ponte_io_uart_tx;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire [15:0] _ponte_io_apb_paddr;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire        _ponte_io_apb_psel;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire        _ponte_io_apb_penable;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire        _ponte_io_apb_pwrite;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire [31:0] _ponte_io_apb_pwdata;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire        _sysCtrl_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  wire [31:0] _sysCtrl_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  wire        _sysCtrl_ctrlPort_lerosReset;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  wire        _sysCtrl_ctrlPort_lerosBootFromRam;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  wire        _sysCtrl_ctrlPort_lerosUartLoopBack;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  reg         leros_reset_REG;	// src/main/scala/caravel/LerosCaravel.scala:77:25
-  always @(posedge clock)	// src/main/scala/caravel/LerosCaravel.scala:51:7
-    leros_reset_REG <= _sysCtrl_ctrlPort_lerosReset | reset;	// src/main/scala/caravel/LerosCaravel.scala:72:23, :77:{25,54}
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/caravel/LerosCaravel.scala:51:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:51:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:51:7
-    `endif // FIRRTL_BEFORE_INITIAL
-    logic [31:0] _RANDOM[0:0];	// src/main/scala/caravel/LerosCaravel.scala:51:7
-    initial begin	// src/main/scala/caravel/LerosCaravel.scala:51:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/caravel/LerosCaravel.scala:51:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/caravel/LerosCaravel.scala:51:7
-      `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/caravel/LerosCaravel.scala:51:7
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/caravel/LerosCaravel.scala:51:7
-        leros_reset_REG = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/caravel/LerosCaravel.scala:51:7, :77:25
-      `endif // RANDOMIZE_REG_INIT
-    end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:51:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:51:7
-    `endif // FIRRTL_AFTER_INITIAL
-  `endif // ENABLE_INITIAL_REG_
-  SystemControl sysCtrl (	// src/main/scala/caravel/LerosCaravel.scala:72:23
-    .clock                      (clock),
-    .reset                      (reset),
-    .apbPort_psel               (_apbMux_io_targets_2_psel),	// src/main/scala/apb/ApbMux.scala:126:24
-    .apbPort_penable            (_apbMux_io_targets_2_penable),	// src/main/scala/apb/ApbMux.scala:126:24
-    .apbPort_pwrite             (_apbMux_io_targets_2_pwrite),	// src/main/scala/apb/ApbMux.scala:126:24
-    .apbPort_pwdata             (_apbMux_io_targets_2_pwdata),	// src/main/scala/apb/ApbMux.scala:126:24
-    .apbPort_pready             (_sysCtrl_apbPort_pready),
-    .apbPort_prdata             (_sysCtrl_apbPort_prdata),
-    .ctrlPort_lerosReset        (_sysCtrl_ctrlPort_lerosReset),
-    .ctrlPort_lerosBootFromRam  (_sysCtrl_ctrlPort_lerosBootFromRam),
-    .ctrlPort_lerosUartLoopBack (_sysCtrl_ctrlPort_lerosUartLoopBack)
-  );
-  Ponte ponte (	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .clock          (clock),
-    .reset          (reset),
-    .io_uart_tx     (_ponte_io_uart_tx),
-    .io_uart_rx     (io_gpio_in[1]),	// src/main/scala/caravel/LerosCaravel.scala:70:27
-    .io_apb_paddr   (_ponte_io_apb_paddr),
-    .io_apb_psel    (_ponte_io_apb_psel),
-    .io_apb_penable (_ponte_io_apb_penable),
-    .io_apb_pwrite  (_ponte_io_apb_pwrite),
-    .io_apb_pwdata  (_ponte_io_apb_pwdata),
-    .io_apb_pready  (_arb_io_masters_0_pready),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_apb_prdata  (_arb_io_masters_0_prdata)	// src/main/scala/apb/ApbArbiter.scala:13:21
-  );
-  Leros leros (	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .clock         (clock),
-    .reset         (leros_reset_REG),	// src/main/scala/caravel/LerosCaravel.scala:77:25
-    .imemIO_addr   (_leros_imemIO_addr),
-    .imemIO_instr
-      (_sysCtrl_ctrlPort_lerosBootFromRam ? _instrMem_instrPort_instr : _rom_io_instr),	// src/main/scala/caravel/LerosCaravel.scala:72:23, :79:24, :80:19, :91:28
-    .dmemIO_rdAddr (_leros_dmemIO_rdAddr),
-    .dmemIO_rdData (_dmemMux_io_master_rdData),	// src/main/scala/dtu/DataMemMux.scala:116:25
-    .dmemIO_wrAddr (_leros_dmemIO_wrAddr),
-    .dmemIO_wrData (_leros_dmemIO_wrData),
-    .dmemIO_wr     (_leros_dmemIO_wr),
-    .dmemIO_wrMask (_leros_dmemIO_wrMask)
-  );
-  InstructionMemory_1 instrMem (	// src/main/scala/caravel/LerosCaravel.scala:79:24
-    .clock           (clock),
-    .reset           (reset),
-    .instrPort_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .instrPort_instr (_instrMem_instrPort_instr),
-    .apbPort_paddr   (_apbMux_io_targets_0_paddr[9:0]),	// src/main/scala/apb/ApbMux.scala:126:24, :132:16
-    .apbPort_psel    (_apbMux_io_targets_0_psel),	// src/main/scala/apb/ApbMux.scala:126:24
-    .apbPort_penable (_apbMux_io_targets_0_penable),	// src/main/scala/apb/ApbMux.scala:126:24
-    .apbPort_pwrite  (_apbMux_io_targets_0_pwrite),	// src/main/scala/apb/ApbMux.scala:126:24
-    .apbPort_pstrb   (_apbMux_io_targets_0_pstrb),	// src/main/scala/apb/ApbMux.scala:126:24
-    .apbPort_pwdata  (_apbMux_io_targets_0_pwdata),	// src/main/scala/apb/ApbMux.scala:126:24
-    .apbPort_pready  (_instrMem_apbPort_pready),
-    .apbPort_prdata  (_instrMem_apbPort_prdata)
-  );
-  InstrMem rom (	// src/main/scala/caravel/LerosCaravel.scala:80:19
-    .clock    (clock),
-    .reset    (reset),
-    .io_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_instr (_rom_io_instr)
-  );
-  RegBlock regBlock (	// src/main/scala/caravel/LerosCaravel.scala:83:24
-    .clock           (clock),
-    .reset           (reset),
-    .apbPort_paddr   (_apbMux_io_targets_1_paddr[3:0]),	// src/main/scala/apb/ApbMux.scala:126:24, :132:16
-    .apbPort_psel    (_apbMux_io_targets_1_psel),	// src/main/scala/apb/ApbMux.scala:126:24
-    .apbPort_penable (_apbMux_io_targets_1_penable),	// src/main/scala/apb/ApbMux.scala:126:24
-    .apbPort_pwrite  (_apbMux_io_targets_1_pwrite),	// src/main/scala/apb/ApbMux.scala:126:24
-    .apbPort_pwdata  (_apbMux_io_targets_1_pwdata),	// src/main/scala/apb/ApbMux.scala:126:24
-    .apbPort_pready  (_regBlock_apbPort_pready),
-    .apbPort_prdata  (_regBlock_apbPort_prdata),
-    .dmemPort_rdAddr (_dmemMux_io_targets_1_rdAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
-    .dmemPort_rdData (_regBlock_dmemPort_rdData),
-    .dmemPort_wrAddr (_dmemMux_io_targets_1_wrAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
-    .dmemPort_wrData (_dmemMux_io_targets_1_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
-    .dmemPort_wr     (_dmemMux_io_targets_1_wr)	// src/main/scala/dtu/DataMemMux.scala:116:25
-  );
-  Gpio gpio (	// src/main/scala/caravel/LerosCaravel.scala:84:20
-    .clock           (clock),
-    .reset           (reset),
-    .dmemPort_rdAddr (_dmemMux_io_targets_2_rdAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
-    .dmemPort_rdData (_gpio_dmemPort_rdData),
-    .dmemPort_wrAddr (_dmemMux_io_targets_2_wrAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
-    .dmemPort_wrData (_dmemMux_io_targets_2_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
-    .dmemPort_wr     (_dmemMux_io_targets_2_wr),	// src/main/scala/dtu/DataMemMux.scala:116:25
-    .gpioPort_in     (io_gpio_in[5:4]),	// src/main/scala/caravel/LerosCaravel.scala:119:33
-    .gpioPort_out    (_gpio_gpioPort_out),
-    .gpioPort_oe     (_gpio_gpioPort_oe)
-  );
-  DataMemory_1 dmem (	// src/main/scala/caravel/LerosCaravel.scala:85:20
-    .clock           (clock),
-    .dmemPort_rdAddr (_dmemMux_io_targets_0_rdAddr[7:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
-    .dmemPort_rdData (_dmem_dmemPort_rdData),
-    .dmemPort_wrAddr (_dmemMux_io_targets_0_wrAddr[7:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
-    .dmemPort_wrData (_dmemMux_io_targets_0_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
-    .dmemPort_wr     (_dmemMux_io_targets_0_wr),	// src/main/scala/dtu/DataMemMux.scala:116:25
-    .dmemPort_wrMask (_dmemMux_io_targets_0_wrMask)	// src/main/scala/dtu/DataMemMux.scala:116:25
-  );
-  Uart uart (	// src/main/scala/caravel/LerosCaravel.scala:86:20
-    .clock           (clock),
-    .reset           (reset),
-    .uartPins_tx     (_uart_uartPins_tx),
-    .uartPins_rx
-      (_sysCtrl_ctrlPort_lerosUartLoopBack ? _uart_uartPins_tx : io_gpio_in[3]),	// src/main/scala/caravel/LerosCaravel.scala:69:27, :72:23, :86:20, :87:26
-    .dmemPort_rdAddr (_dmemMux_io_targets_3_rdAddr[0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
-    .dmemPort_rdData (_uart_dmemPort_rdData),
-    .dmemPort_wrAddr (_dmemMux_io_targets_3_wrAddr[0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
-    .dmemPort_wrData (_dmemMux_io_targets_3_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
-    .dmemPort_wr     (_dmemMux_io_targets_3_wr)	// src/main/scala/dtu/DataMemMux.scala:116:25
-  );
-  WishbonePipelineStage stage (	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .clock        (clock),
-    .reset        (reset),
-    .io_in_cyc    (io_wb_cyc),
-    .io_in_we     (io_wb_we),
-    .io_in_sel    (io_wb_sel),
-    .io_in_dat_i  (io_wb_dat_i),
-    .io_in_adr    (io_wb_adr),
-    .io_in_dat_o  (io_wb_dat_o),
-    .io_in_ack    (io_wb_ack),
-    .io_out_stb   (_stage_io_out_stb),
-    .io_out_cyc   (_stage_io_out_cyc),
-    .io_out_we    (_stage_io_out_we),
-    .io_out_sel   (_stage_io_out_sel),
-    .io_out_dat_i (_stage_io_out_dat_i),
-    .io_out_adr   (_stage_io_out_adr),
-    .io_out_dat_o (_bridge_io_wb_dat_o),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-    .io_out_ack   (_bridge_io_wb_ack)	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  );
-  WishboneToApb bridge (	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-    .clock          (clock),
-    .reset          (reset),
-    .io_wb_stb      (_stage_io_out_stb),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_cyc      (_stage_io_out_cyc),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_we       (_stage_io_out_we),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_sel      (_stage_io_out_sel),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_dat_i    (_stage_io_out_dat_i),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_adr      (_stage_io_out_adr),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_dat_o    (_bridge_io_wb_dat_o),
-    .io_wb_ack      (_bridge_io_wb_ack),
-    .io_apb_paddr   (_bridge_io_apb_paddr),
-    .io_apb_psel    (_bridge_io_apb_psel),
-    .io_apb_penable (_bridge_io_apb_penable),
-    .io_apb_pwrite  (_bridge_io_apb_pwrite),
-    .io_apb_pstrb   (_bridge_io_apb_pstrb),
-    .io_apb_pwdata  (_bridge_io_apb_pwdata),
-    .io_apb_pready  (_arb_io_masters_1_pready),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_apb_prdata  (_arb_io_masters_1_prdata)	// src/main/scala/apb/ApbArbiter.scala:13:21
-  );
-  ApbArbiter arb (	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .clock                (clock),
-    .reset                (reset),
-    .io_masters_0_paddr   (_ponte_io_apb_paddr),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_psel    (_ponte_io_apb_psel),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_penable (_ponte_io_apb_penable),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_pwrite  (_ponte_io_apb_pwrite),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_pwdata  (_ponte_io_apb_pwdata),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_pready  (_arb_io_masters_0_pready),
-    .io_masters_0_prdata  (_arb_io_masters_0_prdata),
-    .io_masters_1_paddr   ({4'h0, _bridge_io_apb_paddr}),	// src/main/scala/apb/ApbArbiter.scala:19:23, src/main/scala/wishbone/WishboneToApb.scala:48:24
-    .io_masters_1_psel    (_bridge_io_apb_psel),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-    .io_masters_1_penable (_bridge_io_apb_penable),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-    .io_masters_1_pwrite  (_bridge_io_apb_pwrite),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-    .io_masters_1_pstrb   (_bridge_io_apb_pstrb),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-    .io_masters_1_pwdata  (_bridge_io_apb_pwdata),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-    .io_masters_1_pready  (_arb_io_masters_1_pready),
-    .io_masters_1_prdata  (_arb_io_masters_1_prdata),
-    .io_merged_paddr      (_arb_io_merged_paddr),
-    .io_merged_psel       (_arb_io_merged_psel),
-    .io_merged_penable    (_arb_io_merged_penable),
-    .io_merged_pwrite     (_arb_io_merged_pwrite),
-    .io_merged_pstrb      (_arb_io_merged_pstrb),
-    .io_merged_pwdata     (_arb_io_merged_pwdata),
-    .io_merged_pready     (_apbMux_io_master_pready),	// src/main/scala/apb/ApbMux.scala:126:24
-    .io_merged_prdata     (_apbMux_io_master_prdata)	// src/main/scala/apb/ApbMux.scala:126:24
-  );
-  ApbMux apbMux (	// src/main/scala/apb/ApbMux.scala:126:24
-    .clock                (clock),
-    .reset                (reset),
-    .io_master_paddr      (_arb_io_merged_paddr),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_psel       (_arb_io_merged_psel),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_penable    (_arb_io_merged_penable),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_pwrite     (_arb_io_merged_pwrite),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_pstrb      (_arb_io_merged_pstrb),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_pwdata     (_arb_io_merged_pwdata),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_pready     (_apbMux_io_master_pready),
-    .io_master_prdata     (_apbMux_io_master_prdata),
-    .io_targets_0_paddr   (_apbMux_io_targets_0_paddr),
-    .io_targets_0_psel    (_apbMux_io_targets_0_psel),
-    .io_targets_0_penable (_apbMux_io_targets_0_penable),
-    .io_targets_0_pwrite  (_apbMux_io_targets_0_pwrite),
-    .io_targets_0_pstrb   (_apbMux_io_targets_0_pstrb),
-    .io_targets_0_pwdata  (_apbMux_io_targets_0_pwdata),
-    .io_targets_0_pready  (_instrMem_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:79:24
-    .io_targets_0_prdata  (_instrMem_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:79:24
-    .io_targets_1_paddr   (_apbMux_io_targets_1_paddr),
-    .io_targets_1_psel    (_apbMux_io_targets_1_psel),
-    .io_targets_1_penable (_apbMux_io_targets_1_penable),
-    .io_targets_1_pwrite  (_apbMux_io_targets_1_pwrite),
-    .io_targets_1_pwdata  (_apbMux_io_targets_1_pwdata),
-    .io_targets_1_pready  (_regBlock_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:83:24
-    .io_targets_1_prdata  (_regBlock_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:83:24
-    .io_targets_2_psel    (_apbMux_io_targets_2_psel),
-    .io_targets_2_penable (_apbMux_io_targets_2_penable),
-    .io_targets_2_pwrite  (_apbMux_io_targets_2_pwrite),
-    .io_targets_2_pwdata  (_apbMux_io_targets_2_pwdata),
-    .io_targets_2_pready  (_sysCtrl_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:72:23
-    .io_targets_2_prdata  (_sysCtrl_apbPort_prdata)	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  );
-  DataMemMux dmemMux (	// src/main/scala/dtu/DataMemMux.scala:116:25
-    .clock               (clock),
-    .reset               (reset),
-    .io_master_rdAddr    (_leros_dmemIO_rdAddr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_master_rdData    (_dmemMux_io_master_rdData),
-    .io_master_wrAddr    (_leros_dmemIO_wrAddr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_master_wrData    (_leros_dmemIO_wrData),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_master_wr        (_leros_dmemIO_wr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_master_wrMask    (_leros_dmemIO_wrMask),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_targets_0_rdAddr (_dmemMux_io_targets_0_rdAddr),
-    .io_targets_0_rdData (_dmem_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:85:20
-    .io_targets_0_wrAddr (_dmemMux_io_targets_0_wrAddr),
-    .io_targets_0_wrData (_dmemMux_io_targets_0_wrData),
-    .io_targets_0_wr     (_dmemMux_io_targets_0_wr),
-    .io_targets_0_wrMask (_dmemMux_io_targets_0_wrMask),
-    .io_targets_1_rdAddr (_dmemMux_io_targets_1_rdAddr),
-    .io_targets_1_rdData (_regBlock_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:83:24
-    .io_targets_1_wrAddr (_dmemMux_io_targets_1_wrAddr),
-    .io_targets_1_wrData (_dmemMux_io_targets_1_wrData),
-    .io_targets_1_wr     (_dmemMux_io_targets_1_wr),
-    .io_targets_2_rdAddr (_dmemMux_io_targets_2_rdAddr),
-    .io_targets_2_rdData (_gpio_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:84:20
-    .io_targets_2_wrAddr (_dmemMux_io_targets_2_wrAddr),
-    .io_targets_2_wrData (_dmemMux_io_targets_2_wrData),
-    .io_targets_2_wr     (_dmemMux_io_targets_2_wr),
-    .io_targets_3_rdAddr (_dmemMux_io_targets_3_rdAddr),
-    .io_targets_3_rdData (_uart_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:86:20
-    .io_targets_3_wrAddr (_dmemMux_io_targets_3_wrAddr),
-    .io_targets_3_wrData (_dmemMux_io_targets_3_wrData),
-    .io_targets_3_wr     (_dmemMux_io_targets_3_wr)
-  );
-  assign io_gpio_out =
-    {_gpio_gpioPort_out, 1'h0, _uart_uartPins_tx, 1'h0, _ponte_io_uart_tx};	// src/main/scala/caravel/LerosCaravel.scala:51:7, :73:21, :84:20, :86:20, :112:36
-  assign io_gpio_oe = {_gpio_gpioPort_oe, 4'hA};	// src/main/scala/caravel/LerosCaravel.scala:51:7, :84:20, :118:34
+    {_gpio_gpioPort_out, 1'h0, _uart_uartPins_tx, 1'h0, _ponte_io_uart_tx};	// src/main/scala/caravel/LerosCaravel.scala:52:7, :74:21, :85:20, :87:20, :113:36
+  assign io_gpio_oe = {_gpio_gpioPort_oe, 4'hA};	// src/main/scala/caravel/LerosCaravel.scala:52:7, :85:20, :119:34
 endmodule
 
 // external module DFFRAM256x32
@@ -3042,19 +3484,20 @@ module DataMemory_2(	// src/main/scala/dtu/DataMemory.scala:16:7
   );
 endmodule
 
-module LerosCaravel_DffRam(	// src/main/scala/caravel/LerosCaravel.scala:51:7
-  input         clock,	// src/main/scala/caravel/LerosCaravel.scala:51:7
-                reset,	// src/main/scala/caravel/LerosCaravel.scala:51:7
-                io_wb_cyc,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-                io_wb_we,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  input  [3:0]  io_wb_sel,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  input  [31:0] io_wb_dat_i,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  input  [11:0] io_wb_adr,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  output [31:0] io_wb_dat_o,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  output        io_wb_ack,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  input  [5:0]  io_gpio_in,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  output [5:0]  io_gpio_out,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-                io_gpio_oe	// src/main/scala/caravel/LerosCaravel.scala:55:14
+module LerosCaravel_DffRam(	// src/main/scala/caravel/LerosCaravel.scala:52:7
+  input         clock,	// src/main/scala/caravel/LerosCaravel.scala:52:7
+                reset,	// src/main/scala/caravel/LerosCaravel.scala:52:7
+                io_wb_stb,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+                io_wb_cyc,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+                io_wb_we,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  input  [3:0]  io_wb_sel,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  input  [31:0] io_wb_dat_i,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  input  [15:0] io_wb_adr,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  output [31:0] io_wb_dat_o,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  output        io_wb_ack,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  input  [5:0]  io_gpio_in,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  output [5:0]  io_gpio_out,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+                io_gpio_oe	// src/main/scala/caravel/LerosCaravel.scala:56:14
 );
 
   wire [31:0] _dmemMux_io_master_rdData;	// src/main/scala/dtu/DataMemMux.scala:116:25
@@ -3092,82 +3535,74 @@ module LerosCaravel_DffRam(	// src/main/scala/caravel/LerosCaravel.scala:51:7
   wire        _apbMux_io_targets_2_penable;	// src/main/scala/apb/ApbMux.scala:126:24
   wire        _apbMux_io_targets_2_pwrite;	// src/main/scala/apb/ApbMux.scala:126:24
   wire [31:0] _apbMux_io_targets_2_pwdata;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire        _arb_io_masters_0_pready;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [31:0] _arb_io_masters_0_prdata;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire        _arb_io_masters_1_pready;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [31:0] _arb_io_masters_1_prdata;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [15:0] _arb_io_merged_paddr;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire        _arb_io_merged_psel;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire        _arb_io_merged_penable;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire        _arb_io_merged_pwrite;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [3:0]  _arb_io_merged_pstrb;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [31:0] _arb_io_merged_pwdata;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [31:0] _bridge_io_wb_dat_o;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire        _bridge_io_wb_ack;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire [11:0] _bridge_io_apb_paddr;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
+  wire        _arb_io_masters_0_pready;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [31:0] _arb_io_masters_0_prdata;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire        _arb_io_masters_1_pready;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [31:0] _arb_io_masters_1_prdata;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [15:0] _arb_io_merged_paddr;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire        _arb_io_merged_psel;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire        _arb_io_merged_penable;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire        _arb_io_merged_pwrite;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [3:0]  _arb_io_merged_pstrb;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [31:0] _arb_io_merged_pwdata;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [15:0] _bridge_io_apb_paddr;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire        _bridge_io_apb_psel;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire        _bridge_io_apb_penable;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire        _bridge_io_apb_pwrite;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire [3:0]  _bridge_io_apb_pstrb;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire [31:0] _bridge_io_apb_pwdata;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire        _stage_io_out_stb;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire        _stage_io_out_cyc;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire        _stage_io_out_we;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire [3:0]  _stage_io_out_sel;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire [31:0] _stage_io_out_dat_i;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire [11:0] _stage_io_out_adr;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire        _uart_uartPins_tx;	// src/main/scala/caravel/LerosCaravel.scala:86:20
-  wire [31:0] _uart_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:86:20
-  wire [31:0] _dmem_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:85:20
-  wire [31:0] _gpio_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:84:20
-  wire [1:0]  _gpio_gpioPort_out;	// src/main/scala/caravel/LerosCaravel.scala:84:20
-  wire [1:0]  _gpio_gpioPort_oe;	// src/main/scala/caravel/LerosCaravel.scala:84:20
-  wire        _regBlock_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:83:24
-  wire [31:0] _regBlock_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:83:24
-  wire [31:0] _regBlock_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:83:24
-  wire [15:0] _rom_io_instr;	// src/main/scala/caravel/LerosCaravel.scala:80:19
-  wire [15:0] _instrMem_instrPort_instr;	// src/main/scala/caravel/LerosCaravel.scala:79:24
-  wire        _instrMem_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:79:24
-  wire [31:0] _instrMem_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:79:24
-  wire [9:0]  _leros_imemIO_addr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [15:0] _leros_dmemIO_rdAddr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [15:0] _leros_dmemIO_wrAddr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [31:0] _leros_dmemIO_wrData;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire        _leros_dmemIO_wr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [3:0]  _leros_dmemIO_wrMask;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire        _ponte_io_uart_tx;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire [15:0] _ponte_io_apb_paddr;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire        _ponte_io_apb_psel;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire        _ponte_io_apb_penable;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire        _ponte_io_apb_pwrite;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire [31:0] _ponte_io_apb_pwdata;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire        _sysCtrl_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  wire [31:0] _sysCtrl_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  wire        _sysCtrl_ctrlPort_lerosReset;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  wire        _sysCtrl_ctrlPort_lerosBootFromRam;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  wire        _sysCtrl_ctrlPort_lerosUartLoopBack;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  reg         leros_reset_REG;	// src/main/scala/caravel/LerosCaravel.scala:77:25
-  always @(posedge clock)	// src/main/scala/caravel/LerosCaravel.scala:51:7
-    leros_reset_REG <= _sysCtrl_ctrlPort_lerosReset | reset;	// src/main/scala/caravel/LerosCaravel.scala:72:23, :77:{25,54}
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/caravel/LerosCaravel.scala:51:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:51:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:51:7
+  wire        _uart_uartPins_tx;	// src/main/scala/caravel/LerosCaravel.scala:87:20
+  wire [31:0] _uart_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:87:20
+  wire [31:0] _dmem_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:86:20
+  wire [31:0] _gpio_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:85:20
+  wire [1:0]  _gpio_gpioPort_out;	// src/main/scala/caravel/LerosCaravel.scala:85:20
+  wire [1:0]  _gpio_gpioPort_oe;	// src/main/scala/caravel/LerosCaravel.scala:85:20
+  wire        _regBlock_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:84:24
+  wire [31:0] _regBlock_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:84:24
+  wire [31:0] _regBlock_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:84:24
+  wire [15:0] _rom_io_instr;	// src/main/scala/caravel/LerosCaravel.scala:81:19
+  wire [15:0] _instrMem_instrPort_instr;	// src/main/scala/caravel/LerosCaravel.scala:80:24
+  wire        _instrMem_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:80:24
+  wire [31:0] _instrMem_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:80:24
+  wire [9:0]  _leros_imemIO_addr;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire [15:0] _leros_dmemIO_rdAddr;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire [15:0] _leros_dmemIO_wrAddr;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire [31:0] _leros_dmemIO_wrData;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire        _leros_dmemIO_wr;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire [3:0]  _leros_dmemIO_wrMask;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire        _ponte_io_uart_tx;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire [15:0] _ponte_io_apb_paddr;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire        _ponte_io_apb_psel;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire        _ponte_io_apb_penable;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire        _ponte_io_apb_pwrite;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire [31:0] _ponte_io_apb_pwdata;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire        _sysCtrl_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  wire [31:0] _sysCtrl_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  wire        _sysCtrl_ctrlPort_lerosReset;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  wire        _sysCtrl_ctrlPort_lerosBootFromRam;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  wire        _sysCtrl_ctrlPort_lerosUartLoopBack;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  reg         leros_reset_REG;	// src/main/scala/caravel/LerosCaravel.scala:78:25
+  always @(posedge clock)	// src/main/scala/caravel/LerosCaravel.scala:52:7
+    leros_reset_REG <= _sysCtrl_ctrlPort_lerosReset | reset;	// src/main/scala/caravel/LerosCaravel.scala:73:23, :78:{25,54}
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/caravel/LerosCaravel.scala:52:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:52:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:52:7
     `endif // FIRRTL_BEFORE_INITIAL
-    logic [31:0] _RANDOM[0:0];	// src/main/scala/caravel/LerosCaravel.scala:51:7
-    initial begin	// src/main/scala/caravel/LerosCaravel.scala:51:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/caravel/LerosCaravel.scala:51:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/caravel/LerosCaravel.scala:51:7
+    logic [31:0] _RANDOM[0:0];	// src/main/scala/caravel/LerosCaravel.scala:52:7
+    initial begin	// src/main/scala/caravel/LerosCaravel.scala:52:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/caravel/LerosCaravel.scala:52:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/caravel/LerosCaravel.scala:52:7
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/caravel/LerosCaravel.scala:51:7
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/caravel/LerosCaravel.scala:51:7
-        leros_reset_REG = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/caravel/LerosCaravel.scala:51:7, :77:25
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/caravel/LerosCaravel.scala:52:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/caravel/LerosCaravel.scala:52:7
+        leros_reset_REG = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/caravel/LerosCaravel.scala:52:7, :78:25
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:51:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:51:7
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:52:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:52:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  SystemControl sysCtrl (	// src/main/scala/caravel/LerosCaravel.scala:72:23
+  SystemControl sysCtrl (	// src/main/scala/caravel/LerosCaravel.scala:73:23
     .clock                      (clock),
     .reset                      (reset),
     .apbPort_psel               (_apbMux_io_targets_2_psel),	// src/main/scala/apb/ApbMux.scala:126:24
@@ -3180,25 +3615,25 @@ module LerosCaravel_DffRam(	// src/main/scala/caravel/LerosCaravel.scala:51:7
     .ctrlPort_lerosBootFromRam  (_sysCtrl_ctrlPort_lerosBootFromRam),
     .ctrlPort_lerosUartLoopBack (_sysCtrl_ctrlPort_lerosUartLoopBack)
   );
-  Ponte ponte (	// src/main/scala/caravel/LerosCaravel.scala:73:21
+  Ponte ponte (	// src/main/scala/caravel/LerosCaravel.scala:74:21
     .clock          (clock),
     .reset          (reset),
     .io_uart_tx     (_ponte_io_uart_tx),
-    .io_uart_rx     (io_gpio_in[1]),	// src/main/scala/caravel/LerosCaravel.scala:70:27
+    .io_uart_rx     (io_gpio_in[1]),	// src/main/scala/caravel/LerosCaravel.scala:71:27
     .io_apb_paddr   (_ponte_io_apb_paddr),
     .io_apb_psel    (_ponte_io_apb_psel),
     .io_apb_penable (_ponte_io_apb_penable),
     .io_apb_pwrite  (_ponte_io_apb_pwrite),
     .io_apb_pwdata  (_ponte_io_apb_pwdata),
-    .io_apb_pready  (_arb_io_masters_0_pready),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_apb_prdata  (_arb_io_masters_0_prdata)	// src/main/scala/apb/ApbArbiter.scala:13:21
+    .io_apb_pready  (_arb_io_masters_0_pready),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_apb_prdata  (_arb_io_masters_0_prdata)	// src/main/scala/apb/ApbArbiter.scala:14:21
   );
-  Leros leros (	// src/main/scala/caravel/LerosCaravel.scala:76:21
+  Leros_1 leros (	// src/main/scala/caravel/LerosCaravel.scala:77:21
     .clock         (clock),
-    .reset         (leros_reset_REG),	// src/main/scala/caravel/LerosCaravel.scala:77:25
+    .reset         (leros_reset_REG),	// src/main/scala/caravel/LerosCaravel.scala:78:25
     .imemIO_addr   (_leros_imemIO_addr),
     .imemIO_instr
-      (_sysCtrl_ctrlPort_lerosBootFromRam ? _instrMem_instrPort_instr : _rom_io_instr),	// src/main/scala/caravel/LerosCaravel.scala:72:23, :79:24, :80:19, :91:28
+      (_sysCtrl_ctrlPort_lerosBootFromRam ? _instrMem_instrPort_instr : _rom_io_instr),	// src/main/scala/caravel/LerosCaravel.scala:73:23, :80:24, :81:19, :92:28
     .dmemIO_rdAddr (_leros_dmemIO_rdAddr),
     .dmemIO_rdData (_dmemMux_io_master_rdData),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemIO_wrAddr (_leros_dmemIO_wrAddr),
@@ -3206,10 +3641,10 @@ module LerosCaravel_DffRam(	// src/main/scala/caravel/LerosCaravel.scala:51:7
     .dmemIO_wr     (_leros_dmemIO_wr),
     .dmemIO_wrMask (_leros_dmemIO_wrMask)
   );
-  InstructionMemory_2 instrMem (	// src/main/scala/caravel/LerosCaravel.scala:79:24
+  InstructionMemory_2 instrMem (	// src/main/scala/caravel/LerosCaravel.scala:80:24
     .clock           (clock),
     .reset           (reset),
-    .instrPort_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
+    .instrPort_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
     .instrPort_instr (_instrMem_instrPort_instr),
     .apbPort_paddr   (_apbMux_io_targets_0_paddr[9:0]),	// src/main/scala/apb/ApbMux.scala:126:24, :132:16
     .apbPort_psel    (_apbMux_io_targets_0_psel),	// src/main/scala/apb/ApbMux.scala:126:24
@@ -3220,13 +3655,13 @@ module LerosCaravel_DffRam(	// src/main/scala/caravel/LerosCaravel.scala:51:7
     .apbPort_pready  (_instrMem_apbPort_pready),
     .apbPort_prdata  (_instrMem_apbPort_prdata)
   );
-  InstrMem rom (	// src/main/scala/caravel/LerosCaravel.scala:80:19
+  InstrMem_1 rom (	// src/main/scala/caravel/LerosCaravel.scala:81:19
     .clock    (clock),
     .reset    (reset),
-    .io_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
+    .io_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
     .io_instr (_rom_io_instr)
   );
-  RegBlock regBlock (	// src/main/scala/caravel/LerosCaravel.scala:83:24
+  RegBlock regBlock (	// src/main/scala/caravel/LerosCaravel.scala:84:24
     .clock           (clock),
     .reset           (reset),
     .apbPort_paddr   (_apbMux_io_targets_1_paddr[3:0]),	// src/main/scala/apb/ApbMux.scala:126:24, :132:16
@@ -3242,7 +3677,7 @@ module LerosCaravel_DffRam(	// src/main/scala/caravel/LerosCaravel.scala:51:7
     .dmemPort_wrData (_dmemMux_io_targets_1_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemPort_wr     (_dmemMux_io_targets_1_wr)	// src/main/scala/dtu/DataMemMux.scala:116:25
   );
-  Gpio gpio (	// src/main/scala/caravel/LerosCaravel.scala:84:20
+  Gpio gpio (	// src/main/scala/caravel/LerosCaravel.scala:85:20
     .clock           (clock),
     .reset           (reset),
     .dmemPort_rdAddr (_dmemMux_io_targets_2_rdAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
@@ -3250,11 +3685,11 @@ module LerosCaravel_DffRam(	// src/main/scala/caravel/LerosCaravel.scala:51:7
     .dmemPort_wrAddr (_dmemMux_io_targets_2_wrAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
     .dmemPort_wrData (_dmemMux_io_targets_2_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemPort_wr     (_dmemMux_io_targets_2_wr),	// src/main/scala/dtu/DataMemMux.scala:116:25
-    .gpioPort_in     (io_gpio_in[5:4]),	// src/main/scala/caravel/LerosCaravel.scala:119:33
+    .gpioPort_in     (io_gpio_in[5:4]),	// src/main/scala/caravel/LerosCaravel.scala:120:33
     .gpioPort_out    (_gpio_gpioPort_out),
     .gpioPort_oe     (_gpio_gpioPort_oe)
   );
-  DataMemory_2 dmem (	// src/main/scala/caravel/LerosCaravel.scala:85:20
+  DataMemory_2 dmem (	// src/main/scala/caravel/LerosCaravel.scala:86:20
     .clock           (clock),
     .dmemPort_rdAddr (_dmemMux_io_targets_0_rdAddr[7:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
     .dmemPort_rdData (_dmem_dmemPort_rdData),
@@ -3263,68 +3698,49 @@ module LerosCaravel_DffRam(	// src/main/scala/caravel/LerosCaravel.scala:51:7
     .dmemPort_wr     (_dmemMux_io_targets_0_wr),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemPort_wrMask (_dmemMux_io_targets_0_wrMask)	// src/main/scala/dtu/DataMemMux.scala:116:25
   );
-  Uart uart (	// src/main/scala/caravel/LerosCaravel.scala:86:20
+  Uart uart (	// src/main/scala/caravel/LerosCaravel.scala:87:20
     .clock           (clock),
     .reset           (reset),
     .uartPins_tx     (_uart_uartPins_tx),
     .uartPins_rx
-      (_sysCtrl_ctrlPort_lerosUartLoopBack ? _uart_uartPins_tx : io_gpio_in[3]),	// src/main/scala/caravel/LerosCaravel.scala:69:27, :72:23, :86:20, :87:26
+      (_sysCtrl_ctrlPort_lerosUartLoopBack ? _uart_uartPins_tx : io_gpio_in[3]),	// src/main/scala/caravel/LerosCaravel.scala:70:27, :73:23, :87:20, :88:26
     .dmemPort_rdAddr (_dmemMux_io_targets_3_rdAddr[0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
     .dmemPort_rdData (_uart_dmemPort_rdData),
     .dmemPort_wrAddr (_dmemMux_io_targets_3_wrAddr[0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
     .dmemPort_wrData (_dmemMux_io_targets_3_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemPort_wr     (_dmemMux_io_targets_3_wr)	// src/main/scala/dtu/DataMemMux.scala:116:25
   );
-  WishbonePipelineStage stage (	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .clock        (clock),
-    .reset        (reset),
-    .io_in_cyc    (io_wb_cyc),
-    .io_in_we     (io_wb_we),
-    .io_in_sel    (io_wb_sel),
-    .io_in_dat_i  (io_wb_dat_i),
-    .io_in_adr    (io_wb_adr),
-    .io_in_dat_o  (io_wb_dat_o),
-    .io_in_ack    (io_wb_ack),
-    .io_out_stb   (_stage_io_out_stb),
-    .io_out_cyc   (_stage_io_out_cyc),
-    .io_out_we    (_stage_io_out_we),
-    .io_out_sel   (_stage_io_out_sel),
-    .io_out_dat_i (_stage_io_out_dat_i),
-    .io_out_adr   (_stage_io_out_adr),
-    .io_out_dat_o (_bridge_io_wb_dat_o),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-    .io_out_ack   (_bridge_io_wb_ack)	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  );
   WishboneToApb bridge (	// src/main/scala/wishbone/WishboneToApb.scala:48:24
     .clock          (clock),
     .reset          (reset),
-    .io_wb_stb      (_stage_io_out_stb),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_cyc      (_stage_io_out_cyc),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_we       (_stage_io_out_we),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_sel      (_stage_io_out_sel),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_dat_i    (_stage_io_out_dat_i),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_adr      (_stage_io_out_adr),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_dat_o    (_bridge_io_wb_dat_o),
-    .io_wb_ack      (_bridge_io_wb_ack),
+    .io_wb_stb      (io_wb_stb),
+    .io_wb_cyc      (io_wb_cyc),
+    .io_wb_we       (io_wb_we),
+    .io_wb_sel      (io_wb_sel),
+    .io_wb_dat_i    (io_wb_dat_i),
+    .io_wb_adr      (io_wb_adr),
+    .io_wb_dat_o    (io_wb_dat_o),
+    .io_wb_ack      (io_wb_ack),
     .io_apb_paddr   (_bridge_io_apb_paddr),
     .io_apb_psel    (_bridge_io_apb_psel),
     .io_apb_penable (_bridge_io_apb_penable),
     .io_apb_pwrite  (_bridge_io_apb_pwrite),
     .io_apb_pstrb   (_bridge_io_apb_pstrb),
     .io_apb_pwdata  (_bridge_io_apb_pwdata),
-    .io_apb_pready  (_arb_io_masters_1_pready),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_apb_prdata  (_arb_io_masters_1_prdata)	// src/main/scala/apb/ApbArbiter.scala:13:21
+    .io_apb_pready  (_arb_io_masters_1_pready),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_apb_prdata  (_arb_io_masters_1_prdata)	// src/main/scala/apb/ApbArbiter.scala:14:21
   );
-  ApbArbiter arb (	// src/main/scala/apb/ApbArbiter.scala:13:21
+  ApbArbiter arb (	// src/main/scala/apb/ApbArbiter.scala:14:21
     .clock                (clock),
     .reset                (reset),
-    .io_masters_0_paddr   (_ponte_io_apb_paddr),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_psel    (_ponte_io_apb_psel),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_penable (_ponte_io_apb_penable),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_pwrite  (_ponte_io_apb_pwrite),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_pwdata  (_ponte_io_apb_pwdata),	// src/main/scala/caravel/LerosCaravel.scala:73:21
+    .io_masters_0_paddr   (_ponte_io_apb_paddr),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_psel    (_ponte_io_apb_psel),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_penable (_ponte_io_apb_penable),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_pwrite  (_ponte_io_apb_pwrite),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_pwdata  (_ponte_io_apb_pwdata),	// src/main/scala/caravel/LerosCaravel.scala:74:21
     .io_masters_0_pready  (_arb_io_masters_0_pready),
     .io_masters_0_prdata  (_arb_io_masters_0_prdata),
-    .io_masters_1_paddr   ({4'h0, _bridge_io_apb_paddr}),	// src/main/scala/apb/ApbArbiter.scala:19:23, src/main/scala/wishbone/WishboneToApb.scala:48:24
+    .io_masters_1_paddr   (_bridge_io_apb_paddr),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
     .io_masters_1_psel    (_bridge_io_apb_psel),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
     .io_masters_1_penable (_bridge_io_apb_penable),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
     .io_masters_1_pwrite  (_bridge_io_apb_pwrite),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
@@ -3341,15 +3757,15 @@ module LerosCaravel_DffRam(	// src/main/scala/caravel/LerosCaravel.scala:51:7
     .io_merged_pready     (_apbMux_io_master_pready),	// src/main/scala/apb/ApbMux.scala:126:24
     .io_merged_prdata     (_apbMux_io_master_prdata)	// src/main/scala/apb/ApbMux.scala:126:24
   );
-  ApbMux apbMux (	// src/main/scala/apb/ApbMux.scala:126:24
+  ApbMux_1 apbMux (	// src/main/scala/apb/ApbMux.scala:126:24
     .clock                (clock),
     .reset                (reset),
-    .io_master_paddr      (_arb_io_merged_paddr),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_psel       (_arb_io_merged_psel),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_penable    (_arb_io_merged_penable),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_pwrite     (_arb_io_merged_pwrite),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_pstrb      (_arb_io_merged_pstrb),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_pwdata     (_arb_io_merged_pwdata),	// src/main/scala/apb/ApbArbiter.scala:13:21
+    .io_master_paddr      (_arb_io_merged_paddr),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_psel       (_arb_io_merged_psel),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_penable    (_arb_io_merged_penable),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_pwrite     (_arb_io_merged_pwrite),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_pstrb      (_arb_io_merged_pstrb),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_pwdata     (_arb_io_merged_pwdata),	// src/main/scala/apb/ApbArbiter.scala:14:21
     .io_master_pready     (_apbMux_io_master_pready),
     .io_master_prdata     (_apbMux_io_master_prdata),
     .io_targets_0_paddr   (_apbMux_io_targets_0_paddr),
@@ -3358,56 +3774,56 @@ module LerosCaravel_DffRam(	// src/main/scala/caravel/LerosCaravel.scala:51:7
     .io_targets_0_pwrite  (_apbMux_io_targets_0_pwrite),
     .io_targets_0_pstrb   (_apbMux_io_targets_0_pstrb),
     .io_targets_0_pwdata  (_apbMux_io_targets_0_pwdata),
-    .io_targets_0_pready  (_instrMem_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:79:24
-    .io_targets_0_prdata  (_instrMem_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:79:24
+    .io_targets_0_pready  (_instrMem_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:80:24
+    .io_targets_0_prdata  (_instrMem_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:80:24
     .io_targets_1_paddr   (_apbMux_io_targets_1_paddr),
     .io_targets_1_psel    (_apbMux_io_targets_1_psel),
     .io_targets_1_penable (_apbMux_io_targets_1_penable),
     .io_targets_1_pwrite  (_apbMux_io_targets_1_pwrite),
     .io_targets_1_pwdata  (_apbMux_io_targets_1_pwdata),
-    .io_targets_1_pready  (_regBlock_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:83:24
-    .io_targets_1_prdata  (_regBlock_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:83:24
+    .io_targets_1_pready  (_regBlock_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:84:24
+    .io_targets_1_prdata  (_regBlock_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:84:24
     .io_targets_2_psel    (_apbMux_io_targets_2_psel),
     .io_targets_2_penable (_apbMux_io_targets_2_penable),
     .io_targets_2_pwrite  (_apbMux_io_targets_2_pwrite),
     .io_targets_2_pwdata  (_apbMux_io_targets_2_pwdata),
-    .io_targets_2_pready  (_sysCtrl_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:72:23
-    .io_targets_2_prdata  (_sysCtrl_apbPort_prdata)	// src/main/scala/caravel/LerosCaravel.scala:72:23
+    .io_targets_2_pready  (_sysCtrl_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:73:23
+    .io_targets_2_prdata  (_sysCtrl_apbPort_prdata)	// src/main/scala/caravel/LerosCaravel.scala:73:23
   );
-  DataMemMux dmemMux (	// src/main/scala/dtu/DataMemMux.scala:116:25
+  DataMemMux_1 dmemMux (	// src/main/scala/dtu/DataMemMux.scala:116:25
     .clock               (clock),
     .reset               (reset),
-    .io_master_rdAddr    (_leros_dmemIO_rdAddr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
+    .io_master_rdAddr    (_leros_dmemIO_rdAddr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
     .io_master_rdData    (_dmemMux_io_master_rdData),
-    .io_master_wrAddr    (_leros_dmemIO_wrAddr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_master_wrData    (_leros_dmemIO_wrData),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_master_wr        (_leros_dmemIO_wr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_master_wrMask    (_leros_dmemIO_wrMask),	// src/main/scala/caravel/LerosCaravel.scala:76:21
+    .io_master_wrAddr    (_leros_dmemIO_wrAddr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .io_master_wrData    (_leros_dmemIO_wrData),	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .io_master_wr        (_leros_dmemIO_wr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .io_master_wrMask    (_leros_dmemIO_wrMask),	// src/main/scala/caravel/LerosCaravel.scala:77:21
     .io_targets_0_rdAddr (_dmemMux_io_targets_0_rdAddr),
-    .io_targets_0_rdData (_dmem_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:85:20
+    .io_targets_0_rdData (_dmem_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:86:20
     .io_targets_0_wrAddr (_dmemMux_io_targets_0_wrAddr),
     .io_targets_0_wrData (_dmemMux_io_targets_0_wrData),
     .io_targets_0_wr     (_dmemMux_io_targets_0_wr),
     .io_targets_0_wrMask (_dmemMux_io_targets_0_wrMask),
     .io_targets_1_rdAddr (_dmemMux_io_targets_1_rdAddr),
-    .io_targets_1_rdData (_regBlock_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:83:24
+    .io_targets_1_rdData (_regBlock_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:84:24
     .io_targets_1_wrAddr (_dmemMux_io_targets_1_wrAddr),
     .io_targets_1_wrData (_dmemMux_io_targets_1_wrData),
     .io_targets_1_wr     (_dmemMux_io_targets_1_wr),
     .io_targets_2_rdAddr (_dmemMux_io_targets_2_rdAddr),
-    .io_targets_2_rdData (_gpio_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:84:20
+    .io_targets_2_rdData (_gpio_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:85:20
     .io_targets_2_wrAddr (_dmemMux_io_targets_2_wrAddr),
     .io_targets_2_wrData (_dmemMux_io_targets_2_wrData),
     .io_targets_2_wr     (_dmemMux_io_targets_2_wr),
     .io_targets_3_rdAddr (_dmemMux_io_targets_3_rdAddr),
-    .io_targets_3_rdData (_uart_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:86:20
+    .io_targets_3_rdData (_uart_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:87:20
     .io_targets_3_wrAddr (_dmemMux_io_targets_3_wrAddr),
     .io_targets_3_wrData (_dmemMux_io_targets_3_wrData),
     .io_targets_3_wr     (_dmemMux_io_targets_3_wr)
   );
   assign io_gpio_out =
-    {_gpio_gpioPort_out, 1'h0, _uart_uartPins_tx, 1'h0, _ponte_io_uart_tx};	// src/main/scala/caravel/LerosCaravel.scala:51:7, :73:21, :84:20, :86:20, :112:36
-  assign io_gpio_oe = {_gpio_gpioPort_oe, 4'hA};	// src/main/scala/caravel/LerosCaravel.scala:51:7, :84:20, :118:34
+    {_gpio_gpioPort_out, 1'h0, _uart_uartPins_tx, 1'h0, _ponte_io_uart_tx};	// src/main/scala/caravel/LerosCaravel.scala:52:7, :74:21, :85:20, :87:20, :113:36
+  assign io_gpio_oe = {_gpio_gpioPort_oe, 4'hA};	// src/main/scala/caravel/LerosCaravel.scala:52:7, :85:20, :119:34
 endmodule
 
 module Leros_3(	// leros/src/main/scala/leros/Leros.scala:13:7
@@ -4044,9 +4460,9 @@ module ApbMux_3(	// src/main/scala/apb/ApbMux.scala:15:7
   wire _errorTarget_apbPort_pready;	// src/main/scala/apb/ApbMux.scala:34:27
   wire selected = io_master_psel & io_master_paddr[15:8] == 8'h0;	// src/main/scala/apb/ApbMux.scala:82:{35,53}, :85:7
   reg  wasSelected;	// src/main/scala/apb/ApbMux.scala:93:30
-  wire selected_1 = io_master_psel & io_master_paddr[15:4] == 12'h80;	// src/main/scala/apb/ApbMux.scala:82:{35,53}, :85:7
+  wire selected_1 = io_master_psel & io_master_paddr[15:4] == 12'h100;	// src/main/scala/apb/ApbMux.scala:82:{35,53}, :85:7
   reg  wasSelected_1;	// src/main/scala/apb/ApbMux.scala:93:30
-  wire selected_2 = io_master_psel & io_master_paddr[15:2] == 14'h300;	// src/main/scala/apb/ApbMux.scala:82:{35,53}, :85:7
+  wire selected_2 = io_master_psel & io_master_paddr[15:2] == 14'h800;	// src/main/scala/apb/ApbMux.scala:82:{35,53}, :85:7
   reg  wasSelected_2;	// src/main/scala/apb/ApbMux.scala:93:30
   always @(posedge clock) begin	// src/main/scala/apb/ApbMux.scala:15:7
     if (reset) begin	// src/main/scala/apb/ApbMux.scala:15:7
@@ -4209,19 +4625,20 @@ module DataMemMux_3(	// src/main/scala/dtu/DataMemMux.scala:21:7
   assign io_targets_3_wr = io_master_wr & io_master_wrAddr[15:1] == 15'h1022;	// src/main/scala/dtu/DataMemMux.scala:21:7, :59:7, :67:38, :70:7, :71:29
 endmodule
 
-module LerosCaravel_RtlSyncMemory(	// src/main/scala/caravel/LerosCaravel.scala:51:7
-  input         clock,	// src/main/scala/caravel/LerosCaravel.scala:51:7
-                reset,	// src/main/scala/caravel/LerosCaravel.scala:51:7
-                io_wb_cyc,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-                io_wb_we,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  input  [3:0]  io_wb_sel,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  input  [31:0] io_wb_dat_i,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  input  [11:0] io_wb_adr,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  output [31:0] io_wb_dat_o,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  output        io_wb_ack,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  input  [5:0]  io_gpio_in,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-  output [5:0]  io_gpio_out,	// src/main/scala/caravel/LerosCaravel.scala:55:14
-                io_gpio_oe	// src/main/scala/caravel/LerosCaravel.scala:55:14
+module LerosCaravel_RtlSyncMemory(	// src/main/scala/caravel/LerosCaravel.scala:52:7
+  input         clock,	// src/main/scala/caravel/LerosCaravel.scala:52:7
+                reset,	// src/main/scala/caravel/LerosCaravel.scala:52:7
+                io_wb_stb,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+                io_wb_cyc,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+                io_wb_we,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  input  [3:0]  io_wb_sel,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  input  [31:0] io_wb_dat_i,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  input  [15:0] io_wb_adr,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  output [31:0] io_wb_dat_o,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  output        io_wb_ack,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  input  [5:0]  io_gpio_in,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+  output [5:0]  io_gpio_out,	// src/main/scala/caravel/LerosCaravel.scala:56:14
+                io_gpio_oe	// src/main/scala/caravel/LerosCaravel.scala:56:14
 );
 
   wire [31:0] _dmemMux_io_master_rdData;	// src/main/scala/dtu/DataMemMux.scala:116:25
@@ -4259,82 +4676,74 @@ module LerosCaravel_RtlSyncMemory(	// src/main/scala/caravel/LerosCaravel.scala:
   wire        _apbMux_io_targets_2_penable;	// src/main/scala/apb/ApbMux.scala:126:24
   wire        _apbMux_io_targets_2_pwrite;	// src/main/scala/apb/ApbMux.scala:126:24
   wire [31:0] _apbMux_io_targets_2_pwdata;	// src/main/scala/apb/ApbMux.scala:126:24
-  wire        _arb_io_masters_0_pready;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [31:0] _arb_io_masters_0_prdata;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire        _arb_io_masters_1_pready;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [31:0] _arb_io_masters_1_prdata;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [15:0] _arb_io_merged_paddr;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire        _arb_io_merged_psel;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire        _arb_io_merged_penable;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire        _arb_io_merged_pwrite;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [3:0]  _arb_io_merged_pstrb;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [31:0] _arb_io_merged_pwdata;	// src/main/scala/apb/ApbArbiter.scala:13:21
-  wire [31:0] _bridge_io_wb_dat_o;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire        _bridge_io_wb_ack;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire [11:0] _bridge_io_apb_paddr;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
+  wire        _arb_io_masters_0_pready;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [31:0] _arb_io_masters_0_prdata;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire        _arb_io_masters_1_pready;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [31:0] _arb_io_masters_1_prdata;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [15:0] _arb_io_merged_paddr;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire        _arb_io_merged_psel;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire        _arb_io_merged_penable;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire        _arb_io_merged_pwrite;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [3:0]  _arb_io_merged_pstrb;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [31:0] _arb_io_merged_pwdata;	// src/main/scala/apb/ApbArbiter.scala:14:21
+  wire [15:0] _bridge_io_apb_paddr;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire        _bridge_io_apb_psel;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire        _bridge_io_apb_penable;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire        _bridge_io_apb_pwrite;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire [3:0]  _bridge_io_apb_pstrb;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
   wire [31:0] _bridge_io_apb_pwdata;	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  wire        _stage_io_out_stb;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire        _stage_io_out_cyc;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire        _stage_io_out_we;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire [3:0]  _stage_io_out_sel;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire [31:0] _stage_io_out_dat_i;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire [11:0] _stage_io_out_adr;	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-  wire        _uart_uartPins_tx;	// src/main/scala/caravel/LerosCaravel.scala:86:20
-  wire [31:0] _uart_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:86:20
-  wire [31:0] _dmem_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:85:20
-  wire [31:0] _gpio_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:84:20
-  wire [1:0]  _gpio_gpioPort_out;	// src/main/scala/caravel/LerosCaravel.scala:84:20
-  wire [1:0]  _gpio_gpioPort_oe;	// src/main/scala/caravel/LerosCaravel.scala:84:20
-  wire        _regBlock_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:83:24
-  wire [31:0] _regBlock_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:83:24
-  wire [31:0] _regBlock_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:83:24
-  wire [15:0] _rom_io_instr;	// src/main/scala/caravel/LerosCaravel.scala:80:19
-  wire [15:0] _instrMem_instrPort_instr;	// src/main/scala/caravel/LerosCaravel.scala:79:24
-  wire        _instrMem_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:79:24
-  wire [31:0] _instrMem_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:79:24
-  wire [7:0]  _leros_imemIO_addr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [15:0] _leros_dmemIO_rdAddr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [15:0] _leros_dmemIO_wrAddr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [31:0] _leros_dmemIO_wrData;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire        _leros_dmemIO_wr;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire [3:0]  _leros_dmemIO_wrMask;	// src/main/scala/caravel/LerosCaravel.scala:76:21
-  wire        _ponte_io_uart_tx;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire [15:0] _ponte_io_apb_paddr;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire        _ponte_io_apb_psel;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire        _ponte_io_apb_penable;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire        _ponte_io_apb_pwrite;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire [31:0] _ponte_io_apb_pwdata;	// src/main/scala/caravel/LerosCaravel.scala:73:21
-  wire        _sysCtrl_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  wire [31:0] _sysCtrl_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  wire        _sysCtrl_ctrlPort_lerosReset;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  wire        _sysCtrl_ctrlPort_lerosBootFromRam;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  wire        _sysCtrl_ctrlPort_lerosUartLoopBack;	// src/main/scala/caravel/LerosCaravel.scala:72:23
-  reg         leros_reset_REG;	// src/main/scala/caravel/LerosCaravel.scala:77:25
-  always @(posedge clock)	// src/main/scala/caravel/LerosCaravel.scala:51:7
-    leros_reset_REG <= _sysCtrl_ctrlPort_lerosReset | reset;	// src/main/scala/caravel/LerosCaravel.scala:72:23, :77:{25,54}
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/caravel/LerosCaravel.scala:51:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:51:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:51:7
+  wire        _uart_uartPins_tx;	// src/main/scala/caravel/LerosCaravel.scala:87:20
+  wire [31:0] _uart_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:87:20
+  wire [31:0] _dmem_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:86:20
+  wire [31:0] _gpio_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:85:20
+  wire [1:0]  _gpio_gpioPort_out;	// src/main/scala/caravel/LerosCaravel.scala:85:20
+  wire [1:0]  _gpio_gpioPort_oe;	// src/main/scala/caravel/LerosCaravel.scala:85:20
+  wire        _regBlock_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:84:24
+  wire [31:0] _regBlock_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:84:24
+  wire [31:0] _regBlock_dmemPort_rdData;	// src/main/scala/caravel/LerosCaravel.scala:84:24
+  wire [15:0] _rom_io_instr;	// src/main/scala/caravel/LerosCaravel.scala:81:19
+  wire [15:0] _instrMem_instrPort_instr;	// src/main/scala/caravel/LerosCaravel.scala:80:24
+  wire        _instrMem_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:80:24
+  wire [31:0] _instrMem_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:80:24
+  wire [7:0]  _leros_imemIO_addr;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire [15:0] _leros_dmemIO_rdAddr;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire [15:0] _leros_dmemIO_wrAddr;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire [31:0] _leros_dmemIO_wrData;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire        _leros_dmemIO_wr;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire [3:0]  _leros_dmemIO_wrMask;	// src/main/scala/caravel/LerosCaravel.scala:77:21
+  wire        _ponte_io_uart_tx;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire [15:0] _ponte_io_apb_paddr;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire        _ponte_io_apb_psel;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire        _ponte_io_apb_penable;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire        _ponte_io_apb_pwrite;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire [31:0] _ponte_io_apb_pwdata;	// src/main/scala/caravel/LerosCaravel.scala:74:21
+  wire        _sysCtrl_apbPort_pready;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  wire [31:0] _sysCtrl_apbPort_prdata;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  wire        _sysCtrl_ctrlPort_lerosReset;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  wire        _sysCtrl_ctrlPort_lerosBootFromRam;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  wire        _sysCtrl_ctrlPort_lerosUartLoopBack;	// src/main/scala/caravel/LerosCaravel.scala:73:23
+  reg         leros_reset_REG;	// src/main/scala/caravel/LerosCaravel.scala:78:25
+  always @(posedge clock)	// src/main/scala/caravel/LerosCaravel.scala:52:7
+    leros_reset_REG <= _sysCtrl_ctrlPort_lerosReset | reset;	// src/main/scala/caravel/LerosCaravel.scala:73:23, :78:{25,54}
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/caravel/LerosCaravel.scala:52:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:52:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:52:7
     `endif // FIRRTL_BEFORE_INITIAL
-    logic [31:0] _RANDOM[0:0];	// src/main/scala/caravel/LerosCaravel.scala:51:7
-    initial begin	// src/main/scala/caravel/LerosCaravel.scala:51:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/caravel/LerosCaravel.scala:51:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/caravel/LerosCaravel.scala:51:7
+    logic [31:0] _RANDOM[0:0];	// src/main/scala/caravel/LerosCaravel.scala:52:7
+    initial begin	// src/main/scala/caravel/LerosCaravel.scala:52:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/caravel/LerosCaravel.scala:52:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/caravel/LerosCaravel.scala:52:7
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/caravel/LerosCaravel.scala:51:7
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/caravel/LerosCaravel.scala:51:7
-        leros_reset_REG = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/caravel/LerosCaravel.scala:51:7, :77:25
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/caravel/LerosCaravel.scala:52:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/caravel/LerosCaravel.scala:52:7
+        leros_reset_REG = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/caravel/LerosCaravel.scala:52:7, :78:25
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:51:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:51:7
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:52:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/LerosCaravel.scala:52:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  SystemControl sysCtrl (	// src/main/scala/caravel/LerosCaravel.scala:72:23
+  SystemControl sysCtrl (	// src/main/scala/caravel/LerosCaravel.scala:73:23
     .clock                      (clock),
     .reset                      (reset),
     .apbPort_psel               (_apbMux_io_targets_2_psel),	// src/main/scala/apb/ApbMux.scala:126:24
@@ -4347,25 +4756,25 @@ module LerosCaravel_RtlSyncMemory(	// src/main/scala/caravel/LerosCaravel.scala:
     .ctrlPort_lerosBootFromRam  (_sysCtrl_ctrlPort_lerosBootFromRam),
     .ctrlPort_lerosUartLoopBack (_sysCtrl_ctrlPort_lerosUartLoopBack)
   );
-  Ponte ponte (	// src/main/scala/caravel/LerosCaravel.scala:73:21
+  Ponte ponte (	// src/main/scala/caravel/LerosCaravel.scala:74:21
     .clock          (clock),
     .reset          (reset),
     .io_uart_tx     (_ponte_io_uart_tx),
-    .io_uart_rx     (io_gpio_in[1]),	// src/main/scala/caravel/LerosCaravel.scala:70:27
+    .io_uart_rx     (io_gpio_in[1]),	// src/main/scala/caravel/LerosCaravel.scala:71:27
     .io_apb_paddr   (_ponte_io_apb_paddr),
     .io_apb_psel    (_ponte_io_apb_psel),
     .io_apb_penable (_ponte_io_apb_penable),
     .io_apb_pwrite  (_ponte_io_apb_pwrite),
     .io_apb_pwdata  (_ponte_io_apb_pwdata),
-    .io_apb_pready  (_arb_io_masters_0_pready),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_apb_prdata  (_arb_io_masters_0_prdata)	// src/main/scala/apb/ApbArbiter.scala:13:21
+    .io_apb_pready  (_arb_io_masters_0_pready),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_apb_prdata  (_arb_io_masters_0_prdata)	// src/main/scala/apb/ApbArbiter.scala:14:21
   );
-  Leros_3 leros (	// src/main/scala/caravel/LerosCaravel.scala:76:21
+  Leros_3 leros (	// src/main/scala/caravel/LerosCaravel.scala:77:21
     .clock         (clock),
-    .reset         (leros_reset_REG),	// src/main/scala/caravel/LerosCaravel.scala:77:25
+    .reset         (leros_reset_REG),	// src/main/scala/caravel/LerosCaravel.scala:78:25
     .imemIO_addr   (_leros_imemIO_addr),
     .imemIO_instr
-      (_sysCtrl_ctrlPort_lerosBootFromRam ? _instrMem_instrPort_instr : _rom_io_instr),	// src/main/scala/caravel/LerosCaravel.scala:72:23, :79:24, :80:19, :91:28
+      (_sysCtrl_ctrlPort_lerosBootFromRam ? _instrMem_instrPort_instr : _rom_io_instr),	// src/main/scala/caravel/LerosCaravel.scala:73:23, :80:24, :81:19, :92:28
     .dmemIO_rdAddr (_leros_dmemIO_rdAddr),
     .dmemIO_rdData (_dmemMux_io_master_rdData),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemIO_wrAddr (_leros_dmemIO_wrAddr),
@@ -4373,10 +4782,10 @@ module LerosCaravel_RtlSyncMemory(	// src/main/scala/caravel/LerosCaravel.scala:
     .dmemIO_wr     (_leros_dmemIO_wr),
     .dmemIO_wrMask (_leros_dmemIO_wrMask)
   );
-  InstructionMemory_3 instrMem (	// src/main/scala/caravel/LerosCaravel.scala:79:24
+  InstructionMemory_3 instrMem (	// src/main/scala/caravel/LerosCaravel.scala:80:24
     .clock           (clock),
     .reset           (reset),
-    .instrPort_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
+    .instrPort_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
     .instrPort_instr (_instrMem_instrPort_instr),
     .apbPort_paddr   (_apbMux_io_targets_0_paddr[7:0]),	// src/main/scala/apb/ApbMux.scala:126:24, :132:16
     .apbPort_psel    (_apbMux_io_targets_0_psel),	// src/main/scala/apb/ApbMux.scala:126:24
@@ -4387,13 +4796,13 @@ module LerosCaravel_RtlSyncMemory(	// src/main/scala/caravel/LerosCaravel.scala:
     .apbPort_pready  (_instrMem_apbPort_pready),
     .apbPort_prdata  (_instrMem_apbPort_prdata)
   );
-  InstrMem_3 rom (	// src/main/scala/caravel/LerosCaravel.scala:80:19
+  InstrMem_3 rom (	// src/main/scala/caravel/LerosCaravel.scala:81:19
     .clock    (clock),
     .reset    (reset),
-    .io_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
+    .io_addr  (_leros_imemIO_addr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
     .io_instr (_rom_io_instr)
   );
-  RegBlock regBlock (	// src/main/scala/caravel/LerosCaravel.scala:83:24
+  RegBlock regBlock (	// src/main/scala/caravel/LerosCaravel.scala:84:24
     .clock           (clock),
     .reset           (reset),
     .apbPort_paddr   (_apbMux_io_targets_1_paddr[3:0]),	// src/main/scala/apb/ApbMux.scala:126:24, :132:16
@@ -4409,7 +4818,7 @@ module LerosCaravel_RtlSyncMemory(	// src/main/scala/caravel/LerosCaravel.scala:
     .dmemPort_wrData (_dmemMux_io_targets_1_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemPort_wr     (_dmemMux_io_targets_1_wr)	// src/main/scala/dtu/DataMemMux.scala:116:25
   );
-  Gpio gpio (	// src/main/scala/caravel/LerosCaravel.scala:84:20
+  Gpio gpio (	// src/main/scala/caravel/LerosCaravel.scala:85:20
     .clock           (clock),
     .reset           (reset),
     .dmemPort_rdAddr (_dmemMux_io_targets_2_rdAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
@@ -4417,11 +4826,11 @@ module LerosCaravel_RtlSyncMemory(	// src/main/scala/caravel/LerosCaravel.scala:
     .dmemPort_wrAddr (_dmemMux_io_targets_2_wrAddr[1:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
     .dmemPort_wrData (_dmemMux_io_targets_2_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemPort_wr     (_dmemMux_io_targets_2_wr),	// src/main/scala/dtu/DataMemMux.scala:116:25
-    .gpioPort_in     (io_gpio_in[5:4]),	// src/main/scala/caravel/LerosCaravel.scala:119:33
+    .gpioPort_in     (io_gpio_in[5:4]),	// src/main/scala/caravel/LerosCaravel.scala:120:33
     .gpioPort_out    (_gpio_gpioPort_out),
     .gpioPort_oe     (_gpio_gpioPort_oe)
   );
-  DataMemory_3 dmem (	// src/main/scala/caravel/LerosCaravel.scala:85:20
+  DataMemory_3 dmem (	// src/main/scala/caravel/LerosCaravel.scala:86:20
     .clock           (clock),
     .dmemPort_rdAddr (_dmemMux_io_targets_0_rdAddr[4:0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
     .dmemPort_rdData (_dmem_dmemPort_rdData),
@@ -4430,68 +4839,49 @@ module LerosCaravel_RtlSyncMemory(	// src/main/scala/caravel/LerosCaravel.scala:
     .dmemPort_wr     (_dmemMux_io_targets_0_wr),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemPort_wrMask (_dmemMux_io_targets_0_wrMask)	// src/main/scala/dtu/DataMemMux.scala:116:25
   );
-  Uart uart (	// src/main/scala/caravel/LerosCaravel.scala:86:20
+  Uart uart (	// src/main/scala/caravel/LerosCaravel.scala:87:20
     .clock           (clock),
     .reset           (reset),
     .uartPins_tx     (_uart_uartPins_tx),
     .uartPins_rx
-      (_sysCtrl_ctrlPort_lerosUartLoopBack ? _uart_uartPins_tx : io_gpio_in[3]),	// src/main/scala/caravel/LerosCaravel.scala:69:27, :72:23, :86:20, :87:26
+      (_sysCtrl_ctrlPort_lerosUartLoopBack ? _uart_uartPins_tx : io_gpio_in[3]),	// src/main/scala/caravel/LerosCaravel.scala:70:27, :73:23, :87:20, :88:26
     .dmemPort_rdAddr (_dmemMux_io_targets_3_rdAddr[0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
     .dmemPort_rdData (_uart_dmemPort_rdData),
     .dmemPort_wrAddr (_dmemMux_io_targets_3_wrAddr[0]),	// src/main/scala/dtu/DataMemMux.scala:116:25, :127:16
     .dmemPort_wrData (_dmemMux_io_targets_3_wrData),	// src/main/scala/dtu/DataMemMux.scala:116:25
     .dmemPort_wr     (_dmemMux_io_targets_3_wr)	// src/main/scala/dtu/DataMemMux.scala:116:25
   );
-  WishbonePipelineStage stage (	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .clock        (clock),
-    .reset        (reset),
-    .io_in_cyc    (io_wb_cyc),
-    .io_in_we     (io_wb_we),
-    .io_in_sel    (io_wb_sel),
-    .io_in_dat_i  (io_wb_dat_i),
-    .io_in_adr    (io_wb_adr),
-    .io_in_dat_o  (io_wb_dat_o),
-    .io_in_ack    (io_wb_ack),
-    .io_out_stb   (_stage_io_out_stb),
-    .io_out_cyc   (_stage_io_out_cyc),
-    .io_out_we    (_stage_io_out_we),
-    .io_out_sel   (_stage_io_out_sel),
-    .io_out_dat_i (_stage_io_out_dat_i),
-    .io_out_adr   (_stage_io_out_adr),
-    .io_out_dat_o (_bridge_io_wb_dat_o),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-    .io_out_ack   (_bridge_io_wb_ack)	// src/main/scala/wishbone/WishboneToApb.scala:48:24
-  );
   WishboneToApb bridge (	// src/main/scala/wishbone/WishboneToApb.scala:48:24
     .clock          (clock),
     .reset          (reset),
-    .io_wb_stb      (_stage_io_out_stb),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_cyc      (_stage_io_out_cyc),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_we       (_stage_io_out_we),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_sel      (_stage_io_out_sel),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_dat_i    (_stage_io_out_dat_i),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_adr      (_stage_io_out_adr),	// src/main/scala/wishbone/WishbonePipelineStage.scala:44:23
-    .io_wb_dat_o    (_bridge_io_wb_dat_o),
-    .io_wb_ack      (_bridge_io_wb_ack),
+    .io_wb_stb      (io_wb_stb),
+    .io_wb_cyc      (io_wb_cyc),
+    .io_wb_we       (io_wb_we),
+    .io_wb_sel      (io_wb_sel),
+    .io_wb_dat_i    (io_wb_dat_i),
+    .io_wb_adr      (io_wb_adr),
+    .io_wb_dat_o    (io_wb_dat_o),
+    .io_wb_ack      (io_wb_ack),
     .io_apb_paddr   (_bridge_io_apb_paddr),
     .io_apb_psel    (_bridge_io_apb_psel),
     .io_apb_penable (_bridge_io_apb_penable),
     .io_apb_pwrite  (_bridge_io_apb_pwrite),
     .io_apb_pstrb   (_bridge_io_apb_pstrb),
     .io_apb_pwdata  (_bridge_io_apb_pwdata),
-    .io_apb_pready  (_arb_io_masters_1_pready),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_apb_prdata  (_arb_io_masters_1_prdata)	// src/main/scala/apb/ApbArbiter.scala:13:21
+    .io_apb_pready  (_arb_io_masters_1_pready),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_apb_prdata  (_arb_io_masters_1_prdata)	// src/main/scala/apb/ApbArbiter.scala:14:21
   );
-  ApbArbiter arb (	// src/main/scala/apb/ApbArbiter.scala:13:21
+  ApbArbiter arb (	// src/main/scala/apb/ApbArbiter.scala:14:21
     .clock                (clock),
     .reset                (reset),
-    .io_masters_0_paddr   (_ponte_io_apb_paddr),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_psel    (_ponte_io_apb_psel),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_penable (_ponte_io_apb_penable),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_pwrite  (_ponte_io_apb_pwrite),	// src/main/scala/caravel/LerosCaravel.scala:73:21
-    .io_masters_0_pwdata  (_ponte_io_apb_pwdata),	// src/main/scala/caravel/LerosCaravel.scala:73:21
+    .io_masters_0_paddr   (_ponte_io_apb_paddr),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_psel    (_ponte_io_apb_psel),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_penable (_ponte_io_apb_penable),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_pwrite  (_ponte_io_apb_pwrite),	// src/main/scala/caravel/LerosCaravel.scala:74:21
+    .io_masters_0_pwdata  (_ponte_io_apb_pwdata),	// src/main/scala/caravel/LerosCaravel.scala:74:21
     .io_masters_0_pready  (_arb_io_masters_0_pready),
     .io_masters_0_prdata  (_arb_io_masters_0_prdata),
-    .io_masters_1_paddr   ({4'h0, _bridge_io_apb_paddr}),	// src/main/scala/apb/ApbArbiter.scala:19:23, src/main/scala/wishbone/WishboneToApb.scala:48:24
+    .io_masters_1_paddr   (_bridge_io_apb_paddr),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
     .io_masters_1_psel    (_bridge_io_apb_psel),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
     .io_masters_1_penable (_bridge_io_apb_penable),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
     .io_masters_1_pwrite  (_bridge_io_apb_pwrite),	// src/main/scala/wishbone/WishboneToApb.scala:48:24
@@ -4511,12 +4901,12 @@ module LerosCaravel_RtlSyncMemory(	// src/main/scala/caravel/LerosCaravel.scala:
   ApbMux_3 apbMux (	// src/main/scala/apb/ApbMux.scala:126:24
     .clock                (clock),
     .reset                (reset),
-    .io_master_paddr      (_arb_io_merged_paddr),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_psel       (_arb_io_merged_psel),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_penable    (_arb_io_merged_penable),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_pwrite     (_arb_io_merged_pwrite),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_pstrb      (_arb_io_merged_pstrb),	// src/main/scala/apb/ApbArbiter.scala:13:21
-    .io_master_pwdata     (_arb_io_merged_pwdata),	// src/main/scala/apb/ApbArbiter.scala:13:21
+    .io_master_paddr      (_arb_io_merged_paddr),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_psel       (_arb_io_merged_psel),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_penable    (_arb_io_merged_penable),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_pwrite     (_arb_io_merged_pwrite),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_pstrb      (_arb_io_merged_pstrb),	// src/main/scala/apb/ApbArbiter.scala:14:21
+    .io_master_pwdata     (_arb_io_merged_pwdata),	// src/main/scala/apb/ApbArbiter.scala:14:21
     .io_master_pready     (_apbMux_io_master_pready),
     .io_master_prdata     (_apbMux_io_master_prdata),
     .io_targets_0_paddr   (_apbMux_io_targets_0_paddr),
@@ -4525,56 +4915,124 @@ module LerosCaravel_RtlSyncMemory(	// src/main/scala/caravel/LerosCaravel.scala:
     .io_targets_0_pwrite  (_apbMux_io_targets_0_pwrite),
     .io_targets_0_pstrb   (_apbMux_io_targets_0_pstrb),
     .io_targets_0_pwdata  (_apbMux_io_targets_0_pwdata),
-    .io_targets_0_pready  (_instrMem_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:79:24
-    .io_targets_0_prdata  (_instrMem_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:79:24
+    .io_targets_0_pready  (_instrMem_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:80:24
+    .io_targets_0_prdata  (_instrMem_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:80:24
     .io_targets_1_paddr   (_apbMux_io_targets_1_paddr),
     .io_targets_1_psel    (_apbMux_io_targets_1_psel),
     .io_targets_1_penable (_apbMux_io_targets_1_penable),
     .io_targets_1_pwrite  (_apbMux_io_targets_1_pwrite),
     .io_targets_1_pwdata  (_apbMux_io_targets_1_pwdata),
-    .io_targets_1_pready  (_regBlock_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:83:24
-    .io_targets_1_prdata  (_regBlock_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:83:24
+    .io_targets_1_pready  (_regBlock_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:84:24
+    .io_targets_1_prdata  (_regBlock_apbPort_prdata),	// src/main/scala/caravel/LerosCaravel.scala:84:24
     .io_targets_2_psel    (_apbMux_io_targets_2_psel),
     .io_targets_2_penable (_apbMux_io_targets_2_penable),
     .io_targets_2_pwrite  (_apbMux_io_targets_2_pwrite),
     .io_targets_2_pwdata  (_apbMux_io_targets_2_pwdata),
-    .io_targets_2_pready  (_sysCtrl_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:72:23
-    .io_targets_2_prdata  (_sysCtrl_apbPort_prdata)	// src/main/scala/caravel/LerosCaravel.scala:72:23
+    .io_targets_2_pready  (_sysCtrl_apbPort_pready),	// src/main/scala/caravel/LerosCaravel.scala:73:23
+    .io_targets_2_prdata  (_sysCtrl_apbPort_prdata)	// src/main/scala/caravel/LerosCaravel.scala:73:23
   );
   DataMemMux_3 dmemMux (	// src/main/scala/dtu/DataMemMux.scala:116:25
     .clock               (clock),
     .reset               (reset),
-    .io_master_rdAddr    (_leros_dmemIO_rdAddr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
+    .io_master_rdAddr    (_leros_dmemIO_rdAddr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
     .io_master_rdData    (_dmemMux_io_master_rdData),
-    .io_master_wrAddr    (_leros_dmemIO_wrAddr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_master_wrData    (_leros_dmemIO_wrData),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_master_wr        (_leros_dmemIO_wr),	// src/main/scala/caravel/LerosCaravel.scala:76:21
-    .io_master_wrMask    (_leros_dmemIO_wrMask),	// src/main/scala/caravel/LerosCaravel.scala:76:21
+    .io_master_wrAddr    (_leros_dmemIO_wrAddr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .io_master_wrData    (_leros_dmemIO_wrData),	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .io_master_wr        (_leros_dmemIO_wr),	// src/main/scala/caravel/LerosCaravel.scala:77:21
+    .io_master_wrMask    (_leros_dmemIO_wrMask),	// src/main/scala/caravel/LerosCaravel.scala:77:21
     .io_targets_0_rdAddr (_dmemMux_io_targets_0_rdAddr),
-    .io_targets_0_rdData (_dmem_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:85:20
+    .io_targets_0_rdData (_dmem_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:86:20
     .io_targets_0_wrAddr (_dmemMux_io_targets_0_wrAddr),
     .io_targets_0_wrData (_dmemMux_io_targets_0_wrData),
     .io_targets_0_wr     (_dmemMux_io_targets_0_wr),
     .io_targets_0_wrMask (_dmemMux_io_targets_0_wrMask),
     .io_targets_1_rdAddr (_dmemMux_io_targets_1_rdAddr),
-    .io_targets_1_rdData (_regBlock_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:83:24
+    .io_targets_1_rdData (_regBlock_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:84:24
     .io_targets_1_wrAddr (_dmemMux_io_targets_1_wrAddr),
     .io_targets_1_wrData (_dmemMux_io_targets_1_wrData),
     .io_targets_1_wr     (_dmemMux_io_targets_1_wr),
     .io_targets_2_rdAddr (_dmemMux_io_targets_2_rdAddr),
-    .io_targets_2_rdData (_gpio_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:84:20
+    .io_targets_2_rdData (_gpio_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:85:20
     .io_targets_2_wrAddr (_dmemMux_io_targets_2_wrAddr),
     .io_targets_2_wrData (_dmemMux_io_targets_2_wrData),
     .io_targets_2_wr     (_dmemMux_io_targets_2_wr),
     .io_targets_3_rdAddr (_dmemMux_io_targets_3_rdAddr),
-    .io_targets_3_rdData (_uart_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:86:20
+    .io_targets_3_rdData (_uart_dmemPort_rdData),	// src/main/scala/caravel/LerosCaravel.scala:87:20
     .io_targets_3_wrAddr (_dmemMux_io_targets_3_wrAddr),
     .io_targets_3_wrData (_dmemMux_io_targets_3_wrData),
     .io_targets_3_wr     (_dmemMux_io_targets_3_wr)
   );
   assign io_gpio_out =
-    {_gpio_gpioPort_out, 1'h0, _uart_uartPins_tx, 1'h0, _ponte_io_uart_tx};	// src/main/scala/caravel/LerosCaravel.scala:51:7, :73:21, :84:20, :86:20, :112:36
-  assign io_gpio_oe = {_gpio_gpioPort_oe, 4'hA};	// src/main/scala/caravel/LerosCaravel.scala:51:7, :84:20, :118:34
+    {_gpio_gpioPort_out, 1'h0, _uart_uartPins_tx, 1'h0, _ponte_io_uart_tx};	// src/main/scala/caravel/LerosCaravel.scala:52:7, :74:21, :85:20, :87:20, :113:36
+  assign io_gpio_oe = {_gpio_gpioPort_oe, 4'hA};	// src/main/scala/caravel/LerosCaravel.scala:52:7, :85:20, :119:34
+endmodule
+
+module WishboneGpio(	// src/main/scala/caravel/WishboneGpio.scala:8:7
+  input         clock,	// src/main/scala/caravel/WishboneGpio.scala:8:7
+                reset,	// src/main/scala/caravel/WishboneGpio.scala:8:7
+                io_wb_cyc,	// src/main/scala/caravel/WishboneGpio.scala:10:14
+                io_wb_we,	// src/main/scala/caravel/WishboneGpio.scala:10:14
+  input  [31:0] io_wb_dat_i,	// src/main/scala/caravel/WishboneGpio.scala:10:14
+  input  [1:0]  io_wb_adr,	// src/main/scala/caravel/WishboneGpio.scala:10:14
+  output [31:0] io_wb_dat_o,	// src/main/scala/caravel/WishboneGpio.scala:10:14
+  output        io_wb_ack,	// src/main/scala/caravel/WishboneGpio.scala:10:14
+  input  [5:0]  io_gpio_in,	// src/main/scala/caravel/WishboneGpio.scala:10:14
+  output [5:0]  io_gpio_out,	// src/main/scala/caravel/WishboneGpio.scala:10:14
+                io_gpio_oe	// src/main/scala/caravel/WishboneGpio.scala:10:14
+);
+
+  reg        accessReg;	// src/main/scala/caravel/WishboneGpio.scala:19:26
+  reg  [5:0] outputEnables;	// src/main/scala/caravel/WishboneGpio.scala:27:30
+  reg  [5:0] outputs;	// src/main/scala/caravel/WishboneGpio.scala:28:24
+  reg  [1:0] io_wb_dat_o_REG;	// src/main/scala/caravel/WishboneGpio.scala:35:35
+  wire       _GEN = accessReg & io_wb_we;	// src/main/scala/caravel/WishboneGpio.scala:19:26, :43:18
+  wire       _GEN_0 = io_wb_adr == 2'h0;	// src/main/scala/caravel/WishboneGpio.scala:44:23
+  always @(posedge clock) begin	// src/main/scala/caravel/WishboneGpio.scala:8:7
+    if (reset) begin	// src/main/scala/caravel/WishboneGpio.scala:8:7
+      accessReg <= 1'h0;	// src/main/scala/caravel/WishboneGpio.scala:8:7, :19:26
+      outputEnables <= 6'h0;	// src/main/scala/caravel/WishboneGpio.scala:27:30
+      outputs <= 6'h0;	// src/main/scala/caravel/WishboneGpio.scala:27:30, :28:24
+    end
+    else begin	// src/main/scala/caravel/WishboneGpio.scala:8:7
+      accessReg <= ~accessReg & (io_wb_cyc | accessReg);	// src/main/scala/caravel/WishboneGpio.scala:19:26, :21:19, :22:15, :23:25, :24:15
+      if (_GEN & _GEN_0)	// src/main/scala/caravel/WishboneGpio.scala:27:30, :43:{18,31}, :44:23, :46:23
+        outputEnables <= io_wb_dat_i[5:0];	// src/main/scala/caravel/WishboneGpio.scala:27:30, :46:23
+      if (~_GEN | _GEN_0 | io_wb_adr != 2'h1) begin	// src/main/scala/caravel/WishboneGpio.scala:28:24, :35:62, :43:{18,31}, :44:23
+      end
+      else	// src/main/scala/caravel/WishboneGpio.scala:28:24, :43:31, :44:23
+        outputs <= io_wb_dat_i[5:0];	// src/main/scala/caravel/WishboneGpio.scala:28:24, :46:23
+    end
+    io_wb_dat_o_REG <= io_wb_adr;	// src/main/scala/caravel/WishboneGpio.scala:35:35
+  end // always @(posedge)
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/caravel/WishboneGpio.scala:8:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/WishboneGpio.scala:8:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/WishboneGpio.scala:8:7
+    `endif // FIRRTL_BEFORE_INITIAL
+    logic [31:0] _RANDOM[0:0];	// src/main/scala/caravel/WishboneGpio.scala:8:7
+    initial begin	// src/main/scala/caravel/WishboneGpio.scala:8:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/caravel/WishboneGpio.scala:8:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/caravel/WishboneGpio.scala:8:7
+      `endif // INIT_RANDOM_PROLOG_
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/caravel/WishboneGpio.scala:8:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/caravel/WishboneGpio.scala:8:7
+        accessReg = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/caravel/WishboneGpio.scala:8:7, :19:26
+        outputEnables = _RANDOM[/*Zero width*/ 1'b0][6:1];	// src/main/scala/caravel/WishboneGpio.scala:8:7, :19:26, :27:30
+        outputs = _RANDOM[/*Zero width*/ 1'b0][12:7];	// src/main/scala/caravel/WishboneGpio.scala:8:7, :19:26, :28:24
+        io_wb_dat_o_REG = _RANDOM[/*Zero width*/ 1'b0][14:13];	// src/main/scala/caravel/WishboneGpio.scala:8:7, :19:26, :35:35
+      `endif // RANDOMIZE_REG_INIT
+    end // initial
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/WishboneGpio.scala:8:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/WishboneGpio.scala:8:7
+    `endif // FIRRTL_AFTER_INITIAL
+  `endif // ENABLE_INITIAL_REG_
+  assign io_wb_dat_o =
+    {26'h0,
+     io_wb_dat_o_REG == 2'h2
+       ? io_gpio_in
+       : io_wb_dat_o_REG == 2'h1 ? outputs : outputEnables};	// src/main/scala/caravel/WishboneGpio.scala:8:7, :27:30, :28:24, :35:{15,35,62}
+  assign io_wb_ack = accessReg;	// src/main/scala/caravel/WishboneGpio.scala:8:7, :19:26
+  assign io_gpio_out = outputs;	// src/main/scala/caravel/WishboneGpio.scala:8:7, :28:24
+  assign io_gpio_oe = outputEnables;	// src/main/scala/caravel/WishboneGpio.scala:8:7, :27:30
 endmodule
 
 module RegisterFileTest(	// src/main/scala/caravel/RegisterFileTest.scala:10:7
@@ -4659,6 +5117,7 @@ module WishboneMux(	// src/main/scala/wishbone/WishboneMux.scala:15:7
   input  [19:0] io_master_adr,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   output [31:0] io_master_dat_o,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   output        io_master_ack,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+                io_targets_0_stb,	// src/main/scala/wishbone/WishboneMux.scala:21:14
                 io_targets_0_cyc,	// src/main/scala/wishbone/WishboneMux.scala:21:14
                 io_targets_0_we,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   output [3:0]  io_targets_0_sel,	// src/main/scala/wishbone/WishboneMux.scala:21:14
@@ -4666,21 +5125,24 @@ module WishboneMux(	// src/main/scala/wishbone/WishboneMux.scala:15:7
   output [19:0] io_targets_0_adr,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   input  [31:0] io_targets_0_dat_o,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   input         io_targets_0_ack,	// src/main/scala/wishbone/WishboneMux.scala:21:14
-  output        io_targets_1_cyc,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+  output        io_targets_1_stb,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+                io_targets_1_cyc,	// src/main/scala/wishbone/WishboneMux.scala:21:14
                 io_targets_1_we,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   output [3:0]  io_targets_1_sel,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   output [31:0] io_targets_1_dat_i,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   output [19:0] io_targets_1_adr,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   input  [31:0] io_targets_1_dat_o,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   input         io_targets_1_ack,	// src/main/scala/wishbone/WishboneMux.scala:21:14
-  output        io_targets_2_cyc,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+  output        io_targets_2_stb,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+                io_targets_2_cyc,	// src/main/scala/wishbone/WishboneMux.scala:21:14
                 io_targets_2_we,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   output [3:0]  io_targets_2_sel,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   output [31:0] io_targets_2_dat_i,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   output [19:0] io_targets_2_adr,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   input  [31:0] io_targets_2_dat_o,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   input         io_targets_2_ack,	// src/main/scala/wishbone/WishboneMux.scala:21:14
-  output        io_targets_3_cyc,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+  output        io_targets_3_stb,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+                io_targets_3_cyc,	// src/main/scala/wishbone/WishboneMux.scala:21:14
                 io_targets_3_we,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   output [3:0]  io_targets_3_sel,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   output [31:0] io_targets_3_dat_i,	// src/main/scala/wishbone/WishboneMux.scala:21:14
@@ -4688,21 +5150,29 @@ module WishboneMux(	// src/main/scala/wishbone/WishboneMux.scala:15:7
   input  [31:0] io_targets_3_dat_o,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   input         io_targets_3_ack,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   output        io_targets_4_cyc,	// src/main/scala/wishbone/WishboneMux.scala:21:14
-  input         io_targets_4_ack	// src/main/scala/wishbone/WishboneMux.scala:21:14
+  input         io_targets_4_ack,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+  output        io_targets_5_cyc,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+                io_targets_5_we,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+  output [31:0] io_targets_5_dat_i,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+  output [19:0] io_targets_5_adr,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+  input  [31:0] io_targets_5_dat_o,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+  input         io_targets_5_ack	// src/main/scala/wishbone/WishboneMux.scala:21:14
 );
 
   wire _errorTarget_wbPort_ack;	// src/main/scala/wishbone/WishboneMux.scala:35:27
-  wire selected = io_master_cyc & io_master_adr[19:12] == 8'h0;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
+  wire selected = io_master_cyc & io_master_adr[19:16] == 4'h0;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
   reg  wasSelected;	// src/main/scala/wishbone/WishboneMux.scala:73:30
-  wire selected_1 = io_master_cyc & io_master_adr[19:12] == 8'h1;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
+  wire selected_1 = io_master_cyc & io_master_adr[19:16] == 4'h1;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
   reg  wasSelected_1;	// src/main/scala/wishbone/WishboneMux.scala:73:30
-  wire selected_2 = io_master_cyc & io_master_adr[19:12] == 8'h2;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
+  wire selected_2 = io_master_cyc & io_master_adr[19:16] == 4'h2;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
   reg  wasSelected_2;	// src/main/scala/wishbone/WishboneMux.scala:73:30
-  wire selected_3 = io_master_cyc & io_master_adr[19:12] == 8'h3;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
+  wire selected_3 = io_master_cyc & io_master_adr[19:16] == 4'h3;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
   reg  wasSelected_3;	// src/main/scala/wishbone/WishboneMux.scala:73:30
-  wire selected_4 = io_master_cyc & io_master_adr[19:8] == 12'h40;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
-  wire _GEN = selected_4 | selected_3 | selected_2 | selected_1 | selected;	// src/main/scala/wishbone/WishboneMux.scala:36:22, :61:34, :66:20, :67:30
+  wire selected_4 = io_master_cyc & io_master_adr[19:8] == 12'h400;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
   reg  wasSelected_4;	// src/main/scala/wishbone/WishboneMux.scala:73:30
+  wire selected_5 = io_master_cyc & io_master_adr[19:2] == 18'h14000;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
+  wire _GEN = selected_5 | selected_4 | selected_3 | selected_2 | selected_1 | selected;	// src/main/scala/wishbone/WishboneMux.scala:36:22, :61:34, :66:20, :67:30
+  reg  wasSelected_5;	// src/main/scala/wishbone/WishboneMux.scala:73:30
   always @(posedge clock) begin	// src/main/scala/wishbone/WishboneMux.scala:15:7
     if (reset) begin	// src/main/scala/wishbone/WishboneMux.scala:15:7
       wasSelected <= 1'h0;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :73:30
@@ -4710,6 +5180,7 @@ module WishboneMux(	// src/main/scala/wishbone/WishboneMux.scala:15:7
       wasSelected_2 <= 1'h0;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :73:30
       wasSelected_3 <= 1'h0;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :73:30
       wasSelected_4 <= 1'h0;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :73:30
+      wasSelected_5 <= 1'h0;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :73:30
     end
     else begin	// src/main/scala/wishbone/WishboneMux.scala:15:7
       wasSelected <= selected & ~io_targets_0_ack;	// src/main/scala/wishbone/WishboneMux.scala:61:34, :73:{30,40,43}
@@ -4717,6 +5188,7 @@ module WishboneMux(	// src/main/scala/wishbone/WishboneMux.scala:15:7
       wasSelected_2 <= selected_2 & ~io_targets_2_ack;	// src/main/scala/wishbone/WishboneMux.scala:61:34, :73:{30,40,43}
       wasSelected_3 <= selected_3 & ~io_targets_3_ack;	// src/main/scala/wishbone/WishboneMux.scala:61:34, :73:{30,40,43}
       wasSelected_4 <= selected_4 & ~io_targets_4_ack;	// src/main/scala/wishbone/WishboneMux.scala:61:34, :73:{30,40,43}
+      wasSelected_5 <= selected_5 & ~io_targets_5_ack;	// src/main/scala/wishbone/WishboneMux.scala:61:34, :73:{30,40,43}
     end
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/wishbone/WishboneMux.scala:15:7
@@ -4735,6 +5207,7 @@ module WishboneMux(	// src/main/scala/wishbone/WishboneMux.scala:15:7
         wasSelected_2 = _RANDOM[/*Zero width*/ 1'b0][2];	// src/main/scala/wishbone/WishboneMux.scala:15:7, :73:30
         wasSelected_3 = _RANDOM[/*Zero width*/ 1'b0][3];	// src/main/scala/wishbone/WishboneMux.scala:15:7, :73:30
         wasSelected_4 = _RANDOM[/*Zero width*/ 1'b0][4];	// src/main/scala/wishbone/WishboneMux.scala:15:7, :73:30
+        wasSelected_5 = _RANDOM[/*Zero width*/ 1'b0][5];	// src/main/scala/wishbone/WishboneMux.scala:15:7, :73:30
       `endif // RANDOMIZE_REG_INIT
     end // initial
     `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/wishbone/WishboneMux.scala:15:7
@@ -4749,190 +5222,234 @@ module WishboneMux(	// src/main/scala/wishbone/WishboneMux.scala:15:7
     .wbPort_ack (_errorTarget_wbPort_ack)
   );
   assign io_master_dat_o =
-    wasSelected_4
-      ? 32'hDEADBEEF
-      : wasSelected_3
-          ? io_targets_3_dat_o
-          : wasSelected_2
-              ? io_targets_2_dat_o
-              : wasSelected_1
-                  ? io_targets_1_dat_o
-                  : wasSelected ? io_targets_0_dat_o : 32'h0;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :21:14, :35:27, :36:22, :73:30, :75:23, :77:23
+    wasSelected_5
+      ? io_targets_5_dat_o
+      : wasSelected_4
+          ? 32'hDEADBEEF
+          : wasSelected_3
+              ? io_targets_3_dat_o
+              : wasSelected_2
+                  ? io_targets_2_dat_o
+                  : wasSelected_1
+                      ? io_targets_1_dat_o
+                      : wasSelected ? io_targets_0_dat_o : 32'h0;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :21:14, :35:27, :36:22, :73:30, :75:23, :77:23
   assign io_master_ack =
-    wasSelected_4
-      ? io_targets_4_ack
-      : wasSelected_3
-          ? io_targets_3_ack
-          : wasSelected_2
-              ? io_targets_2_ack
-              : wasSelected_1
-                  ? io_targets_1_ack
-                  : wasSelected ? io_targets_0_ack : _errorTarget_wbPort_ack;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :35:27, :36:22, :73:30, :75:23, :76:21
+    wasSelected_5
+      ? io_targets_5_ack
+      : wasSelected_4
+          ? io_targets_4_ack
+          : wasSelected_3
+              ? io_targets_3_ack
+              : wasSelected_2
+                  ? io_targets_2_ack
+                  : wasSelected_1
+                      ? io_targets_1_ack
+                      : wasSelected ? io_targets_0_ack : _errorTarget_wbPort_ack;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :35:27, :36:22, :73:30, :75:23, :76:21
+  assign io_targets_0_stb = selected;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :61:34
   assign io_targets_0_cyc = selected;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :61:34
   assign io_targets_0_we = io_master_we;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_0_sel = io_master_sel;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_0_dat_i = io_master_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_0_adr = io_master_adr;	// src/main/scala/wishbone/WishboneMux.scala:15:7
+  assign io_targets_1_stb = selected_1;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :61:34
   assign io_targets_1_cyc = selected_1;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :61:34
   assign io_targets_1_we = io_master_we;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_1_sel = io_master_sel;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_1_dat_i = io_master_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_1_adr = io_master_adr;	// src/main/scala/wishbone/WishboneMux.scala:15:7
+  assign io_targets_2_stb = selected_2;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :61:34
   assign io_targets_2_cyc = selected_2;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :61:34
   assign io_targets_2_we = io_master_we;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_2_sel = io_master_sel;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_2_dat_i = io_master_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_2_adr = io_master_adr;	// src/main/scala/wishbone/WishboneMux.scala:15:7
+  assign io_targets_3_stb = selected_3;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :61:34
   assign io_targets_3_cyc = selected_3;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :61:34
   assign io_targets_3_we = io_master_we;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_3_sel = io_master_sel;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_3_dat_i = io_master_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_3_adr = io_master_adr;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_4_cyc = selected_4;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :61:34
+  assign io_targets_5_cyc = selected_5;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :61:34
+  assign io_targets_5_we = io_master_we;	// src/main/scala/wishbone/WishboneMux.scala:15:7
+  assign io_targets_5_dat_i = io_master_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:15:7
+  assign io_targets_5_adr = io_master_adr;	// src/main/scala/wishbone/WishboneMux.scala:15:7
 endmodule
 
-module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:24:7
-  input         clock,	// src/main/scala/caravel/CaravelTop.scala:24:7
-                reset,	// src/main/scala/caravel/CaravelTop.scala:24:7
-                io_wb_stb,	// src/main/scala/caravel/CaravelTop.scala:38:14
-                io_wb_cyc,	// src/main/scala/caravel/CaravelTop.scala:38:14
-                io_wb_we,	// src/main/scala/caravel/CaravelTop.scala:38:14
-  input  [3:0]  io_wb_sel,	// src/main/scala/caravel/CaravelTop.scala:38:14
-  input  [31:0] io_wb_dat_i,	// src/main/scala/caravel/CaravelTop.scala:38:14
-  input  [19:0] io_wb_adr,	// src/main/scala/caravel/CaravelTop.scala:38:14
-  output [31:0] io_wb_dat_o,	// src/main/scala/caravel/CaravelTop.scala:38:14
-  output        io_wb_ack,	// src/main/scala/caravel/CaravelTop.scala:38:14
-  input  [23:0] io_gpio_in,	// src/main/scala/caravel/CaravelTop.scala:38:14
-  output [23:0] io_gpio_out,	// src/main/scala/caravel/CaravelTop.scala:38:14
-                io_gpio_oe	// src/main/scala/caravel/CaravelTop.scala:38:14
+module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:27:7
+  input         clock,	// src/main/scala/caravel/CaravelTop.scala:27:7
+                reset,	// src/main/scala/caravel/CaravelTop.scala:27:7
+                io_wb_stb,	// src/main/scala/caravel/CaravelTop.scala:44:14
+                io_wb_cyc,	// src/main/scala/caravel/CaravelTop.scala:44:14
+                io_wb_we,	// src/main/scala/caravel/CaravelTop.scala:44:14
+  input  [3:0]  io_wb_sel,	// src/main/scala/caravel/CaravelTop.scala:44:14
+  input  [31:0] io_wb_dat_i,	// src/main/scala/caravel/CaravelTop.scala:44:14
+  input  [19:0] io_wb_adr,	// src/main/scala/caravel/CaravelTop.scala:44:14
+  output [31:0] io_wb_dat_o,	// src/main/scala/caravel/CaravelTop.scala:44:14
+  output        io_wb_ack,	// src/main/scala/caravel/CaravelTop.scala:44:14
+  input  [29:0] io_gpio_in,	// src/main/scala/caravel/CaravelTop.scala:44:14
+  output [29:0] io_gpio_out,	// src/main/scala/caravel/CaravelTop.scala:44:14
+                io_gpio_oe	// src/main/scala/caravel/CaravelTop.scala:44:14
 );
 
+  wire        _wbMux_io_targets_0_stb;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire        _wbMux_io_targets_0_cyc;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire        _wbMux_io_targets_0_we;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [3:0]  _wbMux_io_targets_0_sel;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [31:0] _wbMux_io_targets_0_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [19:0] _wbMux_io_targets_0_adr;	// src/main/scala/wishbone/WishboneMux.scala:111:23
+  wire        _wbMux_io_targets_1_stb;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire        _wbMux_io_targets_1_cyc;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire        _wbMux_io_targets_1_we;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [3:0]  _wbMux_io_targets_1_sel;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [31:0] _wbMux_io_targets_1_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [19:0] _wbMux_io_targets_1_adr;	// src/main/scala/wishbone/WishboneMux.scala:111:23
+  wire        _wbMux_io_targets_2_stb;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire        _wbMux_io_targets_2_cyc;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire        _wbMux_io_targets_2_we;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [3:0]  _wbMux_io_targets_2_sel;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [31:0] _wbMux_io_targets_2_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [19:0] _wbMux_io_targets_2_adr;	// src/main/scala/wishbone/WishboneMux.scala:111:23
+  wire        _wbMux_io_targets_3_stb;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire        _wbMux_io_targets_3_cyc;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire        _wbMux_io_targets_3_we;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [3:0]  _wbMux_io_targets_3_sel;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [31:0] _wbMux_io_targets_3_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [19:0] _wbMux_io_targets_3_adr;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire        _wbMux_io_targets_4_cyc;	// src/main/scala/wishbone/WishboneMux.scala:111:23
-  wire        _registerFileTest_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:85:32
-  wire [31:0] _lerosRtlRam_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:66:11
-  wire        _lerosRtlRam_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:66:11
-  wire [5:0]  _lerosRtlRam_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:66:11
-  wire [5:0]  _lerosRtlRam_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:66:11
-  wire [31:0] _lerosDffRam_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:62:11
-  wire        _lerosDffRam_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:62:11
-  wire [5:0]  _lerosDffRam_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:62:11
-  wire [5:0]  _lerosDffRam_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:62:11
-  wire [31:0] _lerosSky130_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:58:11
-  wire        _lerosSky130_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:58:11
-  wire [5:0]  _lerosSky130_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:58:11
-  wire [5:0]  _lerosSky130_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:58:11
-  wire [31:0] _lerosCfram_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:54:11
-  wire        _lerosCfram_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:54:11
-  wire [5:0]  _lerosCfram_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:54:11
-  wire [5:0]  _lerosCfram_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:54:11
-  reg  [5:0]  lerosCfram_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:78:32
-  reg  [5:0]  lerosSky130_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:78:32
-  reg  [5:0]  lerosDffRam_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:78:32
-  reg  [5:0]  lerosRtlRam_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:78:32
-  always @(posedge clock) begin	// src/main/scala/caravel/CaravelTop.scala:24:7
-    lerosCfram_io_gpio_in_REG <= io_gpio_in[5:0];	// src/main/scala/caravel/CaravelTop.scala:78:{32,43}
-    lerosSky130_io_gpio_in_REG <= io_gpio_in[11:6];	// src/main/scala/caravel/CaravelTop.scala:78:{32,43}
-    lerosDffRam_io_gpio_in_REG <= io_gpio_in[17:12];	// src/main/scala/caravel/CaravelTop.scala:78:{32,43}
-    lerosRtlRam_io_gpio_in_REG <= io_gpio_in[23:18];	// src/main/scala/caravel/CaravelTop.scala:78:{32,43}
+  wire        _wbMux_io_targets_5_cyc;	// src/main/scala/wishbone/WishboneMux.scala:111:23
+  wire        _wbMux_io_targets_5_we;	// src/main/scala/wishbone/WishboneMux.scala:111:23
+  wire [31:0] _wbMux_io_targets_5_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:111:23
+  wire [19:0] _wbMux_io_targets_5_adr;	// src/main/scala/wishbone/WishboneMux.scala:111:23
+  wire        _registerFileTest_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:98:32
+  wire [31:0] _wishboneGpio_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:84:28
+  wire        _wishboneGpio_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:84:28
+  wire [5:0]  _wishboneGpio_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:84:28
+  wire [5:0]  _wishboneGpio_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:84:28
+  wire [31:0] _lerosRtlRam_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:75:11
+  wire        _lerosRtlRam_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:75:11
+  wire [5:0]  _lerosRtlRam_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:75:11
+  wire [5:0]  _lerosRtlRam_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:75:11
+  wire [31:0] _lerosDffRam_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:71:11
+  wire        _lerosDffRam_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:71:11
+  wire [5:0]  _lerosDffRam_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:71:11
+  wire [5:0]  _lerosDffRam_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:71:11
+  wire [31:0] _lerosSky130_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:67:11
+  wire        _lerosSky130_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:67:11
+  wire [5:0]  _lerosSky130_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:67:11
+  wire [5:0]  _lerosSky130_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:67:11
+  wire [31:0] _lerosCfram_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:60:11
+  wire        _lerosCfram_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:60:11
+  wire [5:0]  _lerosCfram_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:60:11
+  wire [5:0]  _lerosCfram_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:60:11
+  reg  [5:0]  lerosCfram_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:91:23
+  reg  [5:0]  lerosSky130_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:91:23
+  reg  [5:0]  lerosDffRam_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:91:23
+  reg  [5:0]  lerosRtlRam_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:91:23
+  reg  [5:0]  wishboneGpio_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:91:23
+  always @(posedge clock) begin	// src/main/scala/caravel/CaravelTop.scala:27:7
+    lerosCfram_io_gpio_in_REG <= io_gpio_in[5:0];	// src/main/scala/caravel/CaravelTop.scala:91:{23,34}
+    lerosSky130_io_gpio_in_REG <= io_gpio_in[11:6];	// src/main/scala/caravel/CaravelTop.scala:91:{23,34}
+    lerosDffRam_io_gpio_in_REG <= io_gpio_in[17:12];	// src/main/scala/caravel/CaravelTop.scala:91:{23,34}
+    lerosRtlRam_io_gpio_in_REG <= io_gpio_in[23:18];	// src/main/scala/caravel/CaravelTop.scala:91:{23,34}
+    wishboneGpio_io_gpio_in_REG <= io_gpio_in[29:24];	// src/main/scala/caravel/CaravelTop.scala:91:{23,34}
   end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/caravel/CaravelTop.scala:24:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/CaravelTop.scala:24:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/CaravelTop.scala:24:7
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/caravel/CaravelTop.scala:27:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/CaravelTop.scala:27:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/CaravelTop.scala:27:7
     `endif // FIRRTL_BEFORE_INITIAL
-    logic [31:0] _RANDOM[0:0];	// src/main/scala/caravel/CaravelTop.scala:24:7
-    initial begin	// src/main/scala/caravel/CaravelTop.scala:24:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/caravel/CaravelTop.scala:24:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/caravel/CaravelTop.scala:24:7
+    logic [31:0] _RANDOM[0:0];	// src/main/scala/caravel/CaravelTop.scala:27:7
+    initial begin	// src/main/scala/caravel/CaravelTop.scala:27:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/caravel/CaravelTop.scala:27:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/caravel/CaravelTop.scala:27:7
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/caravel/CaravelTop.scala:24:7
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/caravel/CaravelTop.scala:24:7
-        lerosCfram_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][5:0];	// src/main/scala/caravel/CaravelTop.scala:24:7, :78:32
-        lerosSky130_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][11:6];	// src/main/scala/caravel/CaravelTop.scala:24:7, :78:32
-        lerosDffRam_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][17:12];	// src/main/scala/caravel/CaravelTop.scala:24:7, :78:32
-        lerosRtlRam_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][23:18];	// src/main/scala/caravel/CaravelTop.scala:24:7, :78:32
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/caravel/CaravelTop.scala:27:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/caravel/CaravelTop.scala:27:7
+        lerosCfram_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][5:0];	// src/main/scala/caravel/CaravelTop.scala:27:7, :91:23
+        lerosSky130_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][11:6];	// src/main/scala/caravel/CaravelTop.scala:27:7, :91:23
+        lerosDffRam_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][17:12];	// src/main/scala/caravel/CaravelTop.scala:27:7, :91:23
+        lerosRtlRam_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][23:18];	// src/main/scala/caravel/CaravelTop.scala:27:7, :91:23
+        wishboneGpio_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][29:24];	// src/main/scala/caravel/CaravelTop.scala:27:7, :91:23
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/CaravelTop.scala:24:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/CaravelTop.scala:24:7
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/CaravelTop.scala:27:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/CaravelTop.scala:27:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  LerosCaravel_ChipFoundrySram lerosCfram (	// src/main/scala/caravel/CaravelTop.scala:54:11
+  LerosCaravel_ChipFoundrySram lerosCfram (	// src/main/scala/caravel/CaravelTop.scala:60:11
     .clock       (clock),
     .reset       (reset),
+    .io_wb_stb   (_wbMux_io_targets_0_stb),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_cyc   (_wbMux_io_targets_0_cyc),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_we    (_wbMux_io_targets_0_we),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_sel   (_wbMux_io_targets_0_sel),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_dat_i (_wbMux_io_targets_0_dat_i),	// src/main/scala/wishbone/WishboneMux.scala:111:23
-    .io_wb_adr   (_wbMux_io_targets_0_adr[11:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
+    .io_wb_adr   (_wbMux_io_targets_0_adr[15:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
     .io_wb_dat_o (_lerosCfram_io_wb_dat_o),
     .io_wb_ack   (_lerosCfram_io_wb_ack),
-    .io_gpio_in  (lerosCfram_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:78:32
+    .io_gpio_in  (lerosCfram_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:91:23
     .io_gpio_out (_lerosCfram_io_gpio_out),
     .io_gpio_oe  (_lerosCfram_io_gpio_oe)
   );
-  LerosCaravel_OpenRamSky130 lerosSky130 (	// src/main/scala/caravel/CaravelTop.scala:58:11
+  LerosCaravel_OpenRamSky130 lerosSky130 (	// src/main/scala/caravel/CaravelTop.scala:67:11
     .clock       (clock),
     .reset       (reset),
+    .io_wb_stb   (_wbMux_io_targets_1_stb),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_cyc   (_wbMux_io_targets_1_cyc),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_we    (_wbMux_io_targets_1_we),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_sel   (_wbMux_io_targets_1_sel),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_dat_i (_wbMux_io_targets_1_dat_i),	// src/main/scala/wishbone/WishboneMux.scala:111:23
-    .io_wb_adr   (_wbMux_io_targets_1_adr[11:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
+    .io_wb_adr   (_wbMux_io_targets_1_adr[15:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
     .io_wb_dat_o (_lerosSky130_io_wb_dat_o),
     .io_wb_ack   (_lerosSky130_io_wb_ack),
-    .io_gpio_in  (lerosSky130_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:78:32
+    .io_gpio_in  (lerosSky130_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:91:23
     .io_gpio_out (_lerosSky130_io_gpio_out),
     .io_gpio_oe  (_lerosSky130_io_gpio_oe)
   );
-  LerosCaravel_DffRam lerosDffRam (	// src/main/scala/caravel/CaravelTop.scala:62:11
+  LerosCaravel_DffRam lerosDffRam (	// src/main/scala/caravel/CaravelTop.scala:71:11
     .clock       (clock),
     .reset       (reset),
+    .io_wb_stb   (_wbMux_io_targets_2_stb),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_cyc   (_wbMux_io_targets_2_cyc),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_we    (_wbMux_io_targets_2_we),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_sel   (_wbMux_io_targets_2_sel),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_dat_i (_wbMux_io_targets_2_dat_i),	// src/main/scala/wishbone/WishboneMux.scala:111:23
-    .io_wb_adr   (_wbMux_io_targets_2_adr[11:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
+    .io_wb_adr   (_wbMux_io_targets_2_adr[15:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
     .io_wb_dat_o (_lerosDffRam_io_wb_dat_o),
     .io_wb_ack   (_lerosDffRam_io_wb_ack),
-    .io_gpio_in  (lerosDffRam_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:78:32
+    .io_gpio_in  (lerosDffRam_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:91:23
     .io_gpio_out (_lerosDffRam_io_gpio_out),
     .io_gpio_oe  (_lerosDffRam_io_gpio_oe)
   );
-  LerosCaravel_RtlSyncMemory lerosRtlRam (	// src/main/scala/caravel/CaravelTop.scala:66:11
+  LerosCaravel_RtlSyncMemory lerosRtlRam (	// src/main/scala/caravel/CaravelTop.scala:75:11
     .clock       (clock),
     .reset       (reset),
+    .io_wb_stb   (_wbMux_io_targets_3_stb),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_cyc   (_wbMux_io_targets_3_cyc),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_we    (_wbMux_io_targets_3_we),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_sel   (_wbMux_io_targets_3_sel),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_dat_i (_wbMux_io_targets_3_dat_i),	// src/main/scala/wishbone/WishboneMux.scala:111:23
-    .io_wb_adr   (_wbMux_io_targets_3_adr[11:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
+    .io_wb_adr   (_wbMux_io_targets_3_adr[15:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
     .io_wb_dat_o (_lerosRtlRam_io_wb_dat_o),
     .io_wb_ack   (_lerosRtlRam_io_wb_ack),
-    .io_gpio_in  (lerosRtlRam_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:78:32
+    .io_gpio_in  (lerosRtlRam_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:91:23
     .io_gpio_out (_lerosRtlRam_io_gpio_out),
     .io_gpio_oe  (_lerosRtlRam_io_gpio_oe)
   );
-  RegisterFileTest registerFileTest (	// src/main/scala/caravel/CaravelTop.scala:85:32
+  WishboneGpio wishboneGpio (	// src/main/scala/caravel/CaravelTop.scala:84:28
+    .clock       (clock),
+    .reset       (reset),
+    .io_wb_cyc   (_wbMux_io_targets_5_cyc),	// src/main/scala/wishbone/WishboneMux.scala:111:23
+    .io_wb_we    (_wbMux_io_targets_5_we),	// src/main/scala/wishbone/WishboneMux.scala:111:23
+    .io_wb_dat_i (_wbMux_io_targets_5_dat_i),	// src/main/scala/wishbone/WishboneMux.scala:111:23
+    .io_wb_adr   (_wbMux_io_targets_5_adr[1:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
+    .io_wb_dat_o (_wishboneGpio_io_wb_dat_o),
+    .io_wb_ack   (_wishboneGpio_io_wb_ack),
+    .io_gpio_in  (wishboneGpio_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:91:23
+    .io_gpio_out (_wishboneGpio_io_gpio_out),
+    .io_gpio_oe  (_wishboneGpio_io_gpio_oe)
+  );
+  RegisterFileTest registerFileTest (	// src/main/scala/caravel/CaravelTop.scala:98:32
     .clock     (clock),
     .reset     (reset),
     .io_wb_cyc (_wbMux_io_targets_4_cyc),	// src/main/scala/wishbone/WishboneMux.scala:111:23
@@ -4949,46 +5466,58 @@ module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:24:7
     .io_master_adr      (io_wb_adr),
     .io_master_dat_o    (io_wb_dat_o),
     .io_master_ack      (io_wb_ack),
+    .io_targets_0_stb   (_wbMux_io_targets_0_stb),
     .io_targets_0_cyc   (_wbMux_io_targets_0_cyc),
     .io_targets_0_we    (_wbMux_io_targets_0_we),
     .io_targets_0_sel   (_wbMux_io_targets_0_sel),
     .io_targets_0_dat_i (_wbMux_io_targets_0_dat_i),
     .io_targets_0_adr   (_wbMux_io_targets_0_adr),
-    .io_targets_0_dat_o (_lerosCfram_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:54:11
-    .io_targets_0_ack   (_lerosCfram_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:54:11
+    .io_targets_0_dat_o (_lerosCfram_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:60:11
+    .io_targets_0_ack   (_lerosCfram_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:60:11
+    .io_targets_1_stb   (_wbMux_io_targets_1_stb),
     .io_targets_1_cyc   (_wbMux_io_targets_1_cyc),
     .io_targets_1_we    (_wbMux_io_targets_1_we),
     .io_targets_1_sel   (_wbMux_io_targets_1_sel),
     .io_targets_1_dat_i (_wbMux_io_targets_1_dat_i),
     .io_targets_1_adr   (_wbMux_io_targets_1_adr),
-    .io_targets_1_dat_o (_lerosSky130_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:58:11
-    .io_targets_1_ack   (_lerosSky130_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:58:11
+    .io_targets_1_dat_o (_lerosSky130_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:67:11
+    .io_targets_1_ack   (_lerosSky130_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:67:11
+    .io_targets_2_stb   (_wbMux_io_targets_2_stb),
     .io_targets_2_cyc   (_wbMux_io_targets_2_cyc),
     .io_targets_2_we    (_wbMux_io_targets_2_we),
     .io_targets_2_sel   (_wbMux_io_targets_2_sel),
     .io_targets_2_dat_i (_wbMux_io_targets_2_dat_i),
     .io_targets_2_adr   (_wbMux_io_targets_2_adr),
-    .io_targets_2_dat_o (_lerosDffRam_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:62:11
-    .io_targets_2_ack   (_lerosDffRam_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:62:11
+    .io_targets_2_dat_o (_lerosDffRam_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:71:11
+    .io_targets_2_ack   (_lerosDffRam_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:71:11
+    .io_targets_3_stb   (_wbMux_io_targets_3_stb),
     .io_targets_3_cyc   (_wbMux_io_targets_3_cyc),
     .io_targets_3_we    (_wbMux_io_targets_3_we),
     .io_targets_3_sel   (_wbMux_io_targets_3_sel),
     .io_targets_3_dat_i (_wbMux_io_targets_3_dat_i),
     .io_targets_3_adr   (_wbMux_io_targets_3_adr),
-    .io_targets_3_dat_o (_lerosRtlRam_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:66:11
-    .io_targets_3_ack   (_lerosRtlRam_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:66:11
+    .io_targets_3_dat_o (_lerosRtlRam_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:75:11
+    .io_targets_3_ack   (_lerosRtlRam_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:75:11
     .io_targets_4_cyc   (_wbMux_io_targets_4_cyc),
-    .io_targets_4_ack   (_registerFileTest_io_wb_ack)	// src/main/scala/caravel/CaravelTop.scala:85:32
+    .io_targets_4_ack   (_registerFileTest_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:98:32
+    .io_targets_5_cyc   (_wbMux_io_targets_5_cyc),
+    .io_targets_5_we    (_wbMux_io_targets_5_we),
+    .io_targets_5_dat_i (_wbMux_io_targets_5_dat_i),
+    .io_targets_5_adr   (_wbMux_io_targets_5_adr),
+    .io_targets_5_dat_o (_wishboneGpio_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:84:28
+    .io_targets_5_ack   (_wishboneGpio_io_wb_ack)	// src/main/scala/caravel/CaravelTop.scala:84:28
   );
   assign io_gpio_out =
-    {_lerosRtlRam_io_gpio_out,
+    {_wishboneGpio_io_gpio_out,
+     _lerosRtlRam_io_gpio_out,
      _lerosDffRam_io_gpio_out,
      _lerosSky130_io_gpio_out,
-     _lerosCfram_io_gpio_out};	// src/main/scala/caravel/CaravelTop.scala:24:7, :54:11, :58:11, :62:11, :66:11, :82:21
+     _lerosCfram_io_gpio_out};	// src/main/scala/caravel/CaravelTop.scala:27:7, :60:11, :67:11, :71:11, :75:11, :84:28, :95:21
   assign io_gpio_oe =
-    {_lerosRtlRam_io_gpio_oe,
+    {_wishboneGpio_io_gpio_oe,
+     _lerosRtlRam_io_gpio_oe,
      _lerosDffRam_io_gpio_oe,
      _lerosSky130_io_gpio_oe,
-     _lerosCfram_io_gpio_oe};	// src/main/scala/caravel/CaravelTop.scala:24:7, :54:11, :58:11, :62:11, :66:11, :83:20
+     _lerosCfram_io_gpio_oe};	// src/main/scala/caravel/CaravelTop.scala:27:7, :60:11, :67:11, :71:11, :75:11, :84:28, :96:20
 endmodule
 

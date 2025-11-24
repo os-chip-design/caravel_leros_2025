@@ -12,8 +12,8 @@
     "DIE_AREA": [
         0,
         0,
-        840,
-        735
+        1120,
+        515
     ],
     "VDD_NETS": [
         "vccd1"
@@ -26,17 +26,17 @@
             "instances": {
                 "instrMem.m.mem": {
                     "location": [
-                        40,
-                        289.9
+                        0,
+                        50
                     ],
                     "orientation": "N"
                 },
                 "dmem.m.mem": {
                     "location": [
-                        420,
-                        289.9
+                        740,
+                        50
                     ],
-                    "orientation": "N"
+                    "orientation": "FN"
                 }
             },
             "gds": [
@@ -113,6 +113,8 @@
     "RUN_POST_GRT_RESIZER_TIMING": true,
     "GRT_ANTENNA_ITERS": 20,
     "GRT_ANTENNA_MARGIN": 15,
+    "DESIGN_REPAIR_MAX_WIRE_LENGTH": 800,
+    "PL_WIRE_LENGTH_COEF": 0.05,
     "DESIGN_REPAIR_MAX_SLEW_PCT": 30,
     "DESIGN_REPAIR_MAX_CAP_PCT": 30,
     "MAGIC_DEF_LABELS": false,

@@ -10,8 +10,8 @@
   "DIE_AREA": [
     0,
     0,
-    500,
-    300
+    300,
+    500
   ],
   "VDD_NETS": [
     "vccd1"
@@ -71,5 +71,7 @@
     "QUIT_ON_MAGIC_DRC": false,
     "MAGIC_EXT_USE_GDS": false,
     "MAGIC_CAPTURE_ERRORS": false,
-    "QUIT_ON_ILLEGAL_OVERLAPS": false
+    "QUIT_ON_ILLEGAL_OVERLAPS": false,
+
+    "DIODE_ON_PORTS": "both"
 }
