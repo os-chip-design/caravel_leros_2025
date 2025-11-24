@@ -1,6 +1,7 @@
 {
     "DESIGN_NAME": "rf_wrapper",
     "FP_PDN_MULTILAYER": true,
+    "FP_PDN_CORE_RING": true,
     "VERILOG_FILES": [
         "dir::../../macro/rf_wrapper.v",
         "dir::../../macro/rf_top.v"
@@ -11,8 +12,8 @@
     "DIE_AREA": [
         0,
         0,
-        1000,
-        500
+        200,
+        300
     ],
       "MACROS": {
     "rf_top": {
@@ -37,9 +38,10 @@
     ],
       "FP_PDN_HPITCH": 35,
     "FP_PDN_VPITCH": 35,
-      "PDN_MACRO_CONNECTIONS": [
-        "i_rf vccd1 vssd1 VDPWR VGND"
-    ],
+  "PDN_MACRO_CONNECTIONS": [
+    "i_rf vccd1 vssd1 VDPWR VGND"
+  ],
+  "RUN_IRDROP_REPORT": 0,
     "RUN_KLAYOUT_XOR": 0
 
 }
