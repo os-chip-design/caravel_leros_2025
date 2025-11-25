@@ -3,6 +3,7 @@
     "VERILOG_FILES": [
         "dir::../../verilog/rtl/defines.v",
         "dir::../../verilog/rtl/CaravelTop.sv",
+        "dir::../../macro/rf_top.v",
         "dir::../../verilog/rtl/user_project_wrapper.v"
     ],
     "PNR_SDC_FILE": "dir::signoff.sdc",
