@@ -11,7 +11,7 @@ config["VERILOG_FILES"] = [
 ]
 
 left_edge_space = 10.1
-right_edge_space = 150
+right_edge_space = 120
 center_space = 300
 top_space = 10.1
 bottom_space = 10.1
@@ -156,6 +156,8 @@ config.update({
 
     "PRIMARY_GDSII_STREAMOUT_TOOL": "klayout"
 })
+
+config["DIODE_ON_PORTS"] = "both"
 
 # get python file dir
 import os 

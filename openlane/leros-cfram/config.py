@@ -161,6 +161,8 @@ config.update({ # Klayout seems to be upset by something in the openram metadata
     "QUIT_ON_ILLEGAL_OVERLAPS": False,
 })
 
+config["DIODE_ON_PORTS"] = "both"
+
 # get python file dir
 import os 
 dir_path = os.path.dirname(os.path.realpath(__file__))

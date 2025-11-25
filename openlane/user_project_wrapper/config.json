@@ -58,7 +58,7 @@
         "LerosCaravel_OpenRamSky130": {
             "instances": {
                 "mprj.lerosSky130": {
-                    "location": [150, 900],
+                    "location": [50, 1200],
                     "orientation": "N"
                 }
             },
@@ -78,7 +78,7 @@
         "LerosCaravel_DffRam": {
             "instances": {
                 "mprj.lerosDffRam": {
-                    "location": [1500, 600],
+                    "location": [1500, 900],
                     "orientation": "N"
                 }
             },
@@ -98,7 +98,7 @@
             "instances": {
                 "mprj.lerosRtlRam": {
                     "location": [1500, 2600],
-                    "orientation": "N"
+                    "orientation": "FN"
                 }
             },
             "gds": ["dir::../../gds/LerosCaravel_RtlSyncMemory.gds"],
@@ -186,6 +186,11 @@
 
     "ERROR_ON_MAGIC_DRC": false,
     "ERROR_ON_ILLEGAL_OVERLAPS": false,
-    "GRT_ALLOW_CONGESTION": true
+    "GRT_ALLOW_CONGESTION": true,
+    "STA_CORNERS": [
+        "nom_tt_025C_1v80",
+        "min_tt_025C_1v80",
+        "max_tt_025C_1v80"
+    ]
     
 }

@@ -12,7 +12,7 @@
     "DIE_AREA": [
         0,
         0,
-        639.88,
+        609.88,
         1115.1999999999998
     ],
     "VDD_NETS": [
@@ -115,5 +115,6 @@
     "QUIT_ON_MAGIC_DRC": false,
     "MAGIC_CAPTURE_ERRORS": false,
     "QUIT_ON_ILLEGAL_OVERLAPS": false,
-    "PRIMARY_GDSII_STREAMOUT_TOOL": "klayout"
+    "PRIMARY_GDSII_STREAMOUT_TOOL": "klayout",
+    "DIODE_ON_PORTS": "both"
 }

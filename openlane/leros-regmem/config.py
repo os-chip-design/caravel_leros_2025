@@ -12,7 +12,7 @@ config["VERILOG_FILES"] = [
 
 left_edge_space = 10.1
 right_edge_space = 10.1
-center_space = 400
+center_space = 390
 top_space = 10.1
 bottom_space = 40
 
@@ -172,15 +172,19 @@ config.update({
     "MAX_TRANSITION_CONSTRAINT": 1.5,
     "DESIGN_REPAIR_MAX_SLEW_PCT": 30,
     "DESIGN_REPAIR_MAX_CAP_PCT": 30,
-    "DEFAULT_CORNER": "max_ss_100C_1v60",
+    #"DEFAULT_CORNER": "max_ss_100C_1v60",
     "RUN_POST_GRT_DESIGN_REPAIR": True,
 })
+
+config["DIODE_ON_PORTS"] = "both"
 
 config["STA_CORNERS"] = [
     "nom_tt_025C_1v80",
     "min_tt_025C_1v80",
     "max_tt_025C_1v80"
 ]
+
+config["GRT_ALLOW_CONGESTION"] = True
 
 # get python file dir
 import os 

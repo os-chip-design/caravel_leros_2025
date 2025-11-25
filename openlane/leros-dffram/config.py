@@ -151,9 +151,17 @@ config.update({
     "MAX_TRANSITION_CONSTRAINT": 1.5,
     "DESIGN_REPAIR_MAX_SLEW_PCT": 30,
     "DESIGN_REPAIR_MAX_CAP_PCT": 30,
-    "DEFAULT_CORNER": "max_ss_100C_1v60",
+    #"DEFAULT_CORNER": "max_ss_100C_1v60",
     "RUN_POST_GRT_DESIGN_REPAIR": True,
 })
+
+config["STA_CORNERS"] = [
+    "nom_tt_025C_1v80",
+    "min_tt_025C_1v80",
+    "max_tt_025C_1v80"
+]
+
+config["DIODE_ON_PORTS"] = "both"
 
 # get python file dir
 import os 

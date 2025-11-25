@@ -12,7 +12,7 @@
     "DIE_AREA": [
         0,
         0,
-        1190.1999999999998,
+        1180.1999999999998,
         650.1
     ],
     "VDD_NETS": [
@@ -60,7 +60,7 @@
             "instances": {
                 "dmem.m.mem_ext": {
                     "location": [
-                        880.1,
+                        870.1,
                         40
                     ],
                     "orientation": "N"
@@ -155,10 +155,11 @@
     "PL_WIRE_LENGTH_COEF": 0.05,
     "DESIGN_REPAIR_MAX_SLEW_PCT": 30,
     "DESIGN_REPAIR_MAX_CAP_PCT": 30,
-    "DEFAULT_CORNER": "max_ss_100C_1v60",
+    "DIODE_ON_PORTS": "both",
     "STA_CORNERS": [
         "nom_tt_025C_1v80",
         "min_tt_025C_1v80",
         "max_tt_025C_1v80"
-    ]
+    ],
+    "GRT_ALLOW_CONGESTION": true
 }

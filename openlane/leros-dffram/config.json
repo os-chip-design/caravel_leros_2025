@@ -2,7 +2,7 @@
     "DESIGN_NAME": "LerosCaravel_DffRam",
     "CLOCK_PORT": "clock",
     "CLOCK_NET": "clock",
-    "CLOCK_PERIOD": 50,
+    "CLOCK_PERIOD": 55,
     "VERILOG_FILES": [
         "dir::../../verilog/rtl/CaravelTop.sv"
     ],
@@ -104,7 +104,7 @@
     "pdk::sky130*": {
         "RT_MAX_LAYER": "met4",
         "scl::sky130_fd_sc_hd": {
-            "CLOCK_PERIOD": 50
+            "CLOCK_PERIOD": 55
         },
         "scl::sky130_fd_sc_hdll": {
             "CLOCK_PERIOD": 10
@@ -136,5 +136,10 @@
     "PL_WIRE_LENGTH_COEF": 0.05,
     "DESIGN_REPAIR_MAX_SLEW_PCT": 30,
     "DESIGN_REPAIR_MAX_CAP_PCT": 30,
-    "DEFAULT_CORNER": "max_ss_100C_1v60"
+    "STA_CORNERS": [
+        "nom_tt_025C_1v80",
+        "min_tt_025C_1v80",
+        "max_tt_025C_1v80"
+    ],
+    "DIODE_ON_PORTS": "both"
 }
