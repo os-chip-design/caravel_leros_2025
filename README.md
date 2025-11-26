@@ -24,6 +24,10 @@ Install the CF RAM and the DFF RAM (it should be included in the Makefile on Lin
     ipm install DFFRAM256x32
     gunzip ip/DFFRAM256x32/layout/gds/DFFRAM256x32.gds.gz
 
+Unzip the GDS of the registerfile test:
+
+    gunzip macro/rf_top.gds.gz
+
 Generate the Leros Verilog files (not needed as the SV files are included):
 
     make generate-verilog
@@ -105,9 +109,10 @@ Wishbone User space is mapped as follows: 0x3000_0000 - 0x300F_FFFF
 
 | Range         | Description                  |
 |---------------|------------------------------|
-| 37:32         | Leros with OpenRAM SRAM      |
-| 31:26         | Leros with CF SRAM           |
-| 25:20         | Leros with RTL Register File |
-| 19:14         | Leros with DFF RAM           |
-| 13:7          | free                         |
+| 37:32         | Wishbone 6-bit GPIO          |
+| 31            | HelloMorse                   |
+| 30:25         | Leros with OpenRAM SRAM      |
+| 24:19         | Leros with CF SRAM           |
+| 18:13         | Leros with RTL Register File |
+| 12:7          | Leros with DFF RAM           |
 | 6:0           | Blocked by caravel           |
