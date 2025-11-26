@@ -39,7 +39,7 @@ then harden the wrapper for the memory
 and the register file
 
     make reg-file LIBRELANE_USE_NIX=1
-    
+
 and the register based memories
 
     make regmem_128 LIBRELANE_USE_NIX=1
@@ -79,7 +79,7 @@ The Leros test case can be run with cocotb:
 * [x] MPW check
 * [x] Test upload to ChipFoundry (user is martin-schoeberl)
 * [ ] Change example to Chisel top level (with a simple design) and harden it
-* [ ] Have some basic tests
+* [x] Have some basic tests
 * [x] Add DTU subsystem (inclusive memories)
 * [x] Make sure to use 10 MHz for the serial port
 * [ ] Set pin defines in defines.v
@@ -89,8 +89,8 @@ The Leros test case can be run with cocotb:
   - [x] CF RAM
   - [x] DFF RAM
 * [x] Have a RV Wishbone test to boot Leros
-* [ ] Maybe have three versions on the same chip
-* [ ] Add some more simple example on the top level (WB IO, Sylvan's RF, ttsky25-tapeout/SKY130_register_file_testing)
+* [x] Maybe have three versions on the same chip
+* [x] Add some more simple example on the top level (WB IO, Sylvan's RF, ttsky25-tapeout/SKY130_register_file_testing)
 * [ ] Add a block diagram of the project architecture.
 * [ ] Include instructions on how to build and simulate the project.
 
@@ -120,3 +120,7 @@ Wishbone User space is mapped as follows: 0x3000_0000 - 0x300F_FFFF
 | 18:13         | Leros with RTL Register File |
 | 12:7          | Leros with DFF RAM           |
 | 6:0           | Blocked by caravel           |
+
+## The Chip GDS:
+
+![Chip GDS](caravel_leros.png)
