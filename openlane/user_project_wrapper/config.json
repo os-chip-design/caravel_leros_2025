@@ -38,7 +38,7 @@
         "LerosCaravel_ChipFoundrySram": {
             "instances": {
                 "mprj.lerosCfram": {
-                    "location": [340, 2600],
+                    "location": [150, 2600],
                     "orientation": "N"
                 }
             },
@@ -58,7 +58,7 @@
         "LerosCaravel_OpenRamSky130": {
             "instances": {
                 "mprj.lerosSky130": {
-                    "location": [50, 1200],
+                    "location": [200, 1200],
                     "orientation": "N"
                 }
             },
@@ -78,7 +78,7 @@
         "LerosCaravel_DffRam": {
             "instances": {
                 "mprj.lerosDffRam": {
-                    "location": [1500, 900],
+                    "location": [1300, 900],
                     "orientation": "N"
                 }
             },
@@ -116,7 +116,7 @@
         "rf_wrapper": {
             "instances": {
                 "mprj.registerFileTest.rf": {
-                    "location": [468, 930],
+                    "location": [468, 500],
                     "orientation": "N"
                 }
             },

@@ -36,6 +36,10 @@ then harden the wrapper for the memory
 
     make CF_SRAM_1024x32_wrapper LIBRELANE_USE_NIX=1
 
+and the register file
+
+    make reg-file LIBRELANE_USE_NIX=1
+    
 and the register based memories
 
     make regmem_128 LIBRELANE_USE_NIX=1
