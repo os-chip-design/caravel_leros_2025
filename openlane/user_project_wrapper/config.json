@@ -2,8 +2,8 @@
     "//": "Design files",
     "VERILOG_FILES": [
         "dir::../../verilog/rtl/defines.v",
+        "dir::../../macro/rf_wrapper.bb.v",
         "dir::../../verilog/rtl/CaravelTop.sv",
-        "dir::../../macro/rf_top.v",
         "dir::../../verilog/rtl/user_project_wrapper.v"
     ],
     "PNR_SDC_FILE": "dir::signoff.sdc",
@@ -112,13 +112,32 @@
             "lib": {
                 "*": "dir::../../lib/LerosCaravel_RtlSyncMemory.lib"
             }
+        },
+        "rf_wrapper": {
+            "instances": {
+                "mprj.registerFileTest.rf": {
+                    "location": [468, 950],
+                    "orientation": "N"
+                }
+            },
+            "gds": ["dir::../../gds/rf_wrapper.gds"],
+            "lef": ["dir::../../lef/rf_wrapper.lef"],
+            "spef": {
+                "min_*": ["dir::../../spef/multicorner/rf_wrapper.min.spef"],
+                "nom_*": ["dir::../../spef/multicorner/rf_wrapper.nom.spef"],
+                "max_*": ["dir::../../spef/multicorner/rf_wrapper.max.spef"]
+            },
+            "lib": {
+                "*": "dir::../../lib/rf_wrapper.lib"
+            }
         }
     },
     "PDN_MACRO_CONNECTIONS": [
         "mprj.lerosSky130 vccd2 vssd2 vccd1 vssd1", 
         "mprj.lerosCfram vccd2 vssd2 vccd1 vssd1",
         "mprj.lerosDffRam vccd2 vssd2 vccd1 vssd1",
-        "mprj.lerosRtlRam vccd2 vssd2 vccd1 vssd1"
+        "mprj.lerosRtlRam vccd2 vssd2 vccd1 vssd1",
+        "mprj.registerFileTest.rf vccd2 vssd2 vccd1 vssd1"
     ],
 
     "//": "PDN configurations",
@@ -191,6 +210,8 @@
         "nom_tt_025C_1v80",
         "min_tt_025C_1v80",
         "max_tt_025C_1v80"
-    ]
+    ],
+    "PL_RESIZER_HOLD_SLACK_MARGIN": 0.1,
+    "GRT_RESIZER_HOLD_SLACK_MARGIN": 0.05
     
 }

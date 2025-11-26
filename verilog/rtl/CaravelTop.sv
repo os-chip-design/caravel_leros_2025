@@ -5035,19 +5035,27 @@ module WishboneGpio(	// src/main/scala/caravel/WishboneGpio.scala:8:7
   assign io_gpio_oe = outputEnables;	// src/main/scala/caravel/WishboneGpio.scala:8:7, :27:30
 endmodule
 
+// external module rf_wrapper
+
 module RegisterFileTest(	// src/main/scala/caravel/RegisterFileTest.scala:10:7
-  input  clock,	// src/main/scala/caravel/RegisterFileTest.scala:10:7
-         reset,	// src/main/scala/caravel/RegisterFileTest.scala:10:7
-         io_wb_cyc,	// src/main/scala/caravel/RegisterFileTest.scala:15:14
-  output io_wb_ack	// src/main/scala/caravel/RegisterFileTest.scala:15:14
+  input         clock,	// src/main/scala/caravel/RegisterFileTest.scala:10:7
+                reset,	// src/main/scala/caravel/RegisterFileTest.scala:10:7
+                io_wb_cyc,	// src/main/scala/caravel/RegisterFileTest.scala:12:14
+                io_wb_we,	// src/main/scala/caravel/RegisterFileTest.scala:12:14
+  input  [31:0] io_wb_dat_i,	// src/main/scala/caravel/RegisterFileTest.scala:12:14
+  input  [11:0] io_wb_adr,	// src/main/scala/caravel/RegisterFileTest.scala:12:14
+  output [31:0] io_wb_dat_o,	// src/main/scala/caravel/RegisterFileTest.scala:12:14
+  output        io_wb_ack	// src/main/scala/caravel/RegisterFileTest.scala:12:14
 );
 
-  reg accessPhase;	// src/main/scala/caravel/RegisterFileTest.scala:23:28
+  wire [31:0] _rf_ra_data;	// src/main/scala/caravel/RegisterFileTest.scala:28:18
+  wire [31:0] _rf_rb_data;	// src/main/scala/caravel/RegisterFileTest.scala:28:18
+  reg         accessPhase;	// src/main/scala/caravel/RegisterFileTest.scala:20:28
   always @(posedge clock) begin	// src/main/scala/caravel/RegisterFileTest.scala:10:7
     if (reset)	// src/main/scala/caravel/RegisterFileTest.scala:10:7
-      accessPhase <= 1'h0;	// src/main/scala/caravel/RegisterFileTest.scala:10:7, :23:28
+      accessPhase <= 1'h0;	// src/main/scala/caravel/RegisterFileTest.scala:10:7, :20:28
     else	// src/main/scala/caravel/RegisterFileTest.scala:10:7
-      accessPhase <= ~accessPhase & (io_wb_cyc | accessPhase);	// src/main/scala/caravel/RegisterFileTest.scala:23:28, :25:21, :26:17, :27:25, :28:17
+      accessPhase <= ~accessPhase & (io_wb_cyc | accessPhase);	// src/main/scala/caravel/RegisterFileTest.scala:20:28, :22:21, :23:17, :24:25, :25:17
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/caravel/RegisterFileTest.scala:10:7
     `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/RegisterFileTest.scala:10:7
@@ -5060,14 +5068,25 @@ module RegisterFileTest(	// src/main/scala/caravel/RegisterFileTest.scala:10:7
       `endif // INIT_RANDOM_PROLOG_
       `ifdef RANDOMIZE_REG_INIT	// src/main/scala/caravel/RegisterFileTest.scala:10:7
         _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/caravel/RegisterFileTest.scala:10:7
-        accessPhase = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/caravel/RegisterFileTest.scala:10:7, :23:28
+        accessPhase = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/caravel/RegisterFileTest.scala:10:7, :20:28
       `endif // RANDOMIZE_REG_INIT
     end // initial
     `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/RegisterFileTest.scala:10:7
       `FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/RegisterFileTest.scala:10:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  assign io_wb_ack = accessPhase;	// src/main/scala/caravel/RegisterFileTest.scala:10:7, :23:28
+  rf_wrapper rf (	// src/main/scala/caravel/RegisterFileTest.scala:28:18
+    .clk     (clock),
+    .w_data  (io_wb_dat_i),
+    .w_addr  (io_wb_adr[4:0]),	// src/main/scala/caravel/RegisterFileTest.scala:33:16
+    .w_ena   (io_wb_we),
+    .ra_addr (io_wb_adr[4:0]),	// src/main/scala/caravel/RegisterFileTest.scala:33:16
+    .ra_data (_rf_ra_data),
+    .rb_addr (io_wb_adr[4:0]),	// src/main/scala/caravel/RegisterFileTest.scala:33:16
+    .rb_data (_rf_rb_data)
+  );
+  assign io_wb_dat_o = io_wb_adr[5] ? _rf_rb_data : _rf_ra_data;	// src/main/scala/caravel/RegisterFileTest.scala:10:7, :28:18, :40:15, :42:{18,23}, :43:17
+  assign io_wb_ack = accessPhase;	// src/main/scala/caravel/RegisterFileTest.scala:10:7, :20:28
 endmodule
 
 module WishboneErrorTarget(	// src/main/scala/wishbone/WishboneErrorTarget.scala:6:7
@@ -5150,6 +5169,10 @@ module WishboneMux(	// src/main/scala/wishbone/WishboneMux.scala:15:7
   input  [31:0] io_targets_3_dat_o,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   input         io_targets_3_ack,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   output        io_targets_4_cyc,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+                io_targets_4_we,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+  output [31:0] io_targets_4_dat_i,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+  output [19:0] io_targets_4_adr,	// src/main/scala/wishbone/WishboneMux.scala:21:14
+  input  [31:0] io_targets_4_dat_o,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   input         io_targets_4_ack,	// src/main/scala/wishbone/WishboneMux.scala:21:14
   output        io_targets_5_cyc,	// src/main/scala/wishbone/WishboneMux.scala:21:14
                 io_targets_5_we,	// src/main/scala/wishbone/WishboneMux.scala:21:14
@@ -5168,7 +5191,7 @@ module WishboneMux(	// src/main/scala/wishbone/WishboneMux.scala:15:7
   reg  wasSelected_2;	// src/main/scala/wishbone/WishboneMux.scala:73:30
   wire selected_3 = io_master_cyc & io_master_adr[19:16] == 4'h3;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
   reg  wasSelected_3;	// src/main/scala/wishbone/WishboneMux.scala:73:30
-  wire selected_4 = io_master_cyc & io_master_adr[19:8] == 12'h400;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
+  wire selected_4 = io_master_cyc & io_master_adr[19:12] == 8'h40;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
   reg  wasSelected_4;	// src/main/scala/wishbone/WishboneMux.scala:73:30
   wire selected_5 = io_master_cyc & io_master_adr[19:2] == 18'h14000;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
   wire _GEN = selected_5 | selected_4 | selected_3 | selected_2 | selected_1 | selected;	// src/main/scala/wishbone/WishboneMux.scala:36:22, :61:34, :66:20, :67:30
@@ -5225,14 +5248,14 @@ module WishboneMux(	// src/main/scala/wishbone/WishboneMux.scala:15:7
     wasSelected_5
       ? io_targets_5_dat_o
       : wasSelected_4
-          ? 32'hDEADBEEF
+          ? io_targets_4_dat_o
           : wasSelected_3
               ? io_targets_3_dat_o
               : wasSelected_2
                   ? io_targets_2_dat_o
                   : wasSelected_1
                       ? io_targets_1_dat_o
-                      : wasSelected ? io_targets_0_dat_o : 32'h0;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :21:14, :35:27, :36:22, :73:30, :75:23, :77:23
+                      : wasSelected ? io_targets_0_dat_o : 32'h0;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :35:27, :36:22, :73:30, :75:23, :77:23
   assign io_master_ack =
     wasSelected_5
       ? io_targets_5_ack
@@ -5270,6 +5293,9 @@ module WishboneMux(	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_3_dat_i = io_master_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_3_adr = io_master_adr;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_4_cyc = selected_4;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :61:34
+  assign io_targets_4_we = io_master_we;	// src/main/scala/wishbone/WishboneMux.scala:15:7
+  assign io_targets_4_dat_i = io_master_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:15:7
+  assign io_targets_4_adr = io_master_adr;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_5_cyc = selected_5;	// src/main/scala/wishbone/WishboneMux.scala:15:7, :61:34
   assign io_targets_5_we = io_master_we;	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_5_dat_i = io_master_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:15:7
@@ -5317,10 +5343,14 @@ module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:27:7
   wire [31:0] _wbMux_io_targets_3_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [19:0] _wbMux_io_targets_3_adr;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire        _wbMux_io_targets_4_cyc;	// src/main/scala/wishbone/WishboneMux.scala:111:23
+  wire        _wbMux_io_targets_4_we;	// src/main/scala/wishbone/WishboneMux.scala:111:23
+  wire [31:0] _wbMux_io_targets_4_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:111:23
+  wire [19:0] _wbMux_io_targets_4_adr;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire        _wbMux_io_targets_5_cyc;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire        _wbMux_io_targets_5_we;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [31:0] _wbMux_io_targets_5_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [19:0] _wbMux_io_targets_5_adr;	// src/main/scala/wishbone/WishboneMux.scala:111:23
+  wire [31:0] _registerFileTest_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:98:32
   wire        _registerFileTest_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:98:32
   wire [31:0] _wishboneGpio_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:84:28
   wire        _wishboneGpio_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:84:28
@@ -5450,10 +5480,14 @@ module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:27:7
     .io_gpio_oe  (_wishboneGpio_io_gpio_oe)
   );
   RegisterFileTest registerFileTest (	// src/main/scala/caravel/CaravelTop.scala:98:32
-    .clock     (clock),
-    .reset     (reset),
-    .io_wb_cyc (_wbMux_io_targets_4_cyc),	// src/main/scala/wishbone/WishboneMux.scala:111:23
-    .io_wb_ack (_registerFileTest_io_wb_ack)
+    .clock       (clock),
+    .reset       (reset),
+    .io_wb_cyc   (_wbMux_io_targets_4_cyc),	// src/main/scala/wishbone/WishboneMux.scala:111:23
+    .io_wb_we    (_wbMux_io_targets_4_we),	// src/main/scala/wishbone/WishboneMux.scala:111:23
+    .io_wb_dat_i (_wbMux_io_targets_4_dat_i),	// src/main/scala/wishbone/WishboneMux.scala:111:23
+    .io_wb_adr   (_wbMux_io_targets_4_adr[11:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
+    .io_wb_dat_o (_registerFileTest_io_wb_dat_o),
+    .io_wb_ack   (_registerFileTest_io_wb_ack)
   );
   WishboneMux wbMux (	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .clock              (clock),
@@ -5499,6 +5533,10 @@ module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:27:7
     .io_targets_3_dat_o (_lerosRtlRam_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:75:11
     .io_targets_3_ack   (_lerosRtlRam_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:75:11
     .io_targets_4_cyc   (_wbMux_io_targets_4_cyc),
+    .io_targets_4_we    (_wbMux_io_targets_4_we),
+    .io_targets_4_dat_i (_wbMux_io_targets_4_dat_i),
+    .io_targets_4_adr   (_wbMux_io_targets_4_adr),
+    .io_targets_4_dat_o (_registerFileTest_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:98:32
     .io_targets_4_ack   (_registerFileTest_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:98:32
     .io_targets_5_cyc   (_wbMux_io_targets_5_cyc),
     .io_targets_5_we    (_wbMux_io_targets_5_we),
