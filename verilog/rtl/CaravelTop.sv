@@ -5035,6 +5035,598 @@ module WishboneGpio(	// src/main/scala/caravel/WishboneGpio.scala:8:7
   assign io_gpio_oe = outputEnables;	// src/main/scala/caravel/WishboneGpio.scala:8:7, :27:30
 endmodule
 
+module HelloMorse(	// src/main/scala/caravel/HelloMorse.scala:5:7
+  input  clock,	// src/main/scala/caravel/HelloMorse.scala:5:7
+         reset,	// src/main/scala/caravel/HelloMorse.scala:5:7
+  output io_led	// src/main/scala/caravel/HelloMorse.scala:6:14
+);
+
+  reg        regs_0;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_1;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_2;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_3;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_4;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_5;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_6;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_7;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_8;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_9;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_10;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_11;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_12;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_13;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_14;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_15;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_16;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_17;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_18;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_19;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_20;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_21;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_22;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_23;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_24;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_25;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_26;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_27;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_28;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_29;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_30;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_31;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_32;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_33;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_34;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_35;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_36;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_37;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_38;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_39;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_40;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_41;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_42;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_43;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_44;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_45;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_46;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_47;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_48;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_49;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_50;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_51;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_52;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_53;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_54;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_55;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_56;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_57;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_58;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_59;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_60;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_61;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_62;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_63;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_64;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_65;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_66;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_67;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_68;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_69;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_70;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_71;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_72;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_73;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_74;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_75;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_76;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_77;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_78;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_79;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_80;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_81;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_82;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_83;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_84;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_85;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_86;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_87;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_88;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_89;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_90;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_91;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_92;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_93;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_94;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_95;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_96;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_97;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_98;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_99;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_100;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_101;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_102;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_103;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_104;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_105;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_106;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_107;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_108;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_109;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_110;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_111;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_112;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_113;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_114;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_115;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_116;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_117;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_118;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_119;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_120;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_121;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_122;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_123;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_124;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_125;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_126;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_127;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_128;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_129;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_130;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_131;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_132;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_133;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_134;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_135;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_136;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg        regs_137;	// src/main/scala/caravel/HelloMorse.scala:74:21
+  reg [20:0] cntReg;	// src/main/scala/caravel/HelloMorse.scala:76:23
+  always @(posedge clock) begin	// src/main/scala/caravel/HelloMorse.scala:5:7
+    if (reset) begin	// src/main/scala/caravel/HelloMorse.scala:5:7
+      regs_0 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_1 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_2 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_3 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_4 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_5 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_6 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_7 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_8 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_9 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_10 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_11 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_12 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_13 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_14 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_15 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_16 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_17 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_18 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_19 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_20 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_21 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_22 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_23 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_24 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_25 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_26 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_27 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_28 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_29 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_30 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_31 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_32 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_33 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_34 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_35 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_36 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_37 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_38 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_39 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_40 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_41 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_42 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_43 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_44 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_45 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_46 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_47 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_48 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_49 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_50 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_51 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_52 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_53 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_54 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_55 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_56 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_57 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_58 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_59 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_60 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_61 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_62 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_63 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_64 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_65 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_66 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_67 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_68 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_69 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_70 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_71 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_72 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_73 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_74 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_75 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_76 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_77 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_78 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_79 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_80 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_81 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_82 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_83 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_84 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_85 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_86 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_87 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_88 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_89 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_90 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_91 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_92 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_93 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_94 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_95 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_96 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_97 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_98 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_99 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_100 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_101 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_102 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_103 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_104 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_105 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_106 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_107 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_108 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_109 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_110 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_111 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_112 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_113 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_114 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_115 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_116 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_117 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_118 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_119 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_120 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_121 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_122 <= 1'h1;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_123 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_124 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_125 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_126 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_127 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_128 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_129 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_130 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_131 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_132 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_133 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_134 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_135 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_136 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      regs_137 <= 1'h0;	// src/main/scala/caravel/HelloMorse.scala:74:{21,29}
+      cntReg <= 21'h10F446;	// src/main/scala/caravel/HelloMorse.scala:76:23
+    end
+    else if (cntReg == 21'h0) begin	// src/main/scala/caravel/HelloMorse.scala:76:23, :77:21
+      regs_0 <= regs_1;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_1 <= regs_2;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_2 <= regs_3;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_3 <= regs_4;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_4 <= regs_5;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_5 <= regs_6;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_6 <= regs_7;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_7 <= regs_8;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_8 <= regs_9;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_9 <= regs_10;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_10 <= regs_11;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_11 <= regs_12;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_12 <= regs_13;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_13 <= regs_14;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_14 <= regs_15;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_15 <= regs_16;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_16 <= regs_17;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_17 <= regs_18;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_18 <= regs_19;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_19 <= regs_20;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_20 <= regs_21;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_21 <= regs_22;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_22 <= regs_23;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_23 <= regs_24;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_24 <= regs_25;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_25 <= regs_26;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_26 <= regs_27;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_27 <= regs_28;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_28 <= regs_29;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_29 <= regs_30;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_30 <= regs_31;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_31 <= regs_32;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_32 <= regs_33;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_33 <= regs_34;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_34 <= regs_35;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_35 <= regs_36;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_36 <= regs_37;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_37 <= regs_38;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_38 <= regs_39;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_39 <= regs_40;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_40 <= regs_41;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_41 <= regs_42;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_42 <= regs_43;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_43 <= regs_44;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_44 <= regs_45;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_45 <= regs_46;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_46 <= regs_47;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_47 <= regs_48;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_48 <= regs_49;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_49 <= regs_50;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_50 <= regs_51;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_51 <= regs_52;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_52 <= regs_53;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_53 <= regs_54;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_54 <= regs_55;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_55 <= regs_56;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_56 <= regs_57;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_57 <= regs_58;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_58 <= regs_59;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_59 <= regs_60;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_60 <= regs_61;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_61 <= regs_62;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_62 <= regs_63;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_63 <= regs_64;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_64 <= regs_65;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_65 <= regs_66;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_66 <= regs_67;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_67 <= regs_68;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_68 <= regs_69;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_69 <= regs_70;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_70 <= regs_71;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_71 <= regs_72;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_72 <= regs_73;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_73 <= regs_74;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_74 <= regs_75;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_75 <= regs_76;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_76 <= regs_77;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_77 <= regs_78;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_78 <= regs_79;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_79 <= regs_80;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_80 <= regs_81;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_81 <= regs_82;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_82 <= regs_83;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_83 <= regs_84;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_84 <= regs_85;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_85 <= regs_86;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_86 <= regs_87;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_87 <= regs_88;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_88 <= regs_89;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_89 <= regs_90;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_90 <= regs_91;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_91 <= regs_92;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_92 <= regs_93;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_93 <= regs_94;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_94 <= regs_95;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_95 <= regs_96;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_96 <= regs_97;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_97 <= regs_98;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_98 <= regs_99;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_99 <= regs_100;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_100 <= regs_101;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_101 <= regs_102;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_102 <= regs_103;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_103 <= regs_104;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_104 <= regs_105;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_105 <= regs_106;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_106 <= regs_107;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_107 <= regs_108;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_108 <= regs_109;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_109 <= regs_110;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_110 <= regs_111;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_111 <= regs_112;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_112 <= regs_113;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_113 <= regs_114;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_114 <= regs_115;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_115 <= regs_116;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_116 <= regs_117;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_117 <= regs_118;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_118 <= regs_119;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_119 <= regs_120;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_120 <= regs_121;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_121 <= regs_122;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_122 <= regs_123;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_123 <= regs_124;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_124 <= regs_125;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_125 <= regs_126;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_126 <= regs_127;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_127 <= regs_128;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_128 <= regs_129;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_129 <= regs_130;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_130 <= regs_131;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_131 <= regs_132;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_132 <= regs_133;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_133 <= regs_134;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_134 <= regs_135;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_135 <= regs_136;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_136 <= regs_137;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      regs_137 <= regs_0;	// src/main/scala/caravel/HelloMorse.scala:74:21
+      cntReg <= 21'h10F446;	// src/main/scala/caravel/HelloMorse.scala:76:23
+    end
+    else	// src/main/scala/caravel/HelloMorse.scala:77:21
+      cntReg <= cntReg - 21'h1;	// src/main/scala/caravel/HelloMorse.scala:76:23, :78:35
+  end // always @(posedge)
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/caravel/HelloMorse.scala:5:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/HelloMorse.scala:5:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/HelloMorse.scala:5:7
+    `endif // FIRRTL_BEFORE_INITIAL
+    logic [31:0] _RANDOM[0:4];	// src/main/scala/caravel/HelloMorse.scala:5:7
+    initial begin	// src/main/scala/caravel/HelloMorse.scala:5:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/caravel/HelloMorse.scala:5:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/caravel/HelloMorse.scala:5:7
+      `endif // INIT_RANDOM_PROLOG_
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/caravel/HelloMorse.scala:5:7
+        for (logic [2:0] i = 3'h0; i < 3'h5; i += 3'h1) begin
+          _RANDOM[i] = `RANDOM;	// src/main/scala/caravel/HelloMorse.scala:5:7
+        end	// src/main/scala/caravel/HelloMorse.scala:5:7
+        regs_0 = _RANDOM[3'h0][0];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_1 = _RANDOM[3'h0][1];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_2 = _RANDOM[3'h0][2];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_3 = _RANDOM[3'h0][3];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_4 = _RANDOM[3'h0][4];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_5 = _RANDOM[3'h0][5];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_6 = _RANDOM[3'h0][6];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_7 = _RANDOM[3'h0][7];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_8 = _RANDOM[3'h0][8];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_9 = _RANDOM[3'h0][9];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_10 = _RANDOM[3'h0][10];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_11 = _RANDOM[3'h0][11];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_12 = _RANDOM[3'h0][12];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_13 = _RANDOM[3'h0][13];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_14 = _RANDOM[3'h0][14];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_15 = _RANDOM[3'h0][15];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_16 = _RANDOM[3'h0][16];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_17 = _RANDOM[3'h0][17];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_18 = _RANDOM[3'h0][18];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_19 = _RANDOM[3'h0][19];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_20 = _RANDOM[3'h0][20];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_21 = _RANDOM[3'h0][21];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_22 = _RANDOM[3'h0][22];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_23 = _RANDOM[3'h0][23];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_24 = _RANDOM[3'h0][24];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_25 = _RANDOM[3'h0][25];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_26 = _RANDOM[3'h0][26];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_27 = _RANDOM[3'h0][27];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_28 = _RANDOM[3'h0][28];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_29 = _RANDOM[3'h0][29];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_30 = _RANDOM[3'h0][30];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_31 = _RANDOM[3'h0][31];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_32 = _RANDOM[3'h1][0];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_33 = _RANDOM[3'h1][1];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_34 = _RANDOM[3'h1][2];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_35 = _RANDOM[3'h1][3];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_36 = _RANDOM[3'h1][4];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_37 = _RANDOM[3'h1][5];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_38 = _RANDOM[3'h1][6];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_39 = _RANDOM[3'h1][7];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_40 = _RANDOM[3'h1][8];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_41 = _RANDOM[3'h1][9];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_42 = _RANDOM[3'h1][10];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_43 = _RANDOM[3'h1][11];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_44 = _RANDOM[3'h1][12];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_45 = _RANDOM[3'h1][13];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_46 = _RANDOM[3'h1][14];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_47 = _RANDOM[3'h1][15];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_48 = _RANDOM[3'h1][16];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_49 = _RANDOM[3'h1][17];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_50 = _RANDOM[3'h1][18];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_51 = _RANDOM[3'h1][19];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_52 = _RANDOM[3'h1][20];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_53 = _RANDOM[3'h1][21];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_54 = _RANDOM[3'h1][22];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_55 = _RANDOM[3'h1][23];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_56 = _RANDOM[3'h1][24];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_57 = _RANDOM[3'h1][25];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_58 = _RANDOM[3'h1][26];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_59 = _RANDOM[3'h1][27];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_60 = _RANDOM[3'h1][28];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_61 = _RANDOM[3'h1][29];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_62 = _RANDOM[3'h1][30];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_63 = _RANDOM[3'h1][31];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_64 = _RANDOM[3'h2][0];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_65 = _RANDOM[3'h2][1];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_66 = _RANDOM[3'h2][2];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_67 = _RANDOM[3'h2][3];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_68 = _RANDOM[3'h2][4];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_69 = _RANDOM[3'h2][5];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_70 = _RANDOM[3'h2][6];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_71 = _RANDOM[3'h2][7];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_72 = _RANDOM[3'h2][8];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_73 = _RANDOM[3'h2][9];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_74 = _RANDOM[3'h2][10];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_75 = _RANDOM[3'h2][11];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_76 = _RANDOM[3'h2][12];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_77 = _RANDOM[3'h2][13];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_78 = _RANDOM[3'h2][14];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_79 = _RANDOM[3'h2][15];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_80 = _RANDOM[3'h2][16];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_81 = _RANDOM[3'h2][17];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_82 = _RANDOM[3'h2][18];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_83 = _RANDOM[3'h2][19];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_84 = _RANDOM[3'h2][20];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_85 = _RANDOM[3'h2][21];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_86 = _RANDOM[3'h2][22];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_87 = _RANDOM[3'h2][23];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_88 = _RANDOM[3'h2][24];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_89 = _RANDOM[3'h2][25];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_90 = _RANDOM[3'h2][26];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_91 = _RANDOM[3'h2][27];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_92 = _RANDOM[3'h2][28];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_93 = _RANDOM[3'h2][29];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_94 = _RANDOM[3'h2][30];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_95 = _RANDOM[3'h2][31];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_96 = _RANDOM[3'h3][0];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_97 = _RANDOM[3'h3][1];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_98 = _RANDOM[3'h3][2];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_99 = _RANDOM[3'h3][3];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_100 = _RANDOM[3'h3][4];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_101 = _RANDOM[3'h3][5];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_102 = _RANDOM[3'h3][6];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_103 = _RANDOM[3'h3][7];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_104 = _RANDOM[3'h3][8];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_105 = _RANDOM[3'h3][9];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_106 = _RANDOM[3'h3][10];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_107 = _RANDOM[3'h3][11];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_108 = _RANDOM[3'h3][12];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_109 = _RANDOM[3'h3][13];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_110 = _RANDOM[3'h3][14];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_111 = _RANDOM[3'h3][15];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_112 = _RANDOM[3'h3][16];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_113 = _RANDOM[3'h3][17];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_114 = _RANDOM[3'h3][18];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_115 = _RANDOM[3'h3][19];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_116 = _RANDOM[3'h3][20];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_117 = _RANDOM[3'h3][21];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_118 = _RANDOM[3'h3][22];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_119 = _RANDOM[3'h3][23];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_120 = _RANDOM[3'h3][24];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_121 = _RANDOM[3'h3][25];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_122 = _RANDOM[3'h3][26];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_123 = _RANDOM[3'h3][27];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_124 = _RANDOM[3'h3][28];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_125 = _RANDOM[3'h3][29];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_126 = _RANDOM[3'h3][30];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_127 = _RANDOM[3'h3][31];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_128 = _RANDOM[3'h4][0];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_129 = _RANDOM[3'h4][1];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_130 = _RANDOM[3'h4][2];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_131 = _RANDOM[3'h4][3];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_132 = _RANDOM[3'h4][4];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_133 = _RANDOM[3'h4][5];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_134 = _RANDOM[3'h4][6];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_135 = _RANDOM[3'h4][7];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_136 = _RANDOM[3'h4][8];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        regs_137 = _RANDOM[3'h4][9];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+        cntReg = _RANDOM[3'h4][30:10];	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21, :76:23
+      `endif // RANDOMIZE_REG_INIT
+    end // initial
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/HelloMorse.scala:5:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/HelloMorse.scala:5:7
+    `endif // FIRRTL_AFTER_INITIAL
+  `endif // ENABLE_INITIAL_REG_
+  assign io_led = regs_0;	// src/main/scala/caravel/HelloMorse.scala:5:7, :74:21
+endmodule
+
 // external module rf_wrapper
 
 module RegisterFileTest(	// src/main/scala/caravel/RegisterFileTest.scala:10:7
@@ -5302,20 +5894,20 @@ module WishboneMux(	// src/main/scala/wishbone/WishboneMux.scala:15:7
   assign io_targets_5_adr = io_master_adr;	// src/main/scala/wishbone/WishboneMux.scala:15:7
 endmodule
 
-module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:27:7
-  input         clock,	// src/main/scala/caravel/CaravelTop.scala:27:7
-                reset,	// src/main/scala/caravel/CaravelTop.scala:27:7
-                io_wb_stb,	// src/main/scala/caravel/CaravelTop.scala:44:14
-                io_wb_cyc,	// src/main/scala/caravel/CaravelTop.scala:44:14
-                io_wb_we,	// src/main/scala/caravel/CaravelTop.scala:44:14
-  input  [3:0]  io_wb_sel,	// src/main/scala/caravel/CaravelTop.scala:44:14
-  input  [31:0] io_wb_dat_i,	// src/main/scala/caravel/CaravelTop.scala:44:14
-  input  [19:0] io_wb_adr,	// src/main/scala/caravel/CaravelTop.scala:44:14
-  output [31:0] io_wb_dat_o,	// src/main/scala/caravel/CaravelTop.scala:44:14
-  output        io_wb_ack,	// src/main/scala/caravel/CaravelTop.scala:44:14
-  input  [29:0] io_gpio_in,	// src/main/scala/caravel/CaravelTop.scala:44:14
-  output [29:0] io_gpio_out,	// src/main/scala/caravel/CaravelTop.scala:44:14
-                io_gpio_oe	// src/main/scala/caravel/CaravelTop.scala:44:14
+module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:28:7
+  input         clock,	// src/main/scala/caravel/CaravelTop.scala:28:7
+                reset,	// src/main/scala/caravel/CaravelTop.scala:28:7
+                io_wb_stb,	// src/main/scala/caravel/CaravelTop.scala:45:14
+                io_wb_cyc,	// src/main/scala/caravel/CaravelTop.scala:45:14
+                io_wb_we,	// src/main/scala/caravel/CaravelTop.scala:45:14
+  input  [3:0]  io_wb_sel,	// src/main/scala/caravel/CaravelTop.scala:45:14
+  input  [31:0] io_wb_dat_i,	// src/main/scala/caravel/CaravelTop.scala:45:14
+  input  [19:0] io_wb_adr,	// src/main/scala/caravel/CaravelTop.scala:45:14
+  output [31:0] io_wb_dat_o,	// src/main/scala/caravel/CaravelTop.scala:45:14
+  output        io_wb_ack,	// src/main/scala/caravel/CaravelTop.scala:45:14
+  input  [30:0] io_gpio_in,	// src/main/scala/caravel/CaravelTop.scala:45:14
+  output [30:0] io_gpio_out,	// src/main/scala/caravel/CaravelTop.scala:45:14
+                io_gpio_oe	// src/main/scala/caravel/CaravelTop.scala:45:14
 );
 
   wire        _wbMux_io_targets_0_stb;	// src/main/scala/wishbone/WishboneMux.scala:111:23
@@ -5350,63 +5942,64 @@ module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:27:7
   wire        _wbMux_io_targets_5_we;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [31:0] _wbMux_io_targets_5_dat_i;	// src/main/scala/wishbone/WishboneMux.scala:111:23
   wire [19:0] _wbMux_io_targets_5_adr;	// src/main/scala/wishbone/WishboneMux.scala:111:23
-  wire [31:0] _registerFileTest_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:98:32
-  wire        _registerFileTest_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:98:32
-  wire [31:0] _wishboneGpio_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:84:28
-  wire        _wishboneGpio_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:84:28
-  wire [5:0]  _wishboneGpio_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:84:28
-  wire [5:0]  _wishboneGpio_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:84:28
-  wire [31:0] _lerosRtlRam_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:75:11
-  wire        _lerosRtlRam_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:75:11
-  wire [5:0]  _lerosRtlRam_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:75:11
-  wire [5:0]  _lerosRtlRam_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:75:11
-  wire [31:0] _lerosDffRam_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:71:11
-  wire        _lerosDffRam_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:71:11
-  wire [5:0]  _lerosDffRam_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:71:11
-  wire [5:0]  _lerosDffRam_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:71:11
-  wire [31:0] _lerosSky130_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:67:11
-  wire        _lerosSky130_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:67:11
-  wire [5:0]  _lerosSky130_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:67:11
-  wire [5:0]  _lerosSky130_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:67:11
-  wire [31:0] _lerosCfram_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:60:11
-  wire        _lerosCfram_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:60:11
-  wire [5:0]  _lerosCfram_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:60:11
-  wire [5:0]  _lerosCfram_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:60:11
-  reg  [5:0]  lerosCfram_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:91:23
-  reg  [5:0]  lerosSky130_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:91:23
-  reg  [5:0]  lerosDffRam_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:91:23
-  reg  [5:0]  lerosRtlRam_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:91:23
-  reg  [5:0]  wishboneGpio_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:91:23
-  always @(posedge clock) begin	// src/main/scala/caravel/CaravelTop.scala:27:7
-    lerosCfram_io_gpio_in_REG <= io_gpio_in[5:0];	// src/main/scala/caravel/CaravelTop.scala:91:{23,34}
-    lerosSky130_io_gpio_in_REG <= io_gpio_in[11:6];	// src/main/scala/caravel/CaravelTop.scala:91:{23,34}
-    lerosDffRam_io_gpio_in_REG <= io_gpio_in[17:12];	// src/main/scala/caravel/CaravelTop.scala:91:{23,34}
-    lerosRtlRam_io_gpio_in_REG <= io_gpio_in[23:18];	// src/main/scala/caravel/CaravelTop.scala:91:{23,34}
-    wishboneGpio_io_gpio_in_REG <= io_gpio_in[29:24];	// src/main/scala/caravel/CaravelTop.scala:91:{23,34}
+  wire [31:0] _registerFileTest_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:107:32
+  wire        _registerFileTest_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:107:32
+  wire        _morse_io_led;	// src/main/scala/caravel/CaravelTop.scala:87:21
+  wire [31:0] _wishboneGpio_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:85:28
+  wire        _wishboneGpio_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:85:28
+  wire [5:0]  _wishboneGpio_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:85:28
+  wire [5:0]  _wishboneGpio_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:85:28
+  wire [31:0] _lerosRtlRam_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:76:11
+  wire        _lerosRtlRam_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:76:11
+  wire [5:0]  _lerosRtlRam_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:76:11
+  wire [5:0]  _lerosRtlRam_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:76:11
+  wire [31:0] _lerosDffRam_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:72:11
+  wire        _lerosDffRam_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:72:11
+  wire [5:0]  _lerosDffRam_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:72:11
+  wire [5:0]  _lerosDffRam_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:72:11
+  wire [31:0] _lerosSky130_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:68:11
+  wire        _lerosSky130_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:68:11
+  wire [5:0]  _lerosSky130_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:68:11
+  wire [5:0]  _lerosSky130_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:68:11
+  wire [31:0] _lerosCfram_io_wb_dat_o;	// src/main/scala/caravel/CaravelTop.scala:61:11
+  wire        _lerosCfram_io_wb_ack;	// src/main/scala/caravel/CaravelTop.scala:61:11
+  wire [5:0]  _lerosCfram_io_gpio_out;	// src/main/scala/caravel/CaravelTop.scala:61:11
+  wire [5:0]  _lerosCfram_io_gpio_oe;	// src/main/scala/caravel/CaravelTop.scala:61:11
+  reg  [5:0]  lerosCfram_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:99:23
+  reg  [5:0]  lerosSky130_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:99:23
+  reg  [5:0]  lerosDffRam_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:99:23
+  reg  [5:0]  lerosRtlRam_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:99:23
+  reg  [5:0]  wishboneGpio_io_gpio_in_REG;	// src/main/scala/caravel/CaravelTop.scala:99:23
+  always @(posedge clock) begin	// src/main/scala/caravel/CaravelTop.scala:28:7
+    lerosCfram_io_gpio_in_REG <= io_gpio_in[5:0];	// src/main/scala/caravel/CaravelTop.scala:99:{23,34}
+    lerosSky130_io_gpio_in_REG <= io_gpio_in[11:6];	// src/main/scala/caravel/CaravelTop.scala:99:{23,34}
+    lerosDffRam_io_gpio_in_REG <= io_gpio_in[17:12];	// src/main/scala/caravel/CaravelTop.scala:99:{23,34}
+    lerosRtlRam_io_gpio_in_REG <= io_gpio_in[23:18];	// src/main/scala/caravel/CaravelTop.scala:99:{23,34}
+    wishboneGpio_io_gpio_in_REG <= io_gpio_in[29:24];	// src/main/scala/caravel/CaravelTop.scala:99:{23,34}
   end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/caravel/CaravelTop.scala:27:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/CaravelTop.scala:27:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/CaravelTop.scala:27:7
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/caravel/CaravelTop.scala:28:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/CaravelTop.scala:28:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/caravel/CaravelTop.scala:28:7
     `endif // FIRRTL_BEFORE_INITIAL
-    logic [31:0] _RANDOM[0:0];	// src/main/scala/caravel/CaravelTop.scala:27:7
-    initial begin	// src/main/scala/caravel/CaravelTop.scala:27:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/caravel/CaravelTop.scala:27:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/caravel/CaravelTop.scala:27:7
+    logic [31:0] _RANDOM[0:0];	// src/main/scala/caravel/CaravelTop.scala:28:7
+    initial begin	// src/main/scala/caravel/CaravelTop.scala:28:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/caravel/CaravelTop.scala:28:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/caravel/CaravelTop.scala:28:7
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/caravel/CaravelTop.scala:27:7
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/caravel/CaravelTop.scala:27:7
-        lerosCfram_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][5:0];	// src/main/scala/caravel/CaravelTop.scala:27:7, :91:23
-        lerosSky130_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][11:6];	// src/main/scala/caravel/CaravelTop.scala:27:7, :91:23
-        lerosDffRam_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][17:12];	// src/main/scala/caravel/CaravelTop.scala:27:7, :91:23
-        lerosRtlRam_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][23:18];	// src/main/scala/caravel/CaravelTop.scala:27:7, :91:23
-        wishboneGpio_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][29:24];	// src/main/scala/caravel/CaravelTop.scala:27:7, :91:23
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/caravel/CaravelTop.scala:28:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/caravel/CaravelTop.scala:28:7
+        lerosCfram_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][5:0];	// src/main/scala/caravel/CaravelTop.scala:28:7, :99:23
+        lerosSky130_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][11:6];	// src/main/scala/caravel/CaravelTop.scala:28:7, :99:23
+        lerosDffRam_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][17:12];	// src/main/scala/caravel/CaravelTop.scala:28:7, :99:23
+        lerosRtlRam_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][23:18];	// src/main/scala/caravel/CaravelTop.scala:28:7, :99:23
+        wishboneGpio_io_gpio_in_REG = _RANDOM[/*Zero width*/ 1'b0][29:24];	// src/main/scala/caravel/CaravelTop.scala:28:7, :99:23
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/CaravelTop.scala:27:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/CaravelTop.scala:27:7
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/CaravelTop.scala:28:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/CaravelTop.scala:28:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  LerosCaravel_ChipFoundrySram lerosCfram (	// src/main/scala/caravel/CaravelTop.scala:60:11
+  LerosCaravel_ChipFoundrySram lerosCfram (	// src/main/scala/caravel/CaravelTop.scala:61:11
     .clock       (clock),
     .reset       (reset),
     .io_wb_stb   (_wbMux_io_targets_0_stb),	// src/main/scala/wishbone/WishboneMux.scala:111:23
@@ -5417,11 +6010,11 @@ module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:27:7
     .io_wb_adr   (_wbMux_io_targets_0_adr[15:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
     .io_wb_dat_o (_lerosCfram_io_wb_dat_o),
     .io_wb_ack   (_lerosCfram_io_wb_ack),
-    .io_gpio_in  (lerosCfram_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:91:23
+    .io_gpio_in  (lerosCfram_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:99:23
     .io_gpio_out (_lerosCfram_io_gpio_out),
     .io_gpio_oe  (_lerosCfram_io_gpio_oe)
   );
-  LerosCaravel_OpenRamSky130 lerosSky130 (	// src/main/scala/caravel/CaravelTop.scala:67:11
+  LerosCaravel_OpenRamSky130 lerosSky130 (	// src/main/scala/caravel/CaravelTop.scala:68:11
     .clock       (clock),
     .reset       (reset),
     .io_wb_stb   (_wbMux_io_targets_1_stb),	// src/main/scala/wishbone/WishboneMux.scala:111:23
@@ -5432,11 +6025,11 @@ module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:27:7
     .io_wb_adr   (_wbMux_io_targets_1_adr[15:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
     .io_wb_dat_o (_lerosSky130_io_wb_dat_o),
     .io_wb_ack   (_lerosSky130_io_wb_ack),
-    .io_gpio_in  (lerosSky130_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:91:23
+    .io_gpio_in  (lerosSky130_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:99:23
     .io_gpio_out (_lerosSky130_io_gpio_out),
     .io_gpio_oe  (_lerosSky130_io_gpio_oe)
   );
-  LerosCaravel_DffRam lerosDffRam (	// src/main/scala/caravel/CaravelTop.scala:71:11
+  LerosCaravel_DffRam lerosDffRam (	// src/main/scala/caravel/CaravelTop.scala:72:11
     .clock       (clock),
     .reset       (reset),
     .io_wb_stb   (_wbMux_io_targets_2_stb),	// src/main/scala/wishbone/WishboneMux.scala:111:23
@@ -5447,11 +6040,11 @@ module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:27:7
     .io_wb_adr   (_wbMux_io_targets_2_adr[15:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
     .io_wb_dat_o (_lerosDffRam_io_wb_dat_o),
     .io_wb_ack   (_lerosDffRam_io_wb_ack),
-    .io_gpio_in  (lerosDffRam_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:91:23
+    .io_gpio_in  (lerosDffRam_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:99:23
     .io_gpio_out (_lerosDffRam_io_gpio_out),
     .io_gpio_oe  (_lerosDffRam_io_gpio_oe)
   );
-  LerosCaravel_RtlSyncMemory lerosRtlRam (	// src/main/scala/caravel/CaravelTop.scala:75:11
+  LerosCaravel_RtlSyncMemory lerosRtlRam (	// src/main/scala/caravel/CaravelTop.scala:76:11
     .clock       (clock),
     .reset       (reset),
     .io_wb_stb   (_wbMux_io_targets_3_stb),	// src/main/scala/wishbone/WishboneMux.scala:111:23
@@ -5462,11 +6055,11 @@ module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:27:7
     .io_wb_adr   (_wbMux_io_targets_3_adr[15:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
     .io_wb_dat_o (_lerosRtlRam_io_wb_dat_o),
     .io_wb_ack   (_lerosRtlRam_io_wb_ack),
-    .io_gpio_in  (lerosRtlRam_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:91:23
+    .io_gpio_in  (lerosRtlRam_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:99:23
     .io_gpio_out (_lerosRtlRam_io_gpio_out),
     .io_gpio_oe  (_lerosRtlRam_io_gpio_oe)
   );
-  WishboneGpio wishboneGpio (	// src/main/scala/caravel/CaravelTop.scala:84:28
+  WishboneGpio wishboneGpio (	// src/main/scala/caravel/CaravelTop.scala:85:28
     .clock       (clock),
     .reset       (reset),
     .io_wb_cyc   (_wbMux_io_targets_5_cyc),	// src/main/scala/wishbone/WishboneMux.scala:111:23
@@ -5475,11 +6068,16 @@ module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:27:7
     .io_wb_adr   (_wbMux_io_targets_5_adr[1:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
     .io_wb_dat_o (_wishboneGpio_io_wb_dat_o),
     .io_wb_ack   (_wishboneGpio_io_wb_ack),
-    .io_gpio_in  (wishboneGpio_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:91:23
+    .io_gpio_in  (wishboneGpio_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:99:23
     .io_gpio_out (_wishboneGpio_io_gpio_out),
     .io_gpio_oe  (_wishboneGpio_io_gpio_oe)
   );
-  RegisterFileTest registerFileTest (	// src/main/scala/caravel/CaravelTop.scala:98:32
+  HelloMorse morse (	// src/main/scala/caravel/CaravelTop.scala:87:21
+    .clock  (clock),
+    .reset  (reset),
+    .io_led (_morse_io_led)
+  );
+  RegisterFileTest registerFileTest (	// src/main/scala/caravel/CaravelTop.scala:107:32
     .clock       (clock),
     .reset       (reset),
     .io_wb_cyc   (_wbMux_io_targets_4_cyc),	// src/main/scala/wishbone/WishboneMux.scala:111:23
@@ -5506,56 +6104,58 @@ module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:27:7
     .io_targets_0_sel   (_wbMux_io_targets_0_sel),
     .io_targets_0_dat_i (_wbMux_io_targets_0_dat_i),
     .io_targets_0_adr   (_wbMux_io_targets_0_adr),
-    .io_targets_0_dat_o (_lerosCfram_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:60:11
-    .io_targets_0_ack   (_lerosCfram_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:60:11
+    .io_targets_0_dat_o (_lerosCfram_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:61:11
+    .io_targets_0_ack   (_lerosCfram_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:61:11
     .io_targets_1_stb   (_wbMux_io_targets_1_stb),
     .io_targets_1_cyc   (_wbMux_io_targets_1_cyc),
     .io_targets_1_we    (_wbMux_io_targets_1_we),
     .io_targets_1_sel   (_wbMux_io_targets_1_sel),
     .io_targets_1_dat_i (_wbMux_io_targets_1_dat_i),
     .io_targets_1_adr   (_wbMux_io_targets_1_adr),
-    .io_targets_1_dat_o (_lerosSky130_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:67:11
-    .io_targets_1_ack   (_lerosSky130_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:67:11
+    .io_targets_1_dat_o (_lerosSky130_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:68:11
+    .io_targets_1_ack   (_lerosSky130_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:68:11
     .io_targets_2_stb   (_wbMux_io_targets_2_stb),
     .io_targets_2_cyc   (_wbMux_io_targets_2_cyc),
     .io_targets_2_we    (_wbMux_io_targets_2_we),
     .io_targets_2_sel   (_wbMux_io_targets_2_sel),
     .io_targets_2_dat_i (_wbMux_io_targets_2_dat_i),
     .io_targets_2_adr   (_wbMux_io_targets_2_adr),
-    .io_targets_2_dat_o (_lerosDffRam_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:71:11
-    .io_targets_2_ack   (_lerosDffRam_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:71:11
+    .io_targets_2_dat_o (_lerosDffRam_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:72:11
+    .io_targets_2_ack   (_lerosDffRam_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:72:11
     .io_targets_3_stb   (_wbMux_io_targets_3_stb),
     .io_targets_3_cyc   (_wbMux_io_targets_3_cyc),
     .io_targets_3_we    (_wbMux_io_targets_3_we),
     .io_targets_3_sel   (_wbMux_io_targets_3_sel),
     .io_targets_3_dat_i (_wbMux_io_targets_3_dat_i),
     .io_targets_3_adr   (_wbMux_io_targets_3_adr),
-    .io_targets_3_dat_o (_lerosRtlRam_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:75:11
-    .io_targets_3_ack   (_lerosRtlRam_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:75:11
+    .io_targets_3_dat_o (_lerosRtlRam_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:76:11
+    .io_targets_3_ack   (_lerosRtlRam_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:76:11
     .io_targets_4_cyc   (_wbMux_io_targets_4_cyc),
     .io_targets_4_we    (_wbMux_io_targets_4_we),
     .io_targets_4_dat_i (_wbMux_io_targets_4_dat_i),
     .io_targets_4_adr   (_wbMux_io_targets_4_adr),
-    .io_targets_4_dat_o (_registerFileTest_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:98:32
-    .io_targets_4_ack   (_registerFileTest_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:98:32
+    .io_targets_4_dat_o (_registerFileTest_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:107:32
+    .io_targets_4_ack   (_registerFileTest_io_wb_ack),	// src/main/scala/caravel/CaravelTop.scala:107:32
     .io_targets_5_cyc   (_wbMux_io_targets_5_cyc),
     .io_targets_5_we    (_wbMux_io_targets_5_we),
     .io_targets_5_dat_i (_wbMux_io_targets_5_dat_i),
     .io_targets_5_adr   (_wbMux_io_targets_5_adr),
-    .io_targets_5_dat_o (_wishboneGpio_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:84:28
-    .io_targets_5_ack   (_wishboneGpio_io_wb_ack)	// src/main/scala/caravel/CaravelTop.scala:84:28
+    .io_targets_5_dat_o (_wishboneGpio_io_wb_dat_o),	// src/main/scala/caravel/CaravelTop.scala:85:28
+    .io_targets_5_ack   (_wishboneGpio_io_wb_ack)	// src/main/scala/caravel/CaravelTop.scala:85:28
   );
   assign io_gpio_out =
-    {_wishboneGpio_io_gpio_out,
+    {_morse_io_led,
+     _wishboneGpio_io_gpio_out,
      _lerosRtlRam_io_gpio_out,
      _lerosDffRam_io_gpio_out,
      _lerosSky130_io_gpio_out,
-     _lerosCfram_io_gpio_out};	// src/main/scala/caravel/CaravelTop.scala:27:7, :60:11, :67:11, :71:11, :75:11, :84:28, :95:21
+     _lerosCfram_io_gpio_out};	// src/main/scala/caravel/CaravelTop.scala:28:7, :61:11, :68:11, :72:11, :76:11, :85:28, :87:21, :104:21
   assign io_gpio_oe =
-    {_wishboneGpio_io_gpio_oe,
+    {1'h0,
+     _wishboneGpio_io_gpio_oe,
      _lerosRtlRam_io_gpio_oe,
      _lerosDffRam_io_gpio_oe,
      _lerosSky130_io_gpio_oe,
-     _lerosCfram_io_gpio_oe};	// src/main/scala/caravel/CaravelTop.scala:27:7, :60:11, :67:11, :71:11, :75:11, :84:28, :96:20
+     _lerosCfram_io_gpio_oe};	// src/main/scala/caravel/CaravelTop.scala:28:7, :61:11, :68:11, :72:11, :76:11, :85:28, :105:20
 endmodule
 
