@@ -211,7 +211,7 @@
         "min_tt_025C_1v80",
         "max_tt_025C_1v80"
     ],
-    "PL_RESIZER_HOLD_SLACK_MARGIN": 0.1,
-    "GRT_RESIZER_HOLD_SLACK_MARGIN": 0.05
+    "PL_RESIZER_HOLD_SLACK_MARGIN": 0.5,
+    "GRT_RESIZER_HOLD_SLACK_MARGIN": 0.5
     
 }
