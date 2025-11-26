@@ -105,6 +105,35 @@ wire       morse_gpio_in;
 wire       morse_gpio_out;
 wire       morse_gpio_oe;
 
+wire [30:0] mprj_gpio_in;
+wire [30:0] mprj_gpio_out;
+wire [30:0] mprj_gpio_oe;
+
+
+// extract gpio from caravel top
+assign leros_cfram_gpio_in = mprj_gpio_in[5:0];
+assign leros_openram_gpio_in = mprj_gpio_in[11:6];
+assign leros_dffram_gpio_in = mprj_gpio_in[17:12];
+assign leros_regmem_gpio_in = mprj_gpio_in[23:18];
+assign wb_gpio_in = mprj_gpio_in[29:24];
+assign morse_gpio_in = mprj_gpio_in[30];
+
+assign mprj_gpio_out[5:0] = leros_cfram_gpio_out;
+assign mprj_gpio_out[11:6] = leros_openram_gpio_out;
+assign mprj_gpio_out[17:12] = leros_dffram_gpio_out;
+assign mprj_gpio_out[23:18] = leros_regmem_gpio_out;
+assign mprj_gpio_out[29:24] = wb_gpio_out;
+assign mprj_gpio_out[30] = morse_gpio_out;
+
+assign mprj_gpio_oe[5:0] = leros_cfram_gpio_oe;
+assign mprj_gpio_oe[11:6] = leros_openram_gpio_oe;
+assign mprj_gpio_oe[17:12] = leros_dffram_gpio_oe;
+assign mprj_gpio_oe[23:18] = leros_regmem_gpio_oe;
+assign mprj_gpio_oe[29:24] = wb_gpio_oe;
+assign mprj_gpio_oe[30] = morse_gpio_oe;
+
+
+// map gpios to io pads
 assign leros_cfram_gpio_in   = io_in[24:19];
 assign io_out[24:19]         = leros_cfram_gpio_out;
 assign io_oeb[24:19]         = leros_cfram_gpio_oe;
@@ -121,17 +150,20 @@ assign leros_regmem_gpio_in  = io_in[18:13];
 assign io_out[18:13]         = leros_regmem_gpio_out;
 assign io_oeb[18:13]         = leros_regmem_gpio_oe;
 
-assign wb_gpio_in            = io_in[36:31];
-assign io_out[36:31]         = wb_gpio_out;
-assign io_oeb[36:31]         = wb_gpio_oe;
+assign wb_gpio_in            = io_in[37:32];
+assign io_out[37:32]         = wb_gpio_out;
+assign io_oeb[37:32]         = wb_gpio_oe;
 
 assign morse_gpio_in         = io_in[31];
 assign io_out[31]            = morse_gpio_out;
 assign io_oeb[31]            = morse_gpio_oe;
 
+
+// default assignments to unused signals
 assign user_irq = 3'b000;
 assign io_out[6:0] = 7'b0;
 assign io_oeb[6:0] = 7'b1;
+assign la_data_out = 128'b0;
 
 CaravelTop mprj (
     .clock(wb_clk_i),
@@ -144,24 +176,9 @@ CaravelTop mprj (
     .io_wb_dat_i(wbs_dat_i),
     .io_wb_ack(wbs_ack_o),
     .io_wb_dat_o(wbs_dat_o),
-    .io_gpio_in({morse_gpio_in,
-                 wb_gpio_in,
-                 leros_regmem_gpio_in,
-                 leros_dffram_gpio_in,
-                 leros_openram_gpio_in,
-                 leros_cfram_gpio_in}),
-    .io_gpio_out({morse_gpio_out,
-                  wb_gpio_out,
-                  leros_regmem_gpio_out,
-                  leros_dffram_gpio_out,
-                  leros_openram_gpio_out,
-                  leros_cfram_gpio_out}),
-    .io_gpio_oe({morse_gpio_oe,
-                 wb_gpio_oe,
-                 leros_regmem_gpio_oe,
-                 leros_dffram_gpio_oe,
-                 leros_openram_gpio_oe,
-                 leros_cfram_gpio_oe})
+    .io_gpio_in(mprj_gpio_in),
+    .io_gpio_out(mprj_gpio_out),
+    .io_gpio_oe(mprj_gpio_oe)
 );
 
 endmodule	// user_project_wrapper

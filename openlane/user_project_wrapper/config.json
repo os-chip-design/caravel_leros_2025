@@ -38,7 +38,7 @@
         "LerosCaravel_ChipFoundrySram": {
             "instances": {
                 "mprj.lerosCfram": {
-                    "location": [350, 2600],
+                    "location": [340, 2600],
                     "orientation": "N"
                 }
             },
@@ -97,7 +97,7 @@
         "LerosCaravel_RtlSyncMemory": {
             "instances": {
                 "mprj.lerosRtlRam": {
-                    "location": [1500, 2600],
+                    "location": [1510, 2600],
                     "orientation": "FN"
                 }
             },
@@ -116,7 +116,7 @@
         "rf_wrapper": {
             "instances": {
                 "mprj.registerFileTest.rf": {
-                    "location": [468, 950],
+                    "location": [468, 930],
                     "orientation": "N"
                 }
             },
@@ -214,6 +214,16 @@
     "PL_RESIZER_HOLD_SLACK_MARGIN": 0.5,
     "GRT_RESIZER_HOLD_SLACK_MARGIN": 0.5,
     "ERROR_ON_KLAYOUT_DRC": false,
-    "ERROR_ON_LVS_ERROR": false
+    "ERROR_ON_LVS_ERROR": false,
+
+    "RUN_HEURISTIC_DIODE_INSERTION": true,
+    "//HEURISTIC_ANTENNA_THRESHOLD": 110,
+    "RUN_ANTENNA_REPAIR": true,
+    "RUN_POST_GRT_DESIGN_REPAIR": true,
+    "RUN_POST_GRT_RESIZER_TIMING": true,
+    "GRT_ANTENNA_ITERS": 20,
+    "GRT_ANTENNA_MARGIN": 15,
+    "//DESIGN_REPAIR_MAX_WIRE_LENGTH": 800,
+    "//PL_WIRE_LENGTH_COEF": 0.05
     
 }

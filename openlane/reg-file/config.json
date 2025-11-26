@@ -40,9 +40,6 @@
   "RT_MAX_LAYER": "met4",
   "FP_PIN_ORDER_CFG": "dir::pin_order.cfg",
 
-  "RUN_KLAYOUT_XOR": 0,
-  "RUN_KLAYOUT_DRC": 0,
-
   "GRT_ALLOW_CONGESTION": 1,
 
   "RUN_HEURISTIC_DIODE_INSERTION": true,
@@ -54,6 +51,9 @@
   "GRT_ANTENNA_MARGIN": 15,
   "DESIGN_REPAIR_MAX_SLEW_PCT": 30,
   "DESIGN_REPAIR_MAX_CAP_PCT": 30,
-  "DIODE_ON_PORTS": "both"
+  "DIODE_ON_PORTS": "both",
+  "ERROR_ON_KLAYOUT_DRC": false,
+  "ERROR_ON_XOR_ERROR": false,
+  "MAGIC_DEF_LABELS": false
 
 }
