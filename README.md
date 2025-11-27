@@ -56,6 +56,10 @@ and then include all in the wrapper for Caravel:
 
     make user_project_wrapper LIBRELANE_USE_NIX=1
 
+Note that the `LIBRELANE_USE_NIX=1` can speedup the builds with Nix is installed.
+**However, it does not produce correct results on Mac currently.***
+The issue is in the KLayout DRC checks. The produced GDS are fine.
+
 Then install the CF tools and the design should be ready for **tapeout** (submit to CF) ;-)
 
     cf init
