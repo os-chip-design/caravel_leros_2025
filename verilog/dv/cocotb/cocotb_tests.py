@@ -7,3 +7,4 @@
 # from gpio_test.gpio_test import gpio_test
 # from user_proj_tests.leros_adder_test.leros_adder_test import leros_adder_test
 from user_proj_tests.leros_adder_test.leros_adder_test import leros_adder_test
+from user_proj_tests.leros_gpio_test.leros_gpio_test import leros_gpio_test

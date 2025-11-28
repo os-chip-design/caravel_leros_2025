@@ -14,13 +14,8 @@
 
 # SPDX-License-Identifier: Apache-2.0
 
-# yaml file contain general design information that would mostly need to be updated in the first run only 
-includes: 
-    - leros_adder_test/leros_adder_test.yaml
-    - leros_gpio_test/leros_gpio_test.yaml
-    # - counter_la/counter_la.yaml
-    # - counter_wb/counter_wb.yaml
-    # - counter_la_reset/counter_la_reset.yaml
-    # - counter_la_clk/counter_la_clk.yaml
+# Yalm file contain general design information that would mostly need to be updated in the first run only 
+Tests: 
+    - {name: leros_gpio_test, sim: RTL}
 
 

@@ -111,26 +111,26 @@ wire [30:0] mprj_gpio_oe;
 
 
 // extract gpio from caravel top
-assign leros_cfram_gpio_in = mprj_gpio_in[5:0];
-assign leros_openram_gpio_in = mprj_gpio_in[11:6];
-assign leros_dffram_gpio_in = mprj_gpio_in[17:12];
-assign leros_regmem_gpio_in = mprj_gpio_in[23:18];
-assign wb_gpio_in = mprj_gpio_in[29:24];
-assign morse_gpio_in = mprj_gpio_in[30];
+assign mprj_gpio_in[5:0] = leros_cfram_gpio_in;
+assign mprj_gpio_in[11:6] = leros_openram_gpio_in;
+assign mprj_gpio_in[17:12] = leros_dffram_gpio_in;
+assign mprj_gpio_in[23:18] = leros_regmem_gpio_in;
+assign mprj_gpio_in[29:24] = wb_gpio_in;
+assign mprj_gpio_in[30] = morse_gpio_in;
 
-assign mprj_gpio_out[5:0] = leros_cfram_gpio_out;
-assign mprj_gpio_out[11:6] = leros_openram_gpio_out;
-assign mprj_gpio_out[17:12] = leros_dffram_gpio_out;
-assign mprj_gpio_out[23:18] = leros_regmem_gpio_out;
-assign mprj_gpio_out[29:24] = wb_gpio_out;
-assign mprj_gpio_out[30] = morse_gpio_out;
+assign leros_cfram_gpio_out = mprj_gpio_out[5:0];
+assign leros_openram_gpio_out = mprj_gpio_out[11:6];
+assign leros_dffram_gpio_out = mprj_gpio_out[17:12];
+assign leros_regmem_gpio_out = mprj_gpio_out[23:18];
+assign wb_gpio_out = mprj_gpio_out[29:24];
+assign morse_gpio_out = mprj_gpio_out[30];
 
-assign mprj_gpio_oe[5:0] = leros_cfram_gpio_oe;
-assign mprj_gpio_oe[11:6] = leros_openram_gpio_oe;
-assign mprj_gpio_oe[17:12] = leros_dffram_gpio_oe;
-assign mprj_gpio_oe[23:18] = leros_regmem_gpio_oe;
-assign mprj_gpio_oe[29:24] = wb_gpio_oe;
-assign mprj_gpio_oe[30] = morse_gpio_oe;
+assign leros_cfram_gpio_oe = mprj_gpio_oe[5:0];
+assign leros_openram_gpio_oe = mprj_gpio_oe[11:6];
+assign leros_dffram_gpio_oe = mprj_gpio_oe[17:12];
+assign leros_regmem_gpio_oe = mprj_gpio_oe[23:18];
+assign wb_gpio_oe = mprj_gpio_oe[29:24];
+assign morse_gpio_oe = mprj_gpio_oe[30];
 
 
 // map gpios to io pads
