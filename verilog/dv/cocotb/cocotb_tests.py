@@ -8,3 +8,4 @@
 # from user_proj_tests.leros_adder_test.leros_adder_test import leros_adder_test
 from user_proj_tests.leros_adder_test.leros_adder_test import leros_adder_test
 from user_proj_tests.leros_gpio_test.leros_gpio_test import leros_gpio_test
+from user_proj_tests.wishbone_gpio_test.wishbone_gpio_test import wishbone_gpio_test

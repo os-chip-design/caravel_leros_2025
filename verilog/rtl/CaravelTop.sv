@@ -4973,7 +4973,7 @@ module WishboneGpio(	// src/main/scala/caravel/WishboneGpio.scala:8:7
                 io_wb_cyc,	// src/main/scala/caravel/WishboneGpio.scala:10:14
                 io_wb_we,	// src/main/scala/caravel/WishboneGpio.scala:10:14
   input  [31:0] io_wb_dat_i,	// src/main/scala/caravel/WishboneGpio.scala:10:14
-  input  [1:0]  io_wb_adr,	// src/main/scala/caravel/WishboneGpio.scala:10:14
+  input  [3:0]  io_wb_adr,	// src/main/scala/caravel/WishboneGpio.scala:10:14
   output [31:0] io_wb_dat_o,	// src/main/scala/caravel/WishboneGpio.scala:10:14
   output        io_wb_ack,	// src/main/scala/caravel/WishboneGpio.scala:10:14
   input  [5:0]  io_gpio_in,	// src/main/scala/caravel/WishboneGpio.scala:10:14
@@ -4984,9 +4984,9 @@ module WishboneGpio(	// src/main/scala/caravel/WishboneGpio.scala:8:7
   reg        accessReg;	// src/main/scala/caravel/WishboneGpio.scala:19:26
   reg  [5:0] outputEnables;	// src/main/scala/caravel/WishboneGpio.scala:27:30
   reg  [5:0] outputs;	// src/main/scala/caravel/WishboneGpio.scala:28:24
-  reg  [1:0] io_wb_dat_o_REG;	// src/main/scala/caravel/WishboneGpio.scala:35:35
+  reg  [3:0] io_wb_dat_o_REG;	// src/main/scala/caravel/WishboneGpio.scala:35:35
   wire       _GEN = accessReg & io_wb_we;	// src/main/scala/caravel/WishboneGpio.scala:19:26, :43:18
-  wire       _GEN_0 = io_wb_adr == 2'h0;	// src/main/scala/caravel/WishboneGpio.scala:44:23
+  wire       _GEN_0 = io_wb_adr == 4'h0;	// src/main/scala/caravel/WishboneGpio.scala:44:23
   always @(posedge clock) begin	// src/main/scala/caravel/WishboneGpio.scala:8:7
     if (reset) begin	// src/main/scala/caravel/WishboneGpio.scala:8:7
       accessReg <= 1'h0;	// src/main/scala/caravel/WishboneGpio.scala:8:7, :19:26
@@ -4997,7 +4997,7 @@ module WishboneGpio(	// src/main/scala/caravel/WishboneGpio.scala:8:7
       accessReg <= ~accessReg & (io_wb_cyc | accessReg);	// src/main/scala/caravel/WishboneGpio.scala:19:26, :21:19, :22:15, :23:25, :24:15
       if (_GEN & _GEN_0)	// src/main/scala/caravel/WishboneGpio.scala:27:30, :43:{18,31}, :44:23, :46:23
         outputEnables <= io_wb_dat_i[5:0];	// src/main/scala/caravel/WishboneGpio.scala:27:30, :46:23
-      if (~_GEN | _GEN_0 | io_wb_adr != 2'h1) begin	// src/main/scala/caravel/WishboneGpio.scala:28:24, :35:62, :43:{18,31}, :44:23
+      if (~_GEN | _GEN_0 | io_wb_adr != 4'h4) begin	// src/main/scala/caravel/WishboneGpio.scala:28:24, :35:62, :43:{18,31}, :44:23
       end
       else	// src/main/scala/caravel/WishboneGpio.scala:28:24, :43:31, :44:23
         outputs <= io_wb_dat_i[5:0];	// src/main/scala/caravel/WishboneGpio.scala:28:24, :46:23
@@ -5018,7 +5018,7 @@ module WishboneGpio(	// src/main/scala/caravel/WishboneGpio.scala:8:7
         accessReg = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/caravel/WishboneGpio.scala:8:7, :19:26
         outputEnables = _RANDOM[/*Zero width*/ 1'b0][6:1];	// src/main/scala/caravel/WishboneGpio.scala:8:7, :19:26, :27:30
         outputs = _RANDOM[/*Zero width*/ 1'b0][12:7];	// src/main/scala/caravel/WishboneGpio.scala:8:7, :19:26, :28:24
-        io_wb_dat_o_REG = _RANDOM[/*Zero width*/ 1'b0][14:13];	// src/main/scala/caravel/WishboneGpio.scala:8:7, :19:26, :35:35
+        io_wb_dat_o_REG = _RANDOM[/*Zero width*/ 1'b0][16:13];	// src/main/scala/caravel/WishboneGpio.scala:8:7, :19:26, :35:35
       `endif // RANDOMIZE_REG_INIT
     end // initial
     `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/caravel/WishboneGpio.scala:8:7
@@ -5027,9 +5027,9 @@ module WishboneGpio(	// src/main/scala/caravel/WishboneGpio.scala:8:7
   `endif // ENABLE_INITIAL_REG_
   assign io_wb_dat_o =
     {26'h0,
-     io_wb_dat_o_REG == 2'h2
+     io_wb_dat_o_REG == 4'h8
        ? io_gpio_in
-       : io_wb_dat_o_REG == 2'h1 ? outputs : outputEnables};	// src/main/scala/caravel/WishboneGpio.scala:8:7, :27:30, :28:24, :35:{15,35,62}
+       : io_wb_dat_o_REG == 4'h4 ? outputs : outputEnables};	// src/main/scala/caravel/WishboneGpio.scala:8:7, :27:30, :28:24, :35:{15,35,62}
   assign io_wb_ack = accessReg;	// src/main/scala/caravel/WishboneGpio.scala:8:7, :19:26
   assign io_gpio_out = outputs;	// src/main/scala/caravel/WishboneGpio.scala:8:7, :28:24
   assign io_gpio_oe = outputEnables;	// src/main/scala/caravel/WishboneGpio.scala:8:7, :27:30
@@ -5785,7 +5785,7 @@ module WishboneMux(	// src/main/scala/wishbone/WishboneMux.scala:15:7
   reg  wasSelected_3;	// src/main/scala/wishbone/WishboneMux.scala:73:30
   wire selected_4 = io_master_cyc & io_master_adr[19:12] == 8'h40;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
   reg  wasSelected_4;	// src/main/scala/wishbone/WishboneMux.scala:73:30
-  wire selected_5 = io_master_cyc & io_master_adr[19:2] == 18'h14000;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
+  wire selected_5 = io_master_cyc & io_master_adr[19:4] == 16'h5000;	// src/main/scala/wishbone/WishboneMux.scala:61:{34,50}, :64:7
   wire _GEN = selected_5 | selected_4 | selected_3 | selected_2 | selected_1 | selected;	// src/main/scala/wishbone/WishboneMux.scala:36:22, :61:34, :66:20, :67:30
   reg  wasSelected_5;	// src/main/scala/wishbone/WishboneMux.scala:73:30
   always @(posedge clock) begin	// src/main/scala/wishbone/WishboneMux.scala:15:7
@@ -6065,7 +6065,7 @@ module CaravelTop(	// src/main/scala/caravel/CaravelTop.scala:28:7
     .io_wb_cyc   (_wbMux_io_targets_5_cyc),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_we    (_wbMux_io_targets_5_we),	// src/main/scala/wishbone/WishboneMux.scala:111:23
     .io_wb_dat_i (_wbMux_io_targets_5_dat_i),	// src/main/scala/wishbone/WishboneMux.scala:111:23
-    .io_wb_adr   (_wbMux_io_targets_5_adr[1:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
+    .io_wb_adr   (_wbMux_io_targets_5_adr[3:0]),	// src/main/scala/wishbone/WishboneMux.scala:111:23, :117:16
     .io_wb_dat_o (_wishboneGpio_io_wb_dat_o),
     .io_wb_ack   (_wishboneGpio_io_wb_ack),
     .io_gpio_in  (wishboneGpio_io_gpio_in_REG),	// src/main/scala/caravel/CaravelTop.scala:99:23

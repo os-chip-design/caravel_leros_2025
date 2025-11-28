@@ -29,6 +29,7 @@ async def waitForValue(caravelEnv, gpio_rng, expected_value):
         await cocotb.triggers.ClockCycles(caravelEnv.clk,1)
 
 async def expectTransition(caravelEnv, gpio_rng, from_value, to_value):
+    cocotb.log.info(f"Expecting transition on GPIO {gpio_rng[0]}:{gpio_rng[1]} from {from_value} to {to_value}")
     while True:
         received_val = caravelEnv.monitor_gpio(gpio_rng[0], gpio_rng[1]).binstr
         if received_val == to_value:
@@ -46,49 +47,31 @@ async def expectSeq(caravelEnv, gpio_rng, seq, reps):
         if reps > 1:
             await expectTransition(caravelEnv, gpio_rng, seq[-1], seq[0])
 
+
 @cocotb.test()
 @report_test
-async def leros_gpio_test(dut):
-    caravelEnv = await test_configure(dut,timeout_cycles=70772)
-
-    cocotb.log.info(f"[TEST] Start leros_gpio_test test")  
+async def wishbone_gpio_test(dut):
+    caravelEnv = await test_configure(dut,timeout_cycles=999998)
+    
+    cocotb.log.info(f"[TEST] Start wishbone_gpio_test test")  
     # wait for start of sending
     await caravelEnv.release_csb()
 
-    cocotb.log.info(f"[TEST] waiting for blink programs to be loaded") 
+    
+
+    cocotb.log.info(f"[TEST] waiting for riscv to start counting on gpio") 
     await caravelEnv.wait_mgmt_gpio(1) # wait for setup to be done
 
-    # check leros-cfram gpio
-    await expectSeq(caravelEnv, (24,23), ['00','01','10','11'], reps = 2)
-    cocotb.log.info(f"[TEST] leros-cfram gpio passed")
-
-    # check leros-cfram tx
-    await expectSeq(caravelEnv, (21,21), ['0','1'], reps = 10)
-    cocotb.log.info(f"[TEST] leros-cfram tx passed")
-
-    # check leros-openram gpio
-    await expectSeq(caravelEnv, (30,29), ['00','01','10','11'], reps = 2)
-    cocotb.log.info(f"[TEST] leros-openram gpio passed")
-
-    # check leros-openram tx
-    await expectSeq(caravelEnv, (27,27), ['0','1'], reps = 10)
-    cocotb.log.info(f"[TEST] leros-openram tx passed")
-
-    # check leros-dffram gpio
-    await expectSeq(caravelEnv, (12,11), ['00','01','10','11'], reps = 2)
-    cocotb.log.info(f"[TEST] leros-dffram gpio passed")
-
-    # check leros-dffram tx
-    await expectSeq(caravelEnv, (9,9), ['0','1'], reps = 10)
-    cocotb.log.info(f"[TEST] leros-dffram tx passed")
-
-    # check leros-regmem gpio
-    await expectSeq(caravelEnv, (18,17), ['00','01','10','11'], reps = 2)
-    cocotb.log.info(f"[TEST] leros-regmem gpio passed")
-
-    # check leros-regmem tx
-    await expectSeq(caravelEnv, (15,15), ['0','1'], reps = 10)
-    cocotb.log.info(f"[TEST] leros-regmem tx passed")
-
-    cocotb.log.info(f"[TEST] All gpio tests passed")
+    # check wishbone gpio
+    await expectSeq(caravelEnv, (37,32), ['000000', '000001', '000010', '000011', '000100', '000101', '000110', '000111',
+                                            '001000', '001001', '001010', '001011', '001100', '001101', '001110', '001111',
+                                            '010000', '010001', '010010', '010011', '010100', '010101', '010110', '010111',
+                                            '011000', '011001', '011010', '011011', '011100', '011101', '011110', '011111'], reps = 1)
     
+    caravelEnv.drive_gpio_in((37,32), '101010')  # set inputs to 0x2A
+    
+    # wait for riscv to lower mnt_gpio to mark test end
+    await caravelEnv.wait_mgmt_gpio(0)
+    cocotb.log.info(f"[TEST] wishbone_gpio_test passed")
+    
+
