@@ -443,10 +443,34 @@ setup-cfsram:
 	gunzip ip/DFFRAM256x32/layout/gds/DFFRAM256x32.gds.gz
 
 
-harden-all: CF_SRAM_1024x32_wrapper leros-cfram leros-openram leros-dffram regmem_128 regmem_256 leros-regmem user_project_wrapper
 
 clean-old-runs:
 	$(MAKE) -C openlane clean-old-runs
 
 clean-runs:
 	$(MAKE) -C openlane clean-runs
+
+clean-views:
+	@rm -r def gds lef lib mag signoff spef 
+
+print-antenna-reports:
+	@for blockdir in $(shell ls -d signoff/*/ | grep -v openlane-signoff); do \
+		block=$$(basename $$blockdir); \
+		reportfile="signoff/$$block/openlane-signoff/antenna_summary.rpt"; \
+		if [ -f $$reportfile ]; then \
+			echo "Antenna report for $$block:"; \
+			grep -v '^#' $$reportfile; \
+			echo ""; \
+		else \
+			echo "No antenna report found for block $$block"; \
+		fi; \
+	done
+
+ifdef PARALLEL
+user_project_wrapper: leros-cfram leros-openram leros-dffram leros-regmem reg-file
+leros-cfram: CF_SRAM_1024x32_wrapper
+leros-regmem: regmem_128 regmem_256
+harden-all: user_project_wrapper
+else
+harden-all: CF_SRAM_1024x32_wrapper leros-cfram leros-openram leros-dffram regmem_128 regmem_256 leros-regmem reg-file user_project_wrapper
+endif

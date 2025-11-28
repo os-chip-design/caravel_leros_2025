@@ -32,7 +32,13 @@ Generate the Leros Verilog files (not needed as the SV files are included):
 
     make generate-verilog
 
-then harden the wrapper for the memory
+You can either harden all blocks and the top level in one go with
+
+    make harden-all LIBRELANE_USE_NIX=1 PARALLEL=1
+
+where the `PARALLEL` variable enables parallel building of the blocks.
+
+Else you can harden all blocks one by one starting with the wrapper for the ChipFoundry SRAM:
 
     make CF_SRAM_1024x32_wrapper LIBRELANE_USE_NIX=1
 

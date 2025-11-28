@@ -16,11 +16,11 @@
 #include <firmware_apis.h>
 
 void set_sys_ctrl(unsigned int lerosId, unsigned int data) {
-    USER_writeWord(data, (0xC00 >> 2) + ((lerosId * 0x1000) >> 2));
+    USER_writeWord(data, (0x2000 >> 2) + ((lerosId * 0x10000) >> 2));
 }
 
 int get_sys_ctrl(unsigned int lerosId) {
-    return USER_readWord((0xC00 >> 2) + ((lerosId * 0x1000) >> 2));
+    return USER_readWord((0x2000 >> 2) + ((lerosId * 0x10000) >> 2));
 }
 
 void leros_set_reset(unsigned int lerosId) {
@@ -48,16 +48,16 @@ void leros_uart_loopback_disable(unsigned int lerosId) {
 }
 
 void write_reg(unsigned int lerosId, unsigned int i, int data) {
-    USER_writeWord(data, (0x800 >> 2) + i + (lerosId * 0x1000 >> 2));
+    USER_writeWord(data, (0x1000 >> 2) + i + (lerosId * 0x10000 >> 2));
 }
 
 int read_reg(unsigned int lerosId, unsigned int i) {
-    return USER_readWord((0x800 >> 2) + i + (lerosId * 0x1000 >> 2));
+    return USER_readWord((0x1000 >> 2) + i + (lerosId * 0x10000 >> 2));
 }
 
 void write_prog(unsigned int lerosId, unsigned int *prog, unsigned int size) {
     for (unsigned int i = 0; i < size; i++) {
-        USER_writeWord(prog[i], 0x000 + i + (lerosId * 0x1000 >> 2));
+        USER_writeWord(prog[i], 0x000 + i + (lerosId * 0x10000 >> 2));
     }
 }
 
