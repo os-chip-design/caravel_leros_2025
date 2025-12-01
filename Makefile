@@ -110,7 +110,7 @@ simenv-cocotb:
 	docker pull docker.io/chipfoundry/dv:cocotb
 
 .PHONY: setup
-setup: check_dependencies install check-env install_mcw openlane pdk-with-ciel setup-timing-scripts setup-cocotb precheck setup-cfsram
+setup: check_dependencies install check-env install_mcw openlane pdk-with-ciel setup-timing-scripts setup-cocotb precheck
 
 # Openlane
 

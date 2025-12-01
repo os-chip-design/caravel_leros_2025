@@ -17,28 +17,20 @@ Then start Docker and follow [the Docs](docs/source/index.md), or as follows:
 
     make setup
 
-Install the CF RAM and the DFF RAM (it should be included in the Makefile on Linux, below is for Mac):
+Install the CF RAM and the DFF RAM (it should be included in the Makefile on Linux, below is for Mac),
+using the available Python virtual environment `venv`:
 
-    pip3 install --break-system-packages cf-ipm
+    source venv/bin/activate
+    pip install cf-ipm
     ipm install CF_SRAM_1024x32
     ipm install DFFRAM256x32
-    gunzip ip/DFFRAM256x32/layout/gds/DFFRAM256x32.gds.gz
+    deactivate
 
-Unzip the GDS of the registerfile test:
-
-    gunzip macro/rf_top.gds.gz
-
-Generate the Leros Verilog files (not needed as the SV files are included):
+Generate the Leros Verilog files (not needed on a clean checkout as the SV files are included):
 
     make generate-verilog
 
-You can either harden all blocks and the top level in one go with
-
-    make harden-all LIBRELANE_USE_NIX=1 PARALLEL=1
-
-where the `PARALLEL` variable enables parallel building of the blocks.
-
-Else you can harden all blocks one by one starting with the wrapper for the ChipFoundry SRAM:
+You can harden all blocks one by one starting with the wrapper for the ChipFoundry SRAM:
 
     make CF_SRAM_1024x32_wrapper LIBRELANE_USE_NIX=1
 
@@ -61,6 +53,12 @@ then build and harden different Leros versions:
 and then include all in the wrapper for Caravel:
 
     make user_project_wrapper LIBRELANE_USE_NIX=1
+
+You can also harden all blocks and the top level in one go with
+
+    make -j 4 harden-all LIBRELANE_USE_NIX=1 PARALLEL=1
+
+where the `PARALLEL` variable enables parallel building of the blocks.
 
 Note that the `LIBRELANE_USE_NIX=1` can speedup the builds with Nix is installed.
 **However, it does not produce correct results on Mac currently.***
