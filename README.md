@@ -132,3 +132,7 @@ Wishbone User space is mapped as follows: 0x3000_0000 - 0x300F_FFFF
 ## The Chip GDS:
 
 ![Chip GDS](caravel_leros.png)
+
+## The Complete Caravel GDS:
+
+![Caravel GDS](caravel_layout.png)
