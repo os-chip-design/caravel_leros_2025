@@ -22,7 +22,7 @@
           "orientation": "W"
         }
       },
-      "gds": ["dir::../../macro/rf_top.gds"],
+      "gds": ["dir::../../macro/rf_top.gds.gz"],
       "lef": ["dir::../../macro/rf_top.lef"],
       "lib": {
         "*": ["dir::../../macro/rf_top.lib"]

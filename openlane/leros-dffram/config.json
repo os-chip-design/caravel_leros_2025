@@ -40,7 +40,7 @@
                 }
             },
             "gds": [
-                "dir::../../ip/DFFRAM256x32/layout/gds/DFFRAM256x32.gds"
+                "dir::../../ip/DFFRAM256x32/layout/gds/DFFRAM256x32.gds.gz"
             ],
             "lef": [
                 "dir::../../ip/DFFRAM256x32/layout/lef/DFFRAM256x32.lef"
