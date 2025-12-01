@@ -78,30 +78,6 @@ The Leros test case can be run with cocotb:
 
     make cocotb-verify-leros_adder_test-rtl
 
-## TODO
-
-* [x] Setup Caravel on Mac (MS, TP)
-* [x] Setup Caravel on chipdesign1
-* [x] Harden the example project
-* [x] Run the provided tests
-* [x] MPW check
-* [x] Test upload to ChipFoundry (user is martin-schoeberl)
-* [ ] Change example to Chisel top level (with a simple design) and harden it
-* [x] Have some basic tests
-* [x] Add DTU subsystem (inclusive memories)
-* [x] Make sure to use 10 MHz for the serial port
-* [ ] Set pin defines in defines.v
-* [x] TODO: there is a mismatch between io_out vs io_gpio_out
-* [x] Explore three different memories
-  - [x] OpenRAM
-  - [x] CF RAM
-  - [x] DFF RAM
-* [x] Have a RV Wishbone test to boot Leros
-* [x] Maybe have three versions on the same chip
-* [x] Add some more simple example on the top level (WB IO, Sylvan's RF, ttsky25-tapeout/SKY130_register_file_testing)
-* [ ] Add a block diagram of the project architecture.
-* [ ] Include instructions on how to build and simulate the project.
-
 Refer to [README](docs/source/index.md) for basic Caravel documentation.
 
 ## Address Map
